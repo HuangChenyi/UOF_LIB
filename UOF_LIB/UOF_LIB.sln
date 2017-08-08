@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "UOF12.2", "UOF12.2\", "{7F3592F4-D064-4AFF-847B-E4BA013A91CD}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6"
+		ProjectReferences = "{c4d1f5ba-1556-482a-9a34-ec8e0ac1451c}|Lib.dll;{61988e64-e3ad-4655-b741-70e8a31ac60a}|Training.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_6558"
 		Debug.AspNetCompiler.PhysicalPath = "UOF12.2\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_6558\"
@@ -21,15 +22,49 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "UOF12.2", "UOF12.2\", "{7F3
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "6558"
+		SlnRelativePath = "UOF12.2\"
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib", "Lib\Lib.csproj", "{C4D1F5BA-1556-482A-9A34-EC8E0AC1451C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PochenPOC", "PochenPOC\PochenPOC.csproj", "{D111BE5B-8644-4DF8-896B-3B929CAD774E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Training", "Training\Training.csproj", "{61988E64-E3AD-4655-B741-70E8A31AC60A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSAPI", "WSAPI\WSAPI.csproj", "{5C5566F2-BB85-4EF1-8E16-8CA4953EDE10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YJ.Lib", "YJ.Lib\YJ.Lib.csproj", "{1A128E00-6266-4FA6-BB80-885D6EC00410}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7F3592F4-D064-4AFF-847B-E4BA013A91CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F3592F4-D064-4AFF-847B-E4BA013A91CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F3592F4-D064-4AFF-847B-E4BA013A91CD}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F3592F4-D064-4AFF-847B-E4BA013A91CD}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{C4D1F5BA-1556-482A-9A34-EC8E0AC1451C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4D1F5BA-1556-482A-9A34-EC8E0AC1451C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4D1F5BA-1556-482A-9A34-EC8E0AC1451C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4D1F5BA-1556-482A-9A34-EC8E0AC1451C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D111BE5B-8644-4DF8-896B-3B929CAD774E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D111BE5B-8644-4DF8-896B-3B929CAD774E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D111BE5B-8644-4DF8-896B-3B929CAD774E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D111BE5B-8644-4DF8-896B-3B929CAD774E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61988E64-E3AD-4655-B741-70E8A31AC60A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61988E64-E3AD-4655-B741-70E8A31AC60A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61988E64-E3AD-4655-B741-70E8A31AC60A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61988E64-E3AD-4655-B741-70E8A31AC60A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C5566F2-BB85-4EF1-8E16-8CA4953EDE10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C5566F2-BB85-4EF1-8E16-8CA4953EDE10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C5566F2-BB85-4EF1-8E16-8CA4953EDE10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C5566F2-BB85-4EF1-8E16-8CA4953EDE10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A128E00-6266-4FA6-BB80-885D6EC00410}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A128E00-6266-4FA6-BB80-885D6EC00410}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A128E00-6266-4FA6-BB80-885D6EC00410}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A128E00-6266-4FA6-BB80-885D6EC00410}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

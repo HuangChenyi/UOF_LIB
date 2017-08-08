@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PochenPOC.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="PochenPOC_Auth_Authentication" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost/UOF_NANPAO_TRAINING/PublicAPI/System/Authentication.asmx</Value>
+    </Setting>
+    <Setting Name="PochenPOC_File_FileCenter" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost/UOF_NANPAO_TRAINING/PublicAPI/Utility/FileCenter.asmx</Value>
+    </Setting>
+    <Setting Name="PochenPOC_DMS_Dms" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost/UOF_NANPAO_TRAINING/PublicAPI/DMS/Dms.asmx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
