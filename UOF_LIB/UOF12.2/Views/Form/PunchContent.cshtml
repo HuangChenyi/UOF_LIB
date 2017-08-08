@@ -1,0 +1,219 @@
+﻿
+
+<div class="pusher">
+    <div class="ui top large inverted orange fixed menu">
+        <div class="item">
+            <i class="content icon"></i>
+            電子簽核
+        </div>
+    </div>
+ 
+    <div class="full height">
+
+        <div class=" header segment">
+            <div class="container">
+                <div class="introduction">
+                    <h1 class="ui header blue" ng-bind-html="pool.viewTitle"></h1>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="main container">
+
+            <div class="example">
+
+                <ng-form class="ui form" name="uofForm">
+                    <h3 class="ui block top attached green  header">
+                        <i class="user icon"></i>
+                        <div class="content">
+                            申請資訊
+                        </div>
+                    </h3>
+                    <div class="ui bottom attached  segment green ">
+                       
+                        <div class="field">
+                                <label>申請者</label>
+                                <input type="text" ng-model="initialData.name" readonly="readonly" placeholder="姓名" disabled>                          
+                        </div>
+                        <div class="field">
+                            <label>申請者部門</label>
+                            <select class="ui dropdown" ng-model="formData.aplicantInfo.applicantGroupID">
+                                <option value="{{item.Id}}"
+                                        ng-selected="{{item.Id == formData.aplicantInfo.applicantGroupID}}"
+                                        ng-repeat="item in initialData.departments"
+                                        ng-bind-html="item.Name"></option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>申請時間</label>
+                            <input type="text" value="{{formData.aplicantInfo.applyDate|date:'yyyy/MM/dd'}}" reado readonly="readonly">
+                        </div>
+                        <div class="field">
+                            <label>緊急程度</label>
+
+                            <select class="ui dropdown" ng-model="formData.aplicantInfo.urgentLevel">
+                                <option value="0">緊急</option>
+                                <option value="1">急</option>
+                                <option value="2">普通</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <h3 class="ui block top attached green header">
+                        <i class="file icon"></i>
+                        <div class="content">
+                            相關附件
+                        </div>
+                    </h3>
+                    <div class="ui  attached segment green">
+                        <h4 class="ui left floated header">
+                            表單附件(
+                            <span ng-bind-html="formData.formFiles.length"></span>)
+                        </h4>
+                        <div class="ui right floated  primary animated button" ng-click="fileDetail('formFiles','default')">
+                            <div class="visible content">Add</div>
+                            <div class="hidden content">
+                                <i class="plus icon"></i>
+                            </div>
+                        </div>
+
+                        <div style="clear: both; margin: 0"></div>
+                        <div class="ui list">
+                            <div class="item" ng-repeat="item in formData.formFiles">
+                                <div class="right floated compact animated ui red basic button" ng-click="fileRemove('formFiles','default',item.id)">
+                                    <div class="visible content">Remove</div>
+                                    <div class="hidden content">
+                                        <i class="remove icon"></i>
+                                    </div>
+                                </div>
+
+                                <i class="file outline icon" ng-class="isImage(item.name) ? 'image ' : '' "></i>
+                                <div class="content">
+                                    <div class="header">{{item.name}}</div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui bottom attached  segment">
+                        <h4 class="ui left floated header">
+                            個人附件(
+                            <span ng-bind-html="formData.personalFiles.length"></span>)
+                        </h4>
+                        <div class="ui right floated  primary animated button" ng-click="fileDetail('personalFiles','default')">
+                            <div class="visible content">Add</div>
+                            <div class="hidden content">
+                                <i class="plus icon"></i>
+                            </div>
+                        </div>
+                        <div style="clear: both; margin: 0"></div>
+                        <div class="ui list">
+                            <div class="item" ng-repeat="item in formData.personalFiles">
+                                <div class="right floated compact animated ui red basic button" ng-click="fileRemove('personalFiles','default',item.id)">
+                                    <div class="visible content">Remove</div>
+                                    <div class="hidden content">
+                                        <i class="remove icon"></i>
+                                    </div>
+                                </div>
+
+                                <i class="file outline icon" ng-class="isImage(item.name) ? 'image ' : '' "></i>
+                                <div class="content">
+                                    <div class="header">{{item.name}}</div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="ui block top attached green header">
+                        <i class="browser icon"></i>表單
+                    </h3>
+                    <div class="ui bottom attached  segment green">
+
+
+                        <div class="field">
+                            <label>申請單號</label>
+                            <input type="text" name="nbr" readonly="readonly" placeholder="由系統自動產生" disabled>
+                        </div>
+
+                        <div class="field">
+                            <label>申請者</label>                            
+                            <input type="text" name="name" readonly="readonly" ng-model="initialData.name" disabled>
+                        </div>
+                       
+                        <div class="field required">
+                            <label>補刷卡狀態</label>                          
+                            <uof-field-punch ng-model="formData.fields.punchInfo"></uof-field-punch>                           
+                        </div>                            
+                            <div class="field">
+                                <label>事由</label>
+                                <textarea name="reason" ng-model="formData.fields.reason.value"></textarea>
+                            </div>
+                        </div>
+                    <h3 class="ui block top attached green header">
+                        <i class="write icon"></i>意見
+                    </h3>
+                    <div class="ui attached segment green">
+
+                        <div class="field">
+
+                            <textarea ng-model="formData.comment"></textarea>
+                        </div>
+                    </div>
+
+                </ng-form>
+
+                <div class="ui one padded centered grid">
+                    <div class="center aligned column">
+                        <div class="ui  large buttons">
+                            <div class="ui  negative button">取消</div>
+                            <div class="or" data-text="或"></div>
+                            <div class="ui positive button" ng-click="submit()">送出</div>
+                          
+                        </div>
+                    </div>
+                </div>
+                @*<input type="button" ng-disabled="uofForm.$invalid" value="Save" />
+                <input type="button" ng-click="checkValid()" value="check" />
+                {{uofForm.$invalid}}*@
+                @*<div class="ui one padded centered grid">
+                    <div class="center aligned column">
+                        <div class="ui buttons">
+                            <div class="ui red button">取消</div>
+                            <div class="ui green button" ng-click="submit()">送出</div>
+                            <div class="ui green button">加簽</div>
+                            <div class="ui green button">退簽</div>
+                        </div>
+                    </div>
+                </div>*@
+                <div class="ui message">
+                    <p ng-bind-html="message.content"></p>
+                </div>
+                <div class="ui modal submit">
+                    <div class="header" ng-bind-html="message.header"></div>
+                    <div class="content">
+                        <div class="ui icon message" ng-class="message.type">
+                            <i class="icon" ng-class="message.icon"></i>
+                            <div class="content">
+                                <div class="header" ng-bind-html="message.content"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <div class="ui approve right labeled icon button" ng-class="message.type" ng-click="closeForm()">
+                            關閉
+                            <i class="checkmark icon"></i>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,660 @@
+﻿@model Ede.Uof.EIP.BM.dl.CTB_EB_CUS_CUSTOMERAndCTB_EB_CUS_CUSTOMER_FIELDAndCTB_EB_CUS_CONTACT
+@{
+    //"客戶資訊"; 
+    ViewBag.Title = @Html.BMResource("BM_Customer_information");
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+
+<style>
+    .input-group-addon, .input-group-btn {
+    white-space: initial !important;
+    
+    }
+
+</style>
+
+
+<script>
+
+    function gridColumn_reportDelete(CONTACT_ID) {
+        var result = "";
+        var url = '@Url.Action("ClientDelete", "Client")';
+      
+
+        result = "<a class='k-button k-button-icontext ' href='" + url + "?CONTACT_ID=" + CONTACT_ID + "' >@Html.BMResource("BM_Delete")</a>";
+        
+
+        return result;
+    }
+
+</script>
+<div id="main" class="clearfix clientIn-body">
+    <div class="topTabs-header clearfix">
+        <h1 class="secInfo">
+            @*客戶資訊*@ @Html.BMResource("BM_Customer_information")
+        </h1>
+        <!-- /SecInfo -->
+        <ul class="tabs">
+            <li class="tab active">
+                <a href="#tab2" data-toggle="tab">
+                    <span>
+                        @*客戶資料*@ @Html.BMResource("BM_Customer_information")
+                    </span>
+                </a>
+            </li>
+            @if (!string.IsNullOrEmpty(Model.CUSTOMER_ID))
+            {
+                <li class="tab">
+                    <a href="#tab3" data-toggle="tab">
+                        <span>
+                            @*聯絡人資料*@ @Html.BMResource("BM_Contact_information")
+                        </span>
+                    </a>
+                </li>
+                <li class="tab">
+                    <a href="#tab4" data-toggle="tab">
+                        <span>
+                            @*客戶備忘錄*@ @Html.BMResource("BM_Notepad")
+                        </span>
+                    </a>
+                </li>
+            }
+        </ul>
+        <button class="return-btn" onclick="goBack()"><i class="fa fa-reply"></i></button>
+    </div>
+
+    <div class="tab-content">
+
+
+
+        <div class="tab-pane fade in active" id="tab2">
+            @using (Html.BeginForm("ClientSave", "Client", FormMethod.Post))
+            {
+                @Html.Hidden("CRUD_STATUS","INSERT")
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*客戶代號*@ @Html.BMResource("BM_Customer_ID")</span></span>
+
+                            @Html.TextBoxFor(model => model.CUSTOMER_ID, new { @class = "form-control", @required = "required" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*客戶簡稱*@ @Html.BMResource("BM_Customer_abbreviation")</span></span>
+                            @Html.TextBoxFor(model => model.CUSTOMER_ABBREVIATION, new { @class = "form-control", @required = "required" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>@*統一編號*@ @Html.BMResource("BM_Tax_ID")</span></span>
+                            @Html.TextBoxFor(model => model.UNIFIED_ID, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*客戶名稱*@ @Html.BMResource("BM_Customer_name")</span></span>
+                            @Html.TextBoxFor(model => model.CUSTOMER_NAME, new { @class = "form-control", @required = "required" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*英文名稱*@ @Html.BMResource("BM_English_Name")</span>
+                            </span>
+                            @Html.TextBoxFor(model => model.CUSTOMER_ENGLISH_NAME, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span><span style="color:#FF0000;">*</span>@*客戶類別*@ @Html.BMResource("BM_Customer_category")</span>
+                            </span>
+                           
+                            @Html.DropDownListFor(model => model.CLASS_ID, (IEnumerable<SelectListItem>)ViewBag.CusClassList, Html.BMResource("BM_Select"), new { @class = "form-control " })
+
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*地區別*@ @Html.BMResource("BM_Select_region")</span>
+                            </span>
+                            @Html.TextBoxFor(model => model.AREA_NAME, new { @class = "form-control" })
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*行業別*@ @Html.BMResource("BM_Industry")</span>
+                            </span>
+                          
+                        
+                            @Html.DropDownListFor(model => model.INDUSTRY_ID, (IEnumerable<SelectListItem>)ViewBag.CusIndustryList, Html.BMResource("BM_Select"), new { @class = "form-control " })
+
+
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*負責人*@ @Html.BMResource("BM_Owner")</span>
+                            </span>
+
+                            @Html.TextBoxFor(model => model.OWNER, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*資本額*@ @Html.BMResource("BM_Capital")</span>
+                            </span>
+                            @Html.TextBoxFor(model => model.CAPITALIZATION, new { @class = "form-control",type="number",@min="0" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*客戶等級*@ @Html.BMResource("BM_Custome_level")</span>
+                            </span>
+                       
+                            @Html.DropDownListFor(model => model.CLASS_ID, (IEnumerable<SelectListItem>)ViewBag.CusGradeList, Html.BMResource("BM_Select"), new { @class = "form-control " })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*公司電話1*@ @Html.BMResource("BM_Same_as_company_tel_1")</span>
+                            </span>
+                            @Html.TextBoxFor(model => model.TEL1, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*公司電話2*@ @Html.BMResource("BM_Same_as_company_tel_2")</span>
+                            </span>
+                            @Html.TextBoxFor(model => model.TEL2, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*公司傳真*@ @Html.BMResource("BM_Office_fax")</span>
+                            </span>
+                            @Html.TextBoxFor(model => model.COMPANY_FAX, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*郵遞區號*@ @Html.BMResource("BM_Invoice_postal_code")</span>
+                            </span>
+                            @Html.TextBoxFor(model => model.COMPANY_ZIP_CODE, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*公司地址*@ @Html.BMResource("BM_Company_address")</span>
+                            </span>
+                            @Html.TextBoxFor(model => model.COMPANY_ADDRESS, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*發票郵遞區號*@ @Html.BMResource("BM_Invoice_postal_code")</span>
+                            </span>
+                            @Html.TextBoxFor(model => model.INVOICE_ZIP_CODE, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*發票地址*@ @Html.BMResource("BM_Invoice_address")</span>
+                            </span>
+                            @Html.TextBoxFor(model => model.INVOICE_ADDRESS, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@*公司網址*@ @Html.BMResource("BM_Company_URL")</span>
+                            </span>
+                            @Html.TextBoxFor(model => model.WEB_URL, new { @class = "form-control", type = "url" })
+                        </div>
+                    </div>
+                    @*資料歸屬*@
+                    @*<div class="col-sm-6">
+        <div class="input-group mb20">
+
+            <span class="input-group-addon">
+                <span><span style="color:#FF0000;">*</span> @Html.BMResource("BM_Data_belonging")</span>
+            </span>
+            @Html.TextBoxFor(model => model.RM_ID, new { @class = "form-control" })
+
+        </div>
+    </div>*@
+                   
+                    
+
+                    <div class="col-sm-12">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>
+                @*備註*@ @Html.BMResource("BM_Field_remark")</span>
+                            </span>
+
+                            @Html.TextAreaFor(model => model.REMARK, new { @class = "form-control", @style = "max-width:100%;", @rows = "6" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon">
+                                <span>@Model.OPTION1</span>
+                             
+                                @Html.HiddenFor(model => model.OPTION1_VALUE)
+                            </span>
+                            @Html.TextBoxFor(model => model.OPTION1_VALUE, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon">
+                                <span>@Model.OPTION2</span>
+                               
+                                @Html.HiddenFor(model => model.OPTION2)
+                            </span>
+
+                            @Html.TextBoxFor(model => model.OPTION2_VALUE, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@Model.OPTION3</span>
+                               
+                                @Html.HiddenFor(model => model.OPTION3)
+                            </span>
+                            @Html.TextBoxFor(model => model.OPTION3_VALUE, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@Model.OPTION4</span>
+                             
+                                @Html.HiddenFor(model => model.OPTION4)
+                            </span>
+                            @Html.TextBoxFor(model => model.OPTION4_VALUE, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@Model.OPTION5</span>
+                               
+                                @Html.HiddenFor(model => model.OPTION5)
+                            </span>
+                            @Html.TextBoxFor(model => model.OPTION5_VALUE, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+
+                            <span class="input-group-addon">
+                                <span>@Model.OPTION6 </span>
+                               
+                                @Html.HiddenFor(model => model.OPTION6)
+                            </span>
+                            @Html.TextBoxFor(model => model.OPTION6_VALUE, new { @class = "form-control" })
+                        </div>
+                    </div>
+                  
+                </div>
+                  <div class="text-center">
+                        @if (ViewBag.MANAGER == "YES" && string.IsNullOrEmpty( @Model.CUSTOMER_ID))
+                        {
+                            <button type="submit" class="btn btn-submit xs100 xs-mb10">@*儲存*@ @Html.BMResource("BM_Save")</button>
+                        }
+                        <button type="button" class="btn btn-close xs100" onclick="goBack()">@*返回*@ @Html.BMResource("BM_Return")</button>
+                    </div>
+            }
+        </div>
+
+
+
+
+        <div class="tab-pane fade" id="tab3">
+            <div class="clearfix">
+                <div class="float-r xs100 mb10">
+                    <div class="btn-group btn-group-2 xs100">
+
+
+
+
+                        @if (ViewBag.MANAGER == "YES")
+                        {
+                            <a class="btn btn-danger" href="@Url.Action("ContactPerson", "Client", new { CUSTOMER_ID = Model.CUSTOMER_ID, CRUD_STATUS = "INSERT" })">
+                                新增聯絡人
+                            </a>
+                        }
+                        @*<button data-target="#DeleteModal" data-toggle="modal" type="submit" class="btn btn-danger">
+                                刪除聯絡人
+                            </button>*@
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive mb20">
+
+                @(Html.Kendo().Grid(Model.l_CTB_EB_CUS_CONTACT)
+                        .Name("gridSCHEDULESUB")
+        .Columns(columns =>
+        {
+            @*columns.Bound(c =>c.CONTACT_ID).Template(@<text><input type='checkbox' class="chkbxq" /></text>).HeaderTemplate("<input id='chkbxCASELEVEL'  type='checkbox' onclick='ToggleChkBox(this.checked);' />").Title("選取");*@
+            //"姓名"
+            columns.Bound(c => c.CONTACT_NAME).Template(c => @Html.ActionLink(c.CONTACT_NAME, "ScheduleSubTurnEdit", new { id = c.CONTACT_ID })).Title(@Html.BMResource("BM_Name"));
+            //性別
+            columns.Bound(c => c.SEX).Title(@Html.BMResource("BM_Gender"));
+            //單位
+            columns.Bound(c => c.DEPARTMENT).Title(@Html.BMResource("BM_Unit"));
+            //"職稱"
+            columns.Bound(c => c.TITLE).Title(@Html.BMResource("BM_Job_title"));
+            //"電話"
+            columns.Bound(c => c.TEL).Title(@Html.BMResource("BM_Tel"));
+            //"分機"
+            columns.Bound(c => c.EXT_NUM).Title(@Html.BMResource("BM_Ext"));
+            //"手機"
+            columns.Bound(c => c.MOBILE_PHONE).Title(@Html.BMResource("BM_Mobile"));
+            //電子郵件
+            columns.Bound(c => c.EMAIL).Title(@Html.BMResource("BM_E_mail"));
+
+            //            columns.Bound(c => c.CONTACT_ID)
+            //.ClientTemplate("#=gridColumn_reportDelete(CONTACT_ID)#")
+            //                //"刪除"
+            //                               .Title(@Html.BMResource("BM_Delete"));
+            //columns.Command(command =>
+            //{
+            //    //刪除
+            //    command.Destroy().Text(@Html.BMResource("BM_Delete"));
+
+            //});
+
+
+        })
+                                                                       .Pageable(pageable => pageable.PageSizes(new[] { 10, 20, 30, 40, 50 })
+                                                                                       .Messages(messages => messages.Display(
+                                                                         @Html.BMResource("BM_From") + " {0} "
+                                                                                          + @Html.BMResource("BM_To") + " {1} ,"
+                                                                                          + @Html.BMResource("BM_Total") + ": {2} ")) //{0} - {1} of {2} items
+                                                                               .Messages(messages => messages.ItemsPerPage(""))
+                                                                               .Messages(messages => messages.Last(""))
+                                                                               .Messages(messages => messages.Next(""))
+                                                                               .Messages(messages => messages.First(""))
+                                                                               .Messages(messages => messages.Previous(""))
+                                                                               .ButtonCount(5)) // Enable paging
+                                                                        .DataSource(dataSource => dataSource
+                                                                                   .Ajax()
+                                                                                   .Batch(true)
+                                                                                   .PageSize(10)
+                                                                                   .ServerOperation(false)
+
+                                                                                           .Model(model => model.Id(p => p.CONTACT_ID))
+                                                                                                   .Destroy("ClientDelete", "Client"))
+                                                                        .Sortable() // Enable sorting
+
+                )
+
+            </div>
+
+
+            <div class="text-center">
+                <button type="button" class="btn btn-close xs100" onclick="goBack()">@*返回*@ @Html.BMResource("BM_Return")</button>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="tab4">
+
+
+            @if (Model.l_CTB_EB_CUS_CUSTOMER_MEMO != null)
+            {
+                @(new HtmlString( Model.l_CTB_EB_CUS_CUSTOMER_MEMO.MEMO_CONTENT))
+
+
+            }
+            else
+            {
+                <span>目前尚無資料</span>
+
+            }
+
+            <div class="text-center">
+                @if (ViewBag.MANAGER == "YES")
+                {
+                    <a href="@Url.Action("CustomerMemo", "Client", new { CUSTOMER_ID = Model.CUSTOMER_ID, CRUD_STATUS = "INSERT" })" class="btn btn-submit xs100 xs-mb10">編輯</a>
+                }
+                <button type="button" class="btn btn-close xs100" onclick="goBack()">@*返回*@ @Html.BMResource("BM_Return")</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 彈出聯絡人資料視窗開始 -->
+@*<div class="modal fade user-window" id="UserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="overflow:hidden;">
+                <div class="modal-header" style="background-color:#f39800; color:#fFF;">
+                    <button type="button" style="color:#FFF;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    瀏覽聯絡人資料
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>姓名</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>性別</span></span>
+                                <div class="form-control">
+                                    <label class="radio-inline">
+                                        <input type="radio" value="option1" id="" name="inlineRadioOptions">男
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" value="option1" id="" name="inlineRadioOptions">女
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>生日</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>單位</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>職稱</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>公司電話</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>分機</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>手機</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>電子郵件</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>電子郵件1</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>電子郵件2</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>主管名稱</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>助理名稱</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>Skype</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>QQ</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>公司名稱</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>統一編號</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>公司傳真</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon"><span>地址</span></span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon">
+                                    <span>備註</span>
+                                </span>
+                                <textarea style="max-width:100%;" rows="6" class="form-control"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="input-group mb20">
+                                <span class="input-group-addon">
+                                    <span>外部會員帳號</span>
+                                </span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-close" data-dismiss="modal">關閉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+<!-- 彈出聯絡人資料視窗結束 -->
+
+<script>
+    $(".input-group").each(function () {
+
+        var current = $(this),
+          label_height = $(this).height();
+        $(this).children(".form-control").css('height', label_height);
+
+
+    });
+
+</script>
+

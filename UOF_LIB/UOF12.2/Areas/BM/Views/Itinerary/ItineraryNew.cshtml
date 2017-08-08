@@ -1,0 +1,1419 @@
+﻿@model Ede.Uof.EIP.BM.dl.Itinerary.VM_createDayReport
+
+@{
+    if (string.IsNullOrEmpty(Model.CREATE_SCHEDULE.C_SCHEDULE_ID))
+    {
+        @*新增行程*@
+        ViewBag.Title = @Html.BMResource("BM_Create_a_Schedule");
+    }
+    else
+    {
+        @*行程資訊*@
+        ViewBag.Title = @Html.BMResource("BM_Schedule_Information");
+    }
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+<style>
+    .form-control.revise > label {
+        margin-right: 10px;
+    }
+
+    .form-control.revise input {
+        margin-right: 3px;
+    }
+
+    .k-widget.k-datetimepicker.k-header {
+        width: 100%;
+    }
+    .customer-wrap, .history-wrap {
+        padding: 5px 5px 5px 20px;
+        border: 1px solid rgba(0,0,0,.2);
+        margin-bottom: 20px;
+        border-radius: 3px;
+    }
+
+        .customer-contacter input, .history-wrap input {
+            margin-top: 0;
+        }
+
+    .customer, .history {
+        font-size: 1.2em;
+    }
+
+        .customer i, .history i {
+            transition: all .3s;
+            margin-right: 5px;
+        }
+
+            .customer i.rotate, .history i.rotate {
+                transform: rotate(90deg);
+                -webkit-transform: rotate(90deg);
+                -moz-transform: rotate(90deg);
+                -o-transform: rotate(90deg);
+            }
+
+    .customer-contacter, .history-contacter {
+        padding: 5px;
+        line-height: 200%;
+        padding-left: 35px;
+    }
+
+    .input-group-addon, .input-group-btn {
+        white-space: initial;
+    }
+</style>
+
+<script>
+    $(".menu-itinerary").addClass("active");
+
+    function selectCust(p_type) {
+        var p_type = p_type;
+        var keyWord = document.getElementById("keyWord");
+        $.ajax({
+            url: '@Url.Action("CaseNewCustomerSelect", "Case")',
+            data: {
+                keyWord: keyWord.value,
+            },
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                if (p_type == "1") {
+                    $("#Customer").empty();
+                    $("#CustomerContacter").empty();
+                }
+                else if (p_type == "2") {
+                    $("#Dealer").empty();
+                    $("#DealerContacter").empty();
+                }
+                if (data.length > 0) {
+
+                    var Content = "";
+
+                    $.each(data, function (i, item) {
+
+                        Content += "<div class='customer-wrap'>";
+                        Content += "  <a href='javascript:void(0)' onclick=\"  getContacter('" + item.CUSTOMER_ID + "','" + item.CUSTOMER_NAME + "','1')\"  class='customer' id='cus'><i class='fa fa-caret-right'></i> " + item.CUSTOMER_ID + " " + item.CUSTOMER_NAME + "</a> ";
+                        Content += "<div class='customer-contacter'>";
+
+                        $.each(item.l_CTB_EB_CUS_CONTACT, function (i, itemDetail) {
+
+                            Content += "  <div style='position:relative; left:-20px;'><label><input type='hidden' value='" + itemDetail.CONTACT_ID + "'>";  //這邊藏一個Hidden讓連絡者ID可順利被抓到
+                            Content += " <input type='checkbox' name='' value='' class='v-mid' style='margin-right:10px;'>";
+
+                            if (itemDetail.SEX == "M") {
+                                Content += "  <i class='fa fa-mars' style='  font-size: 1.2em;  margin-right: 5px;'></i>";
+                            } else {
+                                Content += "  <i class='fa fa-venus' style='  font-size: 1.2em;  margin-right: 5px;'></i>";
+                            }
+
+                            Content += "   <span style=' font-size: 1.2em;'>" + itemDetail.CONTACT_NAME + "</span>&nbsp;&nbsp;<span><i class='fa fa-sitemap'></i></span>&nbsp;&nbsp;<span>" + itemDetail.DEPARTMENT + "</span>&nbsp;&nbsp;<span><i class='fa fa-briefcase'></i></span>&nbsp;&nbsp;<span>" + itemDetail.TITLE + "</span></label>";
+                            Content += " </div>     ";
+                        })
+
+                        Content += "</div> ";
+                        Content += " </div> ";
+
+                    });
+
+                    if (p_type == "1") {
+                        $('#Customer').append(Content);
+                    }
+                    else if (p_type == "2") {
+                        $('#Dealer').append(Content);
+                    }
+                }
+                else {
+                }
+            }, error: function (data) {
+            }
+        });
+        $(".customer-contacter").hide();
+        $(".customer").click(function () {
+            $(this).parents(".customer-wrap").siblings().find("i").removeClass("rotate");
+            $(this).find("i").toggleClass("rotate");
+            $(this).next(".customer-contacter").slideToggle().parents(".customer-wrap").siblings().find(".customer-contacter").slideUp();
+
+            //如果客戶選擇，點選了其他的公司，則把原本選的聯絡人關掉
+            var checkboxes = $('#Customer').find('input[type="checkbox"]:checked');
+            for (var i = 0; i < checkboxes.length; i++) { checkboxes[i].checked = false; }
+        })
+
+    }
+
+    //p_type 1:客戶 2:經銷商  (按鈕參數)
+    function getContacter(CUSTOMER_ID, CUSTOMER_NAME, p_type) {
+        $("#CustomerInfoArea").empty();
+        var Content = "";
+        Content += "<input id='SelectCus' name='SelectCus' type='hidden'  value='" + CUSTOMER_ID + "'> ";
+        Content += "<input id='SelectCusName' name='SelectCus' type='hidden'  value='" + CUSTOMER_NAME + "'> ";
+        $('#CustomerInfoArea').append(Content);
+
+        $.ajax({
+            url: '@Url.Action("CaseNewLastAndDeadLineSelect", "Case")',
+            data: {
+                CUSTOMER: CUSTOMER_ID,
+            },
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                $("#NEXT_VISIT_DEADLINE").val(data.LastTimeVisit);
+                $("#l_NEXT_VISIT_DEADLINE").html(data.LastTimeVisit);
+            }, error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err);
+            }
+        });
+
+    }
+
+
+    //1:客戶 2:經銷商  (按鈕參數)
+    function getReturnValue(p_type) {
+        var Contacter = "";
+        var ContacterID = "";
+        var checkboxes;
+        if (p_type == "1") {
+            $("#CaseCus").empty();
+            $("#CaseContacterCus").empty();
+
+            checkboxes = $('#Customer').find('input[type="checkbox"]:checked');
+
+        }
+        else if (p_type == "2") {
+            $("#DealerCus").empty();
+            $("#DealerContacterCus").empty();
+            checkboxes = $('#DealerContacter').find('input[type="checkbox"]:checked');
+        }
+
+        if (checkboxes.length > 0) {
+            if (p_type == "1") {
+                $('#CaseCus').append($('#SelectCusName').val() + "<input id='CREATE_SCHEDULE_C_CUSTOMER_ID' name='CREATE_SCHEDULE.C_CUSTOMER_ID' type='hidden'   value='" + $('#SelectCus').val() + "'> ")
+            }
+            else if (p_type == "2") {
+                $('#DealerCus').append($('#SelectCusName').val() + "<input id='CREATE_SCHEDULE_C_DEALER_ID' name='CREATE_SCHEDULE.C_DEALER_ID' type='hidden'   value='" + $('#SelectCus').val() + "'> ")
+            }
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                var checkbox = checkboxes[i];
+                var currentRow = checkbox.parentNode;
+
+                var Value = currentRow.getElementsByTagName("input")[0];
+                var Name = currentRow.getElementsByTagName("span")[0];
+
+                Contacter += Name.innerText + ",";
+                ContacterID += Value.value + ",";
+            }
+        }
+        if (p_type == "1") {
+            $("#CaseContacterCus").append(Contacter + "<input id='CREATE_SCHEDULE_C_CUST_CONTACT_USER' name='CREATE_SCHEDULE.C_CUST_CONTACT_USER' type='hidden'   value='" + ContacterID + "'> ");
+
+            getCustomerChangeCaseOption($('#SelectCus').val());
+            $('#selectCusError').css('display', 'none');
+            $('#ChooseClientModal').modal('hide')
+
+
+
+
+
+        }
+        else if (p_type == "2") {
+            $("#DealerContacterCus").append(Contacter + "<input id='CREATE_SCHEDULE_C_DEALER_CONTACT_USER' name='CREATE_SCHEDULE.C_DEALER_CONTACT_USER' type='hidden'   value='" + ContacterID + "'> ");
+            $('#ChooseContactModal').modal('hide')
+        }
+    }
+
+    //set all CheckBoxList fieldvalue
+    function setFieldValueFromCheckBoxList() {
+
+        var l_divCheckBoxList = $('#divScheduleNewFieldData').find("input[type='hidden'][value='CheckBoxList']");
+
+        //selectedTd.parents('tr').find("td:first").next("td").find('input:checkbox');
+        for (var j = 0; j < l_divCheckBoxList.length; j++) {
+            var l_fieldvalue = '';
+            //input
+            var l_inputCheckBoxList = l_divCheckBoxList[j];
+
+            var MyFirstDiv;
+
+            for (var i = 0; i < 100; i++) {
+                if ($(l_inputCheckBoxList).next().prop('nodeName') == "DIV") {
+                    MyFirstDiv = $(l_inputCheckBoxList).next();
+                    break;
+                }
+                else {
+                    l_inputCheckBoxList = $(l_inputCheckBoxList).next();
+                }
+            }
+
+            // alert(MyFirstDiv);
+            //return false;
+
+            if (MyFirstDiv.length) {
+                //alert("GOT:" + MyFirstDiv.prop("id"));
+                //如果有找到DIV，找DIV底下所有的INPUT
+                var l_count = 0;
+                MyFirstDiv.find("input").each(
+                    function (index) {
+                        if ($(this).prop("type") == "checkbox") {
+                            //alert('in type checkbox');
+                            //alert($.trim($(this).prop("checked")));
+                            if ($.trim($(this).prop("checked")) == "true") {
+                                if (l_count == 0) {
+                                    l_fieldvalue += $(this).prop("id");
+                                } else {
+                                    l_fieldvalue += "@@" + $(this).prop("id");
+                                }
+                                l_count++;
+                            }
+
+                            // alert("勾選：" + $(this).prop("checked") + "  " + $(this).prop("id") + ":" + $(this).val());
+                        }
+                    }
+                );
+            }
+            var l_inputFieldValue = $(MyFirstDiv).next("input[type='hidden']");
+            $(l_inputFieldValue).val(l_fieldvalue);
+            l_fieldvalue = '';
+        }
+    }
+
+
+    //set all dropdownlist fieldvalue
+    function setFieldValueFromDropDownList() {
+
+        var l_fieldvalue = '';
+
+        var l_divDropDownList = $('#divScheduleNewFieldData').find("input[type='hidden'][value='DropDownList']");
+
+        for (var j = 0; j < l_divDropDownList.length; j++) {
+            //input
+            var l_DropDownList = l_divDropDownList[j];
+
+            var MyFirstDiv;
+
+            for (var i = 0; i < 100; i++) {
+
+                if ($(l_DropDownList).next().prop('nodeName') == "DIV") {
+                    MyFirstDiv = $(l_DropDownList).next();
+                    break;
+                }
+                else {
+                    l_DropDownList = $(l_DropDownList).next();
+                }
+            }
+
+            if (MyFirstDiv.length) {
+                l_fieldvalue = MyFirstDiv.find('option:selected').val();
+            }
+
+            var l_inputFieldValue = $(MyFirstDiv).next("input[type='hidden']");
+            $(l_inputFieldValue).val(l_fieldvalue);
+
+        }
+
+    }
+
+    //set all radioButton fieldvalue
+    function setFieldValueFromRadioButtonList() {
+
+        var l_fieldvalue = '';
+
+        var l_divRadioButtonList = $('#divScheduleNewFieldData').find("input[type='hidden'][value='RadioButtonList']");
+
+        //alert(l_divRadioButtonList.length);
+
+        for (var j = 0; j < l_divRadioButtonList.length; j++) {
+            ////input
+            var l_RadioButtonList = l_divRadioButtonList[j];
+            var MyFirstDiv;
+
+            for (var i = 0; i < 100; i++) {
+
+                if ($(l_RadioButtonList).next().prop('nodeName') == "DIV") {
+                    MyFirstDiv = $(l_RadioButtonList).next();
+                    break;
+                }
+                else {
+                    l_RadioButtonList = $(l_RadioButtonList).next();
+                }
+            }
+            if (MyFirstDiv.length) {
+                l_fieldvalue = MyFirstDiv.find('input:radio:checked').val();
+            }
+            var l_inputFieldValue = $(MyFirstDiv).next("input[type='hidden']");
+            $(l_inputFieldValue).val(l_fieldvalue);
+            //alert($(l_inputFieldValue).val());
+
+        }
+
+        return false;
+    }
+
+    function setFieldValue() {
+        setFieldValueFromCheckBoxList();
+        setFieldValueFromDropDownList();
+        setFieldValueFromRadioButtonList();
+    }
+
+    function onSchStartTimeChange() {
+        var start = $("#CREATE_SCHEDULE_C_SCH_START_TIME").data("kendoDateTimePicker");
+        var end = $("#CREATE_SCHEDULE_C_SCH_END_TIME").data("kendoDateTimePicker");
+
+        end.min(start.value());
+        end.value(start.value());
+        getNextDate($("#CREATE_SCHEDULE_C_CASE_ID").val());
+    };
+
+    //從kendo 時間容器 取得 時間字串(yyyy/MM/dd)
+    function getJsDateStringFromKendoContainer(input) {
+        var a = kendo.parseDate(input, "yyyy/MM/dd HH:mm");
+
+        return kendo.toString(new Date(a), "d")
+    }
+
+
+    //下次拜訪時間選擇觸發
+    function nextSchDateChange() {
+        var value = $("#CREATE_SCHEDULE_C_NEXT_SCH_DATE").val();
+
+        if (value) {
+            //l_deadLine = AddDays(datepicker.value(), document.getElementById('visitDeadline').innerHTML);
+            $("#CREATE_SCHEDULE_C_NEXT_SCH_SUB").attr('required', true);
+        } else {
+            $("#CREATE_SCHEDULE_C_NEXT_SCH_SUB").attr('required', false);
+        }
+    }
+
+    @*計算下次拜訪日期 原本的js會算錯 多時區改這樣*@
+    function getNextDate(caseId) {
+        if (caseId === undefined || caseId === null || caseId == '') {
+            document.getElementById('visitDeadline').innerHTML = '';
+            document.getElementById('nextVisitDeadline').innerHTML = '';
+        }
+        var startDate = $("#CREATE_SCHEDULE_C_SCH_START_TIME").val();
+        if (startDate !== undefined || startDate !== null || startDate != '') {
+            var postUrl = '@Url.Action("getNextDate","Itinerary")';
+            $.ajax({
+                url: postUrl,
+                type: 'POST',
+                data: { caseId: caseId, startDate: startDate },
+                dataType: 'json',
+                success: function (data) {
+                    document.getElementById('visitDeadline').innerHTML = data.VisitFreq;
+                    document.getElementById('nextVisitDeadline').innerHTML = data.NextDate;
+                }
+            });
+        }
+    }
+
+    //取得經銷商及聯絡人
+    function getDealer(input_ddl) {
+        var caseId = $(input_ddl).val();
+        if (caseId == undefined || caseId == null || caseId == '') {
+            return;
+        }
+        var postUrl = '@Url.Action("getDealer","Itinerary")';
+        $.ajax({
+            url: postUrl,
+            type: 'POST',
+            data: { caseId: caseId },
+            dataType: 'json',
+            success: function (data) {
+                if (data != null) {
+                    if (data.DEALER_ID && data.DEALER_CONTACT_USER) {
+                        $("#CREATE_SCHEDULE_C_DEALER_ID").val(data.DEALER_ID);
+                        $("#CREATE_SCHEDULE_C_DEALER_CONTACT_USER").val(data.DEALER_CONTACT_USER);
+                    }
+                }
+            }
+        });
+    }
+    //日期 增加天
+    function AddDays(date, value) {
+        add_time = value * 60 * 60 * 24 * 1000; //設定欲加的天數毫秒，f是欲相加的天數，若2天則帶入2
+        org_day = new Date(date); //設定一個原始時間
+        org_time = Date.parse(org_day); //將原始時間分解成毫秒
+        SumDay = org_time + add_time; //將兩個時間相加
+        NewDay = new Date(); //設定一個新的時間變數
+        reday = NewDay.setTime(SumDay); //將相加後的時間還原成日期
+        origDay = new Date(reday); //再設定一個時間變數，值為還原後的時間
+
+        d = origDay.getDate();
+        Y = origDay.getYear() + 1900;
+        M = origDay.getMonth() + 1;
+        return Y + '/' + M + '/' + d;
+    }
+
+
+
+    $(document).ready(function () {
+        $(".datepicker").kendoDatePicker({
+            format: "yyyy/MM/dd",
+            parseFormats: ["MM/dd/yyyy"],
+            change: nextSchDateChange,
+            min: new Date()
+        });
+        nextSchDateChange();
+
+        $("#CREATE_SCHEDULE_C_SCH_START_TIME.datetimepicker").kendoDateTimePicker({
+            timeFormat: "HH:mm",
+            format: "yyyy/MM/dd HH:mm",
+            parseFormats: ["MM/dd/yyyy hh:mmtt", "MM/dd/yyyy HH:mm", "MM/dd/yyyy", "HH:mm"],
+            change: onSchStartTimeChange,
+            max: new Date('@(((DateTimeOffset)ViewBag.sDate).ToString("yyyy/MM/dd HH:mm"))')
+        });
+
+        $("#CREATE_SCHEDULE_C_SCH_END_TIME.datetimepicker").kendoDateTimePicker({
+            timeFormat: "HH:mm",
+            format: "yyyy/MM/dd HH:mm",
+            parseFormats: ["MM/dd/yyyy hh:mmtt", "MM/dd/yyyy HH:mm", "MM/dd/yyyy", "HH:mm"],
+            min: new Date('@(((DateTimeOffset)ViewBag.sDate).ToString("yyyy/MM/dd HH:mm"))'),
+            max: new Date('@(((DateTimeOffset)ViewBag.eDate).ToString("yyyy/MM/dd HH:mm"))')
+        });
+
+        setBusinessControllerShow($("select#CREATE_SCHEDULE_C_SUBJECT_TYPE").val())
+
+        nextSchDateChange();
+
+        //設置案件代號下拉選單
+        $(function () {
+            try {
+                var l_custId = $('#CREATE_SCHEDULE_C_CUSTOMER_ID').val();
+                if (l_custId != '' && l_custId != undefined && l_custId != null) {
+                    //getCustomerChangeCaseOption(l_custId);
+                    //getCustomerChangeCaseOption($('#SelectCus').val());
+
+                    //$('#CREATE_SCHEDULE_C_CASE_ID').children().each(function () {
+                    //    alert($(this).val());
+                    //    //if ($(this).text() == l_custId) {
+                    //    //    //jQuery給法
+                    //    //    $(this).attr("selected", "true"); //或是給"selected"也可
+
+                    //    //    //javascript給法
+                    //    //    this.selected = true;
+                    //    //}
+                    //});
+
+                } else {
+                    getCustomerChangeCaseOption($('#SelectCus').val());
+                }
+
+            } catch (e) { }
+        })
+
+        $(function () {
+            //主旨判斷
+            var ddlValue = $("#CREATE_SCHEDULE_C_SUBJECT_ID option:selected").val();
+            if (ddlValue != undefined && ddlValue != null && ddlValue != '' && ddlValue == 'BusinessOther') {
+
+                $('#topic-else').show();
+            } else {
+                $('#topic-else').hide();
+            }
+        })
+
+        $(function () {
+            //判斷是否有拜訪頻率
+            var ddl = $("#CREATE_SCHEDULE_C_CASE_ID option:selected").text();
+            if (ddl != undefined && ddl != null) {
+                if (document.getElementById('visitDeadline').innerHTML == '' || document.getElementById('nextVisitDeadline').innerHTML == '') {
+                    getNextDate($("#CREATE_SCHEDULE_C_CASE_ID").val());
+                }
+            }
+        })
+        //案件選擇時觸發
+        $(function () {
+            $('select#CREATE_SCHEDULE_C_CASE_ID').change(function () {
+                getNextDate($(this).val());
+                getDealer(this);
+            });
+        });
+
+        //類別選擇時觸發
+        $(function () {
+            $('select#CREATE_SCHEDULE_C_SUBJECT_TYPE').change(function () {
+                setBusinessControllerShow($(this).val());
+            });
+
+            if ($('select#CREATE_SCHEDULE_C_SUBJECT_TYPE').val() == 'NonBusiness') {
+                $('#divCaseNo').hide();
+                $('#divCustomer').hide();
+                $('#divContactUser').hide();
+                $('#divDealer').hide();
+                $('#divDealerContactUser').hide();
+            }
+
+        });
+        $(function () {
+            var start = $("#CREATE_SCHEDULE_C_SCH_START_TIME").data("kendoDateTimePicker");
+            var end = $("#CREATE_SCHEDULE_C_SCH_END_TIME").data("kendoDateTimePicker");
+
+            end.min(start.value());
+        });
+    })
+    function typeChange(ddl) {
+
+        var ddlValue = $(ddl).val();
+        var postUrl = '@Url.Action("getSubjectBySubjectType", "Itinerary")';
+
+        $.ajax({
+            url: postUrl,
+            type: 'POST',
+            data: { SUBJECT_TYPE: ddlValue },
+            dataType: 'json',
+            success: function (data) {
+
+                removeOptions(document.getElementById("CREATE_SCHEDULE_C_SUBJECT_ID"));
+
+                if (data != null) {
+                    $.each(data, function (i, item) {
+
+                        addOption(item.SUBJECT_ID, item.SUBJECT_NAME, i);
+
+                    })
+                }
+            }
+        });
+
+    }
+    //刪除所有Select的option
+    function removeOptions(selectbox) {
+        var i;
+        for (i = selectbox.options.length - 1; i >= 0; i--) {
+            selectbox.remove(i);
+        }
+    }
+    //加入Query到的項目
+    function addOption(id, text, i) {
+        var os = document.getElementById('CREATE_SCHEDULE_C_SUBJECT_ID');
+        var np = document.createElement("option");
+        os.options.add(np, i);
+        np.innerHTML = text;
+        np.value = id;
+
+    }
+
+    //切換主旨
+    function subjectChange(ddl) {
+
+        var ddlValue = $(ddl).val();
+        if (ddlValue == 'BusinessOther' || ddlValue == 'NonBusinessOther') {
+            $('#topic-else').show();
+        } else {
+            $('#topic-else').hide();
+            $('#CREATE_SCHEDULE_C_OTHER_SUBJECT_NAME').val('');
+        }
+
+    }
+
+
+    //類別dll 切換隱藏或顯示
+    function setBusinessControllerShow(SubjectType) {
+        if (SubjectType == 'NonBusiness') {
+            $('#divCaseNo').hide();
+            $('#CREATE_SCHEDULE_C_CASE_ID').val('');
+            $('#divCustomer').hide();
+            $('#CaseCus').empty();
+            $('#divContactUser').hide();
+            $('#CREATE_SCHEDULE_C_CUST_CONTACT_USER_ID').val('');
+            $('#divDealer').hide();
+            $('#CREATE_SCHEDULE_C_DEALER_ID').val('');
+            $('#divDealerContactUser').hide();
+            $('#CREATE_SCHEDULE_C_DEALER_CONTACT_USER').val('');
+        } else {
+            $('#divCaseNo').show();
+            $('#divCustomer').show();
+            $('#divContactUser').show();
+            $('#divDealer').show();
+            $('#divDealerContactUser').show();
+        }
+    }
+
+
+    //選完客戶後 取得客戶的案件代號
+    function getCustomerChangeCaseOption(p_CustomerId) {
+
+        if (p_CustomerId != null) {
+            $.ajax({
+                url: '@Url.Action("geCaseByCustomerId", "Itinerary")',
+                data: {
+                    CustomerId: p_CustomerId
+                },
+                type: 'post',
+                cache: false,
+                async: false,
+                dataType: 'json',
+                success: function (data) {
+
+                    $('#CREATE_SCHEDULE_C_CASE_ID')
+                    .find('option')
+                    .remove()
+                    .end()
+                    .append('<option value=""> @Html.BMResource("BM_Select")</option>')
+
+
+                    if (data.length > 0) {
+                        var Content = "";
+                        $.each(data, function (i, item) {
+                            $("#CREATE_SCHEDULE_C_CASE_ID").append($("<option></option>").attr("value", item.CASE_ID).text(item.CASE_NO));
+                        })
+                    }
+                }, error: function (data, textStatus, jqXHR) {
+                    alert(data.error);
+
+                }
+            });
+
+        }
+    }
+
+    function checkUI() {
+
+        var CUSTOMER_ID = $('#CREATE_SCHEDULE_C_CUST_CONTACT_USER').val();
+
+        if ($('select#CREATE_SCHEDULE_C_SUBJECT_TYPE').val() == 'Business') //如果是業務行程才需判斷是否有選擇客戶
+        {
+
+            if (typeof (CUSTOMER_ID) === 'undefined') {
+                $('#selectCusError').css('display', '');
+                $('html, body').animate({
+                    scrollTop: $('#selectCusError').offset().top
+                }, 0);
+
+                return false;
+            } else {
+                $('#selectCusError').css('display', 'none');
+
+
+            }
+        }
+    }
+
+
+</script>
+
+
+<div id="main" class="clearfix itinerarynew-body">
+    <div class="topTabs-header clearfix">
+        <h1 class="secInfo">
+            @ViewBag.Title
+        </h1>
+        <button class="return-btn" onclick="goBack()"><i class="fa fa-reply"></i></button>
+    </div>
+    @using (Html.BeginForm("CreateItinerarySave", "Itinerary", FormMethod.Post, new
+    {
+        model = @Model @*enctype = "multipart/form-data"*@ ,
+        enctype = "multipart/form-data",
+        onsubmit = "return checkUI();"
+    }))
+    {
+
+
+        //用來存放從點選選擇客戶後的客戶資訊
+        <span id="CustomerInfoArea"> </span>
+
+        @Html.HiddenFor(model => Model.REPORT_DATE)
+        @Html.HiddenFor(model => Model.REPORT_REMARK)
+        @Html.HiddenFor(model => Model.REPORT_STATUS)
+        @Html.HiddenFor(model => Model.REPORT_ID)
+        @Html.HiddenFor(model => Model.CRUD_STATUS)
+        @Html.HiddenFor(model => Model.CUSTOM_FIELD_DATA)
+        @Html.HiddenFor(model => Model.CREATE_DATE)
+        @Html.HiddenFor(model => Model.CREATE_FROM)
+        @Html.HiddenFor(model => Model.CREATOR)
+        @*<div style="display:none">
+            @for (int i = 0; i < Model.List_CTB_EIP_BM_SCHEDULE.Count; i++)
+            {
+                //主頁的grid
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CASE_ID)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CASE_NO)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CREATE_DATE)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CREATE_FROM)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CREATOR)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CUST_CONTACT_USER)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CUSTOM_FIELD_DATA)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CUSTOMER_ABBREVIATION)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CUSTOMER_ID)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].DEALER_CONTACT_USER)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].DEALER_ID)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].MODIFIER)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].MODIFY_DATE)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].MODIFY_FROM)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].NEXT_SCH_DATE)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].NEXT_SCH_SUB)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].NEXT_SCH_WORK_GUID)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].OTHER_SUBJECT_NAME)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].REPORT_ID)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SCH_CONTENT)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SCH_END_TIME)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SCH_REMARK)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SCH_START_TIME)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SCH_WORK_GUID)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SCHEDULE_ID)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SUBJECT_ID)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SUBJECT_NAME)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SUBJECT_TYPE)
+                
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].C_CUSTOMER.CUSTOMER_ID)
+                @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].C_CUSTOMER.CUSTOMER_NAME)
+            }
+
+
+            @for (int i = 0; i < Model.CTB_EIP_BM_CUSTOM_FIELD.Count; i++)
+            {
+                //主頁的外掛欄位
+                @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CREATE_DATE)
+                @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CREATE_FROM)
+                @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CREATOR)
+                @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CUSTOM_FIELD_CONENT)
+                @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CUSTOM_FIELD_TYPE)
+                if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA != null)
+                {
+                    for (int j = 0; j < Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA.Count; j++)
+                    {
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].CustomFiledType)
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldLength)
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName)
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark)
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRowCount)
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType)
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue)
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly)
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField)
+                        //@Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem)
+                        if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem != null)
+                        {
+                            if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem.Count > 0)
+                            {
+                                for (int k = 0; k < Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem.Count; k++)
+                                {
+                                    @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k])
+                                }
+                            }
+                        }
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].MaxValue)
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].MinValue)
+                        @Html.TextBoxFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].RepeatColumns)
+                    }
+
+                }
+
+            }
+
+        </div>*@
+
+        @Html.HiddenFor(model => Model.CREATE_SCHEDULE.C_CREATE_DATE)
+        @Html.HiddenFor(model => Model.CREATE_SCHEDULE.C_CREATE_FROM)
+        @Html.HiddenFor(model => Model.CREATE_SCHEDULE.C_CREATOR)
+        @Html.HiddenFor(model => Model.CREATE_SCHEDULE.C_SCHEDULE_ID)
+        <div class="tab-content">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*類別*@ @Html.BMResource("BM_Category")</span></span>
+                        @Html.DropDownListFor(model => model.CREATE_SCHEDULE.C_SUBJECT_TYPE, (IEnumerable<SelectListItem>)ViewBag.itemSUBJECTTYPE, new { @class = "form-control", onchange = "typeChange(this)", required = "required" })
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*主旨*@ @Html.BMResource("BM_Subject")</span></span>
+                        @Html.DropDownListFor(model => model.CREATE_SCHEDULE.C_SUBJECT_ID, (IEnumerable<SelectListItem>)ViewBag.itemSUBJECTID, new { @class = "form-control", onchange = "subjectChange(this)", required = "required" })
+                    </div>
+                </div>
+
+                <div id="topic-else" class="col-sm-12" style="display: none;">
+                    <div class="input-group mb20">
+                        @*其他主旨*@
+                        <span id="" class="input-group-addon"><span><span style="color:#FF0000;">*</span>@Html.BMResource("BM_other_subject") </span></span>
+                        @Html.TextBoxFor(model => Model.CREATE_SCHEDULE.C_OTHER_SUBJECT_NAME, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        @*  起始時間*@
+                        <span id="" class="input-group-addon"><span><span style="color:#FF0000;">*</span>@Html.BMResource("BM_starting_time")</span></span>
+                        @Html.BMUserTimeFor(m => m.CREATE_SCHEDULE.C_SCH_START_TIME, new { @class = "form-control", @required = "required" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        @*結束時間*@
+                        <span id="" class="input-group-addon"><span><span style="color:#FF0000;">*</span>@Html.BMResource("BM_ending_time")</span></span>
+                        @Html.BMUserTimeFor(m => m.CREATE_SCHEDULE.C_SCH_END_TIME, new { @class = "form-control", @required = "required" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6 mb20" id="divCustomer">
+                    <div class="input-group">
+                        <span id="" class="input-group-addon"><span><span style="color:#ff0000;">*</span>@*案件客戶*@ @Html.BMResource("BM_Case_Customer")</span></span>
+                        <div class="form-control" style="height:auto;">
+                            <a href="#" data-target="#ChooseClientModal" data-toggle="modal">@*選擇客戶*@ @Html.BMResource("BM_Select_Customer")</a>
+                            @*<a class="edit" href="../Client/ClientIn"><i class="fa fa-plus"></i></a>*@
+
+                            @if (!string.IsNullOrEmpty(Model.CREATE_SCHEDULE.C_CUSTOMER_NAME))
+                            {
+                                <span style="font-weight:bold" id="CaseCus" >
+                                    @Model.CREATE_SCHEDULE.C_CUSTOMER_NAME<input type="hidden" id='CREATE_SCHEDULE_C_CUSTOMER_ID' name='CREATE_SCHEDULE.C_CUSTOMER_ID'  value='@Model.CREATE_SCHEDULE.C_CUSTOMER_ID' >
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="font-weight:bold" id="CaseCus">
+                             
+                                </span>
+
+                            }
+                            <label id="selectCusError" style="color:red;display:none;font-size:large">@Html.BMResource("BM_Select")</label>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 mb20" id="divContactUser">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>@*聯絡人*@ @Html.BMResource("BM_Contact_person")</span></span>
+                        <div class="form-control no-edit" style="height:auto;">
+                            @if (!string.IsNullOrEmpty(Model.CREATE_SCHEDULE.C_CUST_CONTACT_USER))
+                            {
+                                <span id="CaseContacterCus">
+                                    @Model.CREATE_SCHEDULE.C_CUST_CONTACT_USER_NAME
+                                    <input id='CREATE_SCHEDULE_C_CUST_CONTACT_USER' name='CREATE_SCHEDULE.C_CUST_CONTACT_USER' type='hidden' value='@Model.CREATE_SCHEDULE.C_CUST_CONTACT_USER'>
+                                </span>
+                            }
+                            else
+                            {
+                                <span id="CaseContacterCus">
+                                    @*不允許填寫，由系統帶入*@
+
+                                    @Html.BMResource("BM_default_value")
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12" id="divCaseNo">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon"><span>@*案件代號*@ @Html.BMResource("BM_Case_ID")</span></span>
+                        @Html.DropDownListFor(model => model.CREATE_SCHEDULE.C_CASE_ID, (IEnumerable<SelectListItem>)ViewBag.CaseList, Html.BMResource("BM_Select"), new { @class = "form-control " })
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6 mb20" id="divDealer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>@*搭配經銷商*@ @Html.BMResource("BM_Distributor")</span></span>
+
+                        @Html.TextBoxFor(model => model.CREATE_SCHEDULE.C_DEALER_ID, new { @class = "form-control bg-black-o color-w", @rows = "6", @style = "max-width:100%;", @placeholder = "" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6 mb20" id="divDealerContactUser">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>@*經銷商聯絡人*@ @Html.BMResource("BM_Distributor_Contact")</span></span>
+                        @Html.TextBoxFor(model => model.CREATE_SCHEDULE.C_DEALER_CONTACT_USER, new { @class = "form-control bg-black-o color-w", @rows = "6", @style = "max-width:100%;", @placeholder = "" })
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*內容*@ @Html.BMResource("BM_Content")</span></span>
+                        @Html.TextAreaFor(model => model.CREATE_SCHEDULE.C_SCH_CONTENT, new { @class = "form-control bg-black-o color-w", @rows = "6", @style = "max-width:100%;", @placeholder = "" })
+                        @*<textarea class="form-control bg-black-o color-w" rows="6" style="max-width:100%;" placeholder=""></textarea>*@
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*備註*@ @Html.BMResource("BM_Remark")</span></span>
+                        @Html.TextAreaFor(model => model.CREATE_SCHEDULE.C_SCH_REMARK, new { @class = "form-control bg-black-o color-w", @rows = "6", @style = "max-width:100%;", @placeholder = "" })
+                        @*<textarea class="form-control bg-black-o color-w" rows="6" style="max-width:100%;" placeholder=""></textarea>*@
+                    </div>
+                </div>
+                 
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*下次拜訪日期*@ @Html.BMResource("BM_Next_Visit_Date")</span></span>
+                        @Html.TextBoxFor(m => m.CREATE_SCHEDULE.C_NEXT_SCH_DATE, new { @class = "datepicker", onkeypress = "keyperss(event)", style = "width: 100%;" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*下次拜訪期限*@ @Html.BMResource("BM_Next_Visit_Deadline")</span></span>
+                        <label id="nextVisitDeadline" class="form-control"></label>
+                        <label id="visitDeadline" style="display:none"></label>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*下次拜訪主旨*@ @Html.BMResource("BM_Next_Visit_Subject")</span></span>
+                        @Html.TextBoxFor(model => model.CREATE_SCHEDULE.C_NEXT_SCH_SUB, new { @class = "form-control" })
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mb20" id="divScheduleNewFieldData">
+
+                @*自訂欄位開始*@
+
+                @if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD != null)
+                {
+                    //Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD.Count
+                    //CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType
+                    for (int i = 0; i < Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD.Count; i++)
+                    {
+
+                        @Html.Hidden("CUSTOM_FIELD_TYPE", Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CUSTOM_FIELD_TYPE)
+
+                        if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA != null)
+                        {
+                            for (int j = 0; j < Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA.Count; j++)
+                            {
+                                //紀錄FieldType
+                                @Html.HiddenFor(model => model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType)
+                                @Html.HiddenFor(model => model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldLength)
+                                @Html.HiddenFor(model => model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName)
+                                @Html.HiddenFor(model => model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark)
+                                @Html.HiddenFor(model => model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRowCount)
+
+                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "SingleLineText") //單行文字欄位
+                                {
+                                    @*@Html.Hidden("FieldId" + j, Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)*@
+                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                    <div class="input-group mb20">
+                                        <span class="input-group-addon"><span>@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span></span>
+                                        @*<input class="form-control" type="text" placeholder="">*@
+                                        @Html.TextBoxForRequiredAndReonly(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new { @class = "form-control inputFieldValue" },
+                                               @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false, @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True") ? true : false)
+</div>
+                                    @*<div class="tip"> @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark </div>*@
+                                }
+                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "MultiLineText") //多行文字欄位
+                                {
+                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                    <div class="input-group mb20">
+                                        <span class="input-group-addon">
+                                            <span>@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span>
+                                        </span>
+                                        @Html.TextAreaForRequiredAndReonly(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new { @class = "form-control inputFieldValue" }, @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false, @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True") ? true : false)
+                                        @*<textarea class="form-control" rows="6" style="max-width:100%;" placeholder=""></textarea>*@
+                                    </div>
+                                    @*<div class="tip">@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark</div>*@
+                                }
+                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "NumberText") //數值欄位
+                                {
+                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                    <div class="input-group mb20">
+                                        <span class="input-group-addon"><span>@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span></span>
+                                        @*<input class="form-control" type="number" placeholder="">*@
+                                        @Html.TextBoxForRequiredAndReonly(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new
+                                   {
+                                       @class = "form-control inputFieldValue",
+                                       type = "number",
+                                       min = @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].MinValue,
+                                       max = @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].MaxValue
+
+                                   }, @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false, @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True") ? true : false)
+
+                                    </div>
+                                    @*<div class="tip"> @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark </div>*@
+                                }
+
+
+
+                                @*檔案選取欄位*@
+                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "FileButton")
+                                {
+                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+
+                                    <div class="input-group mb20">
+                                        <span class="input-group-addon">
+                                            <span>
+                                                @Html.FieldNameWithRequiredMark(Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName, Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false)
+                                            </span>
+                                        </span>
+                                        @if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].l_FILE != null)
+                                        {
+                                            for (int k = 0; k < Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].l_FILE.Count; k++)
+                                            {
+                                                if (!string.IsNullOrEmpty(Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].l_FILE[k].FILE_NAME))
+                                                {
+                                                    <input type="text" readonly="" class="form-control" value="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].l_FILE[k].FILE_NAME">
+                                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue)
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" readonly="" class="form-control" value="">
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <input type="text" readonly="" class="form-control" value="">
+                                        }
+                                        <span class="input-group-btn">
+                                            <span class="btn btn-warning btn-file" style="font-size: 14px!important">
+                                                @Html.BMResource("BM_Select_File")
+                                                @if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("False") && Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("False"))
+                                                {
+                                                    <input type="file" id="FileFieldValue" name="FileFieldValue" />
+                                                }
+                                                else if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") && Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True"))
+                                                {
+                                                    <input type="file" id="FileFieldValue" readonly="readonly" name="FileFieldValue" />
+                                                }
+                                                else if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True"))
+                                                {
+                                                    <input type="file" id="FileFieldValue" name="FileFieldValue" />
+                                                }
+                                                else if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True"))
+                                                {
+                                                    <input type="file" id="FileFieldValue" readonly="readonly" name="FileFieldValue" />
+                                                }
+                                            </span>
+                                        </span>
+                                    </div>
+                                }
+
+
+
+                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "DateSelect")//日期選擇欄位
+                                {
+                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                    <div class="input-group mb20">
+                                        <span class="input-group-addon">
+                                            <span>@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span>
+                                        </span>
+
+                                        <div class="input-group bootstrap-timepicker timepicker">
+                                            @Html.KendoDatePickerRequiredAndReonly("CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[" + i + "].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[" + j + "].FieldValue", @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new { onkeypress = "keyperss(event)" }, @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false, @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True") ? true : false)
+                                         </div>
+                                    </div>
+                                    @*<div class="tip">@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark</div>*@
+                                }
+                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "TimeSelect") //時間選擇欄位
+                                {
+                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                    <div class="input-group mb20">
+                                        <span class="input-group-addon">
+                                            <span>@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span>
+                                        </span>
+
+                                        <div class="input-group bootstrap-timepicker timepicker">                                            
+                                            @*@Html.Kendo().TimePicker().Name("CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[" + i + "].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[" + j + "].FieldValue").Value(@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue)*@
+                                            @Html.KendoTimePickerRequiredAndReonly("CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[" + i + "].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[" + j + "].FieldValue", @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new { onkeypress = "keyperss(event)" }, @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false, @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True") ? true : false)
+
+                                        </div>
+                                    </div>
+                                 
+                                }
+                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "CheckBoxList") //核取方塊選擇欄位
+                                {
+                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                    <div class="input-group mb20">
+                                        <span class="input-group-addon"><span>@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span></span>
+                                        <div class="form-control" style="height:auto;" id="divFieldCheckBoxList">
+                                            @for (int k = 0; k < Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem.Count; k++)
+                                            {
+                                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue != null && Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem != null)
+                                                {
+                                                    if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue.IndexOf(Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]) >= 0)
+                                                    {
+                                                        <label class="checkbox-inline">
+                                                            <input type="checkbox" checked="checked" id="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]"
+                                                                   value="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]">
+                                                            @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+                                                        </label>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label class="checkbox-inline">
+                                                            <input type="checkbox" id="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]"
+                                                                   value="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]">
+                                                            @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+                                                        </label>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <label class="checkbox-inline">
+                                                        <input type="checkbox" id="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]"
+                                                               value="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]">
+                                                        @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+                                                    </label>
+                                                }
+                                            }
+
+                                        </div>
+                                    </div>
+                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue)
+                              
+                                }
+                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "RadioButtonList") //單選圓形按鈕
+                                {
+                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                    <div class="input-group mb20">
+                                        <span class="input-group-addon"><span>@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span></span>
+                                        <div class="form-control revise" style="height:auto;">
+                                            @for (int k = 0; k < Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem.Count; k++)
+                                            {
+                                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue != null && Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem != null)
+                                                {
+                                                    if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue.IndexOf(Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]) >= 0)
+                                                    {
+                                                        <label class="">
+                                                            <input type="radio" checked="checked" name="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId"
+                                                                   id="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j]"
+                                                                   value="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]">
+                                                            @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+                                                        </label>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label class="">
+                                                            <input type="radio" name="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId"
+                                                                   id="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j]"
+                                                                   value="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]">
+                                                            @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+                                                        </label>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <label class="">
+                                                        <input type="radio" name="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId"
+                                                               id="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j]"
+                                                               value="@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]">
+                                                        @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+
+                                                    </label>
+                                                }
+                                            }
+
+                                        </div>
+                                    </div>
+                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue)
+                              
+                                }
+                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "DropDownList") //下拉式選單
+                                {
+                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                    <div class="input-group mb20" id="">
+                                        <span class="input-group-addon">
+                                            <span>@Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span>
+                                        </span>
+                                        <select class="form-control">
+                                            @for (int k = 0; k < Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem.Count; k++)
+                                            {
+                                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue != null && Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem != null)
+                                                {
+                                                    if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue.IndexOf(Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]) >= 0)
+                                                    {
+                                                        <option class="checkbox-inline" selected="selected">
+                                                            @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option class="checkbox-inline">
+                                                            @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+                                                        </option>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <option class="checkbox-inline">
+                                                        @Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+                                                    </option>
+                                                }
+                                            }
+
+                                        </select>
+                                    </div>
+                                    @Html.HiddenFor(model => Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue)
+                                    @*<div class="tip">@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark</div>*@
+                                }
+                                @*超連結欄位*@
+                                if (Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "HyperLink")
+                                {
+                                    var fieldInfo = Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j];
+                                    @Html.HiddenFor(model => model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                    <div class="input-group mb20">
+                                        <span class="input-group-addon">
+                                            @Html.FieldNameWithRequiredMark(Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName, Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false)
+                                        </span>
+                                        @if (string.IsNullOrEmpty(fieldInfo.FieldValue))
+                                        {
+                                            @Html.TextBoxForRequiredAndReonly(model => model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new
+                                       {
+                                           @class = "form-control",
+                                           @style = "height:auto;"
+                                       }, Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false, Model.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True") ? true : false)
+                                        }
+                                        else
+                                        {
+                                            var linkId = "link" + i + j;
+                                            @Html.HiddenFor(m => m.CREATE_SCHEDULE.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new { id = "hidHyperLinkValue" + i + j })
+                                            <span class="form-control"><a id="@linkId" target="_blank" href="@fieldInfo.FieldValue">@fieldInfo.FieldValue</a></span>
+                                        }
+
+                                        @if (fieldInfo.IsReadOnly.Equals("False") && !string.IsNullOrEmpty(fieldInfo.FieldValue))
+                                        {
+                                            var linkHidId = "hidHyperLinkValue" + i + j;
+                                            var linkId = "link" + i + j;
+                                            var modelId = "mdHyperLinkValue" + i + j;
+                                            <div class="modal fade" id="@modelId" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">
+                                                                @fieldInfo.FieldName
+                                                            </h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @Html.TextBox("txtHyperLinkValue" + i + j, fieldInfo.FieldValue, new { @class = "form-control" })
+                                                        </div>
+                                                        <div class="modal-footer" style="margin-top: 35px;">
+                                                            @*確定*@
+                                                            <button type="button" class="btn btn-submit xs100 xs-mb10" onclick="var linqValue=$('#txtHyperLinkValue'+'@i'+'@j').val();if(linqValue != '' || '@fieldInfo.IsRequiredField' == 'False'){$('#'+'@linkId').attr('href',linqValue);$('#'+'@linkId').html(linqValue);$('#'+'@linkHidId').val(linqValue);$('#'+'@modelId').modal('hide');}else{alert('@Html.BMResource("BM_RequiredField")');}">@Html.BMResource("BM_ConfirmForAddCustomer")</button>
+                                                            @* 關閉*@
+                                                            <button type="button" class="btn btn-close xs100 asdfsadf" data-dismiss="modal">@Html.BMResource("BM_EXIT")</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="input-group-btn">
+                                                <span style="font-size: 14px!important" class="btn btn-warning" data-toggle="modal" data-target="#@modelId">
+                                                    @*修改*@
+                                                    @Html.BMResource("BM_Modify")
+                                                </span>
+                                            </span>
+                                        }
+                                    </div>
+                                }
+                            }
+                        }
+                    }
+                }
+                @*自訂欄位結束*@
+
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-submit xs100 xs-mb10" onclick="setFieldValue()">@*儲存*@ @Html.BMResource("BM_Save")</button>
+                <button type="button" class="btn btn-close xs100" onclick="goBack()">@*返回*@ @Html.BMResource("BM_Return")</button>
+            </div>
+        </div>
+
+
+
+
+
+    <!-- 彈出客戶選擇視窗開始 -->
+        <div class="modal fade" id="ChooseClientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header" style="background-color:#f39800; color:#fFF;">
+                        <button type="button" style="color:#FFF;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        @*客戶選擇*@ @Html.BMResource("BM_Customer_select")
+                    </div>
+                    <div class="modal-body">
+                        @*請輸入關鍵字查詢*@
+                        <input class="form-control mb10 xs100" onkeyup="selectCust(1)" placeholder="@Html.BMResource("BM_Key_word_to_inquire")" id="keyWord" style="width:auto; display:inline-block;">
+
+                        @* 因為改了KEYPRESS事件 所以這行註解  *@
+                        @*查詢*@
+                        @*<button type="button" class="btn btn-warning xs100 mb10 " onclick="selectCust(1)" >   @Html.BMResource("BM_Query")</button>*@
+
+                        <span id="Customer">
+
+                        </span>
+
+                        <span id="CustomerContacter">
+
+                        </span>
+
+                        <div class="text-center">
+                            <button type="button" class="btn btn-submit xs100 xs-mb10" onclick="getReturnValue(1)">@*確定*@ @Html.BMResource("BM_ConfirmForAddCustomer")</button>
+                            <button type="button" class="btn btn-close xs100" data-dismiss="modal">@*關閉*@ @Html.BMResource("BM_EXIT")</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- 彈出客戶選擇視窗結束 -->
+    <!-- 彈出經銷商選擇視窗開始 -->
+        <div class="modal fade" id="ChooseContactModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="overflow:hidden;">
+                    <div class="modal-header" style="background-color:#f39800; color:#fFF;">
+                        <button type="button" style="color:#FFF;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        @*經銷商選擇選擇*@ @Html.BMResource("BM_Select_Distributor")
+                    </div>
+                    <div class="modal-body">
+                        @*請輸入關鍵字查詢*@
+                        <input class="form-control mb10 xs100" placeholder="@Html.BMResource("BM_Key_word_to_inquire")" id="keyWord" style="width:auto; display:inline-block;">
+                        <button type="button" class="btn btn-warning xs100 mb10 " onclick="selectCust(2)"> @*查詢*@ @Html.BMResource("BM_Query")</button>
+
+                        <span id="Dealer">
+
+                        </span>
+
+                        <span id="DealerContacter">
+
+                        </span>
+
+                        <div class="text-center">
+                            <button type="button" class="btn btn-submit xs100 xs-mb10" onclick="getReturnValue(2)">@*確定*@ @Html.BMResource("BM_Confirm")</button>
+                            <button type="button" class="btn btn-close xs100" data-dismiss="modal">@*關閉*@ @Html.BMResource("BM_EXIT")</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- 彈出客戶選擇視窗結束 -->
+
+    }
+</div>
+
+
+
+
+
+
+<script>
+
+
+    //如果選擇其他主旨時，顯示主旨輸入欄位
+    $('#topic-else').hide();
+
+
+    $(".input-group").each(function () {
+        var label_height = $(this).height();
+        $(this).children(".form-control").css('height', label_height);
+    });
+
+
+
+
+
+    $('#topic-choose').change(function () { ChangeITEM_CLASS(); });
+
+    function ChangeITEM_CLASS() {
+        var selectedValue = $('#else option:selected').val();
+        $('#topic-else').show();
+    }
+</script>

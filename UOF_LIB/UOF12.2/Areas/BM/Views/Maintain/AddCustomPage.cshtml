@@ -1,0 +1,1825 @@
+﻿@model Ede.Uof.EIP.BM.dl.CTB_EIP_BM_CUSTOM_FIELD
+
+@{
+    //"新增自訂欄位 "
+    ViewBag.Title = Html.BMResource("BM_New_customized_field");
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+
+<style>
+    .onoffswitch {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .onoffswitch-inner::before {
+        content: "   @Html.BMResource("BM_Yes")";
+    }
+
+    .onoffswitch-inner::after {
+        content: "   @Html.BMResource("BM_No")";
+    }
+
+    .onoffswitch-inner::before, .onoffswitch-inner::after {
+        font-family: '微軟正黑體';
+    }
+
+    .onoffswitch-label {
+        margin-bottom: 0;
+    }
+
+
+    .onoffswitch-switch, .onoffswitch-label {
+        border: 1px solid #AAA;
+    }
+
+    .checkbox {
+        display: inline-block;
+        margin: 0;
+    }
+
+        .checkbox input {
+            vertical-align: top;
+        }
+
+    .edit-wrap {
+        padding-right: 30px;
+    }
+
+    .edit {
+        background-color: #d9534f;
+        color: #FFF !important;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 30px;
+        height: 100%;
+        text-align: center;
+        transition: all .3s;
+    }
+
+
+        .edit:hover {
+            background-color: #c9302c;
+        }
+
+        .edit::after {
+            content: "";
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+            width: 0;
+        }
+
+        .edit > i {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+    .tip {
+        text-align: right;
+        font-size: 0.975em;
+        color: #757574;
+        margin-top: 5px;
+    }
+
+    .input-group-addon, .input-group-btn {
+        white-space: initial;
+    }
+</style>
+
+
+
+<script>
+
+    var Modal_Number = 0;
+
+    function addListItem() {
+
+        var txtModalInput = $('#txtModalInput').val();
+
+        if (txtModalInput.value != "") {
+            var content = "<label class='checkbox-inline' id='ModalListItemCheck" + Modal_Number + "'>";
+            content += "<input type='checkbox' name='ModalListItemCheck'  value='" + txtModalInput.value + "'> " + txtModalInput.value;
+            content += "</label>"
+
+            $('#ModalListItem').append(content)
+            Modal_Number++;
+            $('#txtModalInput').val('');
+        }
+    }
+    //點選取消後清空設定值
+    function deleteListItem() {
+
+        var l_ModalListItem = $('#CheckBoxModal').find("input[name^='ModalListItemCheck']:checked");
+        var array = [];
+        if (l_ModalListItem.length > 0) {
+            for (var i = 0 ; i < l_ModalListItem.length; i++) {
+                array.push(l_ModalListItem[i].parentNode.id);
+            }
+        }
+        for (var i = 0; i < array.length; i++) {
+            $("#" + array[i]).remove();
+        }
+    }
+
+    //點選取消後清空設定值
+    function CancelModalListItem() {
+
+        $("#ModalListItem").empty();
+
+    }
+
+
+    function setEmpty() {
+        var TextType = $("#TextType_Hidden").val();
+        if (TextType == "RadioButtonList") {
+            checkboxes = $('#RadioButtonListItem').find('input[type="radio"]:checked');
+            for (var i = 0 ; i < checkboxes.length; i++) {          
+                checkboxes[i].checked = false;
+            }
+        }
+    }
+
+    function AddModalListItem() {
+
+
+       
+        var TextType = $("#TextType_Hidden").val();
+
+        var l_ModalListItem = $('#CheckBoxModal').find("input[name^='ModalListItemCheck']");
+        var array = [];
+        if (l_ModalListItem.length > 0) {
+            for (var i = 0 ; i < l_ModalListItem.length; i++) {
+                array.push(l_ModalListItem[i]);
+            }
+        }
+
+        var content = "";
+        if (TextType == "CheckBoxList") {
+            $("#CheckBoxListItem").empty();
+            for (var i = 0; i < array.length; i++) {
+
+                content += " <label class='checkbox-inline'>";
+                content += "               <input type='checkbox' id='inlineCheckbox" + i + "' name='ListItem' value='" + array[i].value + "'>" + array[i].value;
+                content += "              </label>";
+            }
+    
+            $("#CheckBoxListItem").append(content);
+        }
+        if (TextType == "RadioButtonList") {
+
+            $("#RadioButtonListItem").empty();
+            for (var i = 0; i < array.length; i++) {
+
+                content += " <label class='radio-inline'>";
+                content += "               <input type='radio' id='inlineRadio" + i + "' name='ListItem' value='" + array[i].value + "'>" + array[i].value;
+                content += "              </label>";
+            }
+            $("#RadioButtonListItem").append(content);
+        }
+        if (TextType == "DropDownList") {
+
+            $("#DropDownListItem").empty();
+            for (var i = 0; i < array.length; i++) {
+
+                content += " <input type='checkbox'  readonly='readonly' name='ListItem' id='dropOption1' value='" + array[i].value + "'>"
+                content += array[i].value
+
+            }
+            $("#DropDownListItem").append(content);
+        }
+
+
+
+
+
+    }
+
+    function TextTypeChange() {
+        var txtType = $('#TextType').val(); //抓取欄位樣式SelectValue
+        $("#TextType_Hidden").val(txtType);
+
+    }
+
+</script>
+
+<form>
+    @*用來記錄選了哪一個Type 給CHECKBOX、DROPDOWNLIST、RADIO的自訂選項用*@
+    <input type="hidden" id="TextType_Hidden" />
+
+    @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA == null)
+    {
+
+
+
+
+        <div id="main" class="clearfix">
+            <div class="topTabs-header clearfix">
+                <h1 class="secInfo">
+                    @*新增自訂欄位*@
+                    @Html.BMResource("BM_New_customized_field")
+                </h1>
+                <button class="return-btn" onclick="goBack()"><i class="fa fa-reply"></i></button>
+            </div>
+
+            <div class="tab-content">
+                <div class="row">
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*主功能選擇*@ @Html.BMResource("BM_Main_Function")</span></span>
+                            @Html.BMDropDownListFor(model => model.CUSTOM_FIELD_TYPE, (IEnumerable<SelectListItem>)ViewBag.CUSTOM_FIELD_LIST, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*欄位樣式選擇*@ @Html.BMResource("BM_Field_format")</span></span>
+                            @Html.BMDropDownList("TextType", (IEnumerable<SelectListItem>)ViewBag.fieldTypeList, new { onchange = "TextTypeChange();", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div id="SingleLineText" class="row text-content">
+                    <input name="FieldType" type="hidden" value="SingleLineText" />
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span>
+                                    <span style="color:#FF0000;">*</span>
+                                    @*欄位名稱*@  @Html.BMResource("BM_Field_name")
+                                </span>
+                            </span>
+                            <input type="text" class="form-control" name="FieldName">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span>
+                                    <span style="color:#FF0000;">*</span>
+                                    @*欄位長度*@  @Html.BMResource("BM_Field_length")
+                                </span>
+                            </span>
+                            <input type="number" class="form-control" min="1" max="255" placeholder="@Html.BMResource("BM_String_length") 1-255 " name="FieldLength">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span>
+                                    @*預設值*@
+                                    @Html.BMResource("BM_Default")
+                                </span>
+                            </span>
+                            <input type="text" class="form-control" name="FieldValue">
+                        </div>
+                    </div>
+                    @*必填欄位*@
+                    @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;">
+                            @Html.BMResource("BM_Required")
+                        </span>
+                        <input type="checkbox" name="IsRequiredField" />
+                    </div>*@
+
+
+
+                    <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;">
+                            @*唯　　讀*@ @Html.BMResource("BM_Read_only")
+                        </span>
+                        <input type="checkbox" name="IsReadOnly" />
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span>
+                                    @*欄位備註*@   @Html.BMResource("BM_Field_remark")
+                                </span>
+                            </span>
+                            <input type="text" class="form-control" name="FieldRemark">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="MultiLineText" class="row text-content">
+                    <input name="FieldType" type="hidden" value="MultiLineText" />
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name") </span></span>
+                            <input type="text" class="form-control" name="FieldName">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>欄位範圍</span></span>
+                            @* 顯示行數，最少一行 *@
+                            <input type="number" min="1" max="999" class="form-control" placeholder="@Html.BMResource("BM_Display_line_number_at_least_1_line") " name="FieldRowCount">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span>
+                                    @*預設值*@ @Html.BMResource("BM_Default")
+                                </span>
+                            </span>
+                            <textarea class="form-control" name="FieldValue" placeholder="" style="max-width:100%; width:100%;" rows="3"></textarea>
+                        </div>
+                    </div>
+                    @*必填欄位*@
+                    @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;">
+                            @Html.BMResource("BM_Required")
+                        </span>
+                        <input type="checkbox" name="IsRequiredField" />
+                    </div>*@
+
+                    <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                        <input type="checkbox" name="IsReadOnly" />
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                            <input type="text" class="form-control" name="FieldRemark">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="NumberText" class="row text-content">
+                    <input name="FieldType" type="hidden" value="NumberText" />
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                            <input  class="form-control" name="FieldName">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>    @*欄位範圍*@  欄位範圍</span></span>
+                            <div class="form-control" style="height: auto;">
+                                <input type="number" placeholder="0" min="0" max="999999" style="border: 1px solid rgba(0, 0, 0, 0.2);border-radius: 4px; text-align: center;" name="MinValue" required="required" >
+                                ~
+                                <input type="number" placeholder="999999.." min="0" max="999999" style="border: 1px solid rgba(0, 0, 0, 0.2);border-radius: 4px; text-align: center;" name="MaxValue" required="required" >
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span>@*預設值*@ @Html.BMResource("BM_Default")</span></span>
+                            <input class="form-control" type="number" name="FieldValue" placeholder="" style="max-width:100%; width:100%;" />
+                        </div>
+                    </div>
+                    @*必填欄位*@
+                    @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;">
+                            @Html.BMResource("BM_Required")
+                        </span>
+                        <input type="checkbox" name="IsRequiredField" />
+                    </div>*@
+
+
+
+                    <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                        <input type="checkbox" name="IsReadOnly" />
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                            <input type="text" class="form-control" name="FieldRemark">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="FileButton" class="row text-content">
+                    <input name="FieldType" type="hidden" value="FileButton" />
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                            <input type="text" class="form-control" name="FieldName">
+                        </div>
+                    </div>
+                    @*必填欄位*@
+                    @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;">
+                            @Html.BMResource("BM_Required")
+                        </span>
+                        <input type="checkbox" name="IsRequiredField" />
+                    </div>*@
+
+
+
+                    <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                        <input type="checkbox" name="IsReadOnly" />
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                            <input type="text" class="form-control" name="FieldRemark">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="DateSelect" class="row text-content">
+                    <input name="FieldType" type="hidden" value="DateSelect" />
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                            <input type="text" class="form-control" name="FieldName">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div id="DateType" class="input-group">
+                            <span class="input-group-addon"><span>@*預設值*@ @Html.BMResource("BM_Default")</span></span>
+                            <select class="form-control" name="FieldValueType">
+                                @*無預設值*@
+                                <option value="none" selected="selected">@Html.BMResource("BM_No_default_value")</option>
+                                @*申請日期為預設值*@
+                                @*<option value="preset">@Ede.Uof.Web.Areas.App_LocalResources.Language.Applied_date_is_default</option>*@
+                                @*指定日期*@
+                                <option value="designation">@Html.BMResource("BM_Specify_date")</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 dis-no" id="DesignationDate">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>@*指定日期*@ @Html.BMResource("BM_Specify_date")</span></span>
+                            @(Html.Kendo().DatePicker().Name("FieldValueDate"))
+                        </div>
+                    </div>
+
+                    @*必填欄位*@
+                    @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;">
+                            @Html.BMResource("BM_Required")
+                        </span>
+                        <input type="checkbox" name="IsRequiredField" />
+                    </div>*@
+
+
+
+                    <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                        <input type="checkbox" name="IsReadOnly" />
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                            <input type="text" class="form-control" name="FieldRemark">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="TimeSelect" class="row text-content">
+                    <input name="FieldType" type="hidden" value="TimeSelect" />
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                            <input type="text" class="form-control" name="FieldName">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span>@*預設值*@ @Html.BMResource("BM_Default")</span></span>
+                            <select id="TimeType" class="form-control" name="FieldValueType">
+                                @*無預設值*@
+                                <option value="none" selected="selected">@Html.BMResource("BM_No_default_value")</option>
+                                @*申請時間為預設值*@
+                                @*<option value="preset">@Html.BMResource("BM_Applied_time_is_the_default_value")</option>*@
+                                @*指定時間*@
+                                <option value="designation">@Html.BMResource("BM_Specified_time")</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 dis-no mb20" id="DesignationTime">
+                        <div class="input-group  timepicker">
+
+                            @(Html.Kendo().TimePicker().Name("FieldValueTime"))
+                        </div>
+                    </div>
+
+                    @*必填欄位*@
+                    @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;">
+                            @Html.BMResource("BM_Required")
+                        </span>
+                        <input type="checkbox" name="IsRequiredField" />
+                    </div>*@
+
+
+
+                    <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                        <input type="checkbox" name="IsReadOnly" />
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                            <input type="text" class="form-control" name="FieldRemark">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="CheckBoxList" class="row text-content">
+                    <input name="FieldType" type="hidden" value="CheckBoxList" />
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                            <input type="text" class="form-control" name="FieldName">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*單行個數*@ @Html.BMResource("BM_Number_of_displayed_single_line")</span></span>
+                            <input type="number" class="form-control" name="RepeatColumns">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group edit-wrap">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*欄位選項*@ @Html.BMResource("BM_Field_selection")</span></span>
+                            <div class="form-control" style="height:auto;" id="CheckBoxListItem">
+                                <label class="checkbox-inline">
+
+                                </label>
+
+                            </div>
+                            <a href="#" class="edit" data-toggle="modal" data-target="#CheckBoxModal"><i class="fa fa-cog"></i></a>
+                        </div>
+
+                        @*勾選即為預設值*@
+                        @*<div class="tip">(@Ede.Uof.Web.Areas.App_LocalResources.Language.Check_marked_for_default_value)</div>*@
+                    </div>
+
+                    @*必填欄位*@
+                    @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;">
+                            @Html.BMResource("BM_Required")
+                        </span>
+                        <input type="checkbox" name="IsRequiredField" />
+                    </div>*@
+
+
+
+                    <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                        <input type="checkbox" name="IsReadOnly" />
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                            <input type="text" class="form-control" name="FieldRemark">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="RadioButtonList" class="row text-content">
+                    <input name="FieldType" type="hidden" value="RadioButtonList" />
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                            <input type="text" class="form-control" name="FieldName">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*單行個數*@ @Html.BMResource("BM_Number_of_displayed_single_line")</span></span>
+                            <input type="number" class="form-control" name="RepeatColumns">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group edit-wrap">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*欄位選項*@ @Html.BMResource("BM_Field_selection")</span></span>
+                            <div class="form-control" style="height:auto;" id="RadioButtonListItem">
+                                <label class="radio-inline">
+
+                                </label>
+
+                            </div>
+                            <a href="#" class="edit" data-toggle="modal" data-target="#CheckBoxModal"><i class="fa fa-cog"></i></a>
+                        </div>
+
+                        @*勾選即為預設值*@ @*清空預設值*@
+                        @*<div class="tip">
+                            (@Ede.Uof.Web.Areas.App_LocalResources.Language.Check_marked_for_default_value)　
+                            <a href="#" onclick="setEmpty()">@Ede.Uof.Web.Areas.App_LocalResources.Language.Clear_default_value</a>
+                        </div>*@
+                    </div>
+
+                    @*必填欄位*@
+                    @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;">
+                            @Html.BMResource("BM_Required")
+                        </span>
+                        <input type="checkbox" name="IsRequiredField" />
+                    </div>*@
+
+
+
+                    <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                        <input type="checkbox" name="IsReadOnly" />
+                    </div>
+
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                            <input type="text" class="form-control" name="FieldRemark">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="DropDownList" class="row text-content">
+                    <input name="FieldType" type="hidden" value="DropDownList" />
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                            <input type="text" class="form-control" name="FieldName">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group edit-wrap">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*欄位選項*@ @Html.BMResource("BM_Field_selection")</span></span>
+                            <div class="form-control" style="height:auto;" id="DropDownListItem">
+
+                            </div>
+                            <a href="#" class="edit" data-toggle="modal" data-target="#CheckBoxModal"><i class="fa fa-cog"></i></a>
+
+                        </div>
+
+                        @*選取即為預設值*@
+                        @*<div class="tip">(@Ede.Uof.Web.Areas.App_LocalResources.Language.Select_to_be_default_setting)</div>*@
+                    </div>
+
+                    @*必填欄位*@
+                    @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;">
+                            @Html.BMResource("BM_Required")
+                        </span>
+                        <input type="checkbox" name="IsRequiredField" />
+                    </div>*@
+
+
+
+                    <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                        <input type="checkbox" name="IsReadOnly" />
+                    </div>
+
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                            <input type="text" class="form-control" name="FieldRemark">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="HyperLink" class="row text-content">
+                    <input name="FieldType" type="hidden" value="HyperLink" />
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                            <input type="text" class="form-control" name="FieldName">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span>@*連結網址*@ @Html.BMResource("BM_URL")</span></span>
+                            <input type="text" class="form-control" name="FieldValue">
+                        </div>
+                    </div>
+
+                    @*必填欄位*@
+                    @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;">
+                            @Html.BMResource("BM_Required")
+                        </span>
+                        <input type="checkbox" name="IsRequiredField" />
+                    </div>*@
+
+
+                    <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                        <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                        <input type="checkbox" name="IsReadOnly" />
+                    </div>
+                    <div class="col-sm-12 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                            <input type="text" class="form-control" name="FieldRemark">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center submit-btn">
+                    <button type="submit" class="btn btn-warning xs100 mb10">@*新增*@ @Html.BMResource("BM_New")</button>
+                    <button type="button" class="btn btn-warning close-btn xs100 mb10" onclick="goBack()">@*取消*@ @Html.BMResource("BM_Cancel")</button>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        @Html.HiddenFor(m => m.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldId)
+
+        <div id="main" class="clearfix">
+            <div class="topTabs-header clearfix">
+                <h1 class="secInfo">
+                    修改自訂欄位
+                </h1>
+                <button class="return-btn" onclick="goBack()"><i class="fa fa-reply"></i></button>
+            </div>
+
+            <div class="tab-content">
+                <div class="row">
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*主功能選擇*@ @Html.BMResource("BM_Main_Function")</span></span>
+                            @Html.BMDropDownListFor(model => model.CUSTOM_FIELD_TYPE, (IEnumerable<SelectListItem>)ViewBag.CUSTOM_FIELD_LIST, new { id= "ddlCUSTOM_FIELD_TYPE", isEdit = false, @class = "form-control" })
+                            @Html.HiddenFor(model => model.CUSTOM_FIELD_TYPE)
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb20">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*欄位樣式選擇*@ @Html.BMResource("BM_Field_format")</span></span>
+                            @Html.BMDropDownList("ddlTextType", Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType, (IEnumerable<SelectListItem>)ViewBag.fieldTypeList, new { isEdit = false, @class = "form-control" })
+                            @Html.Hidden("TextType", Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType)
+                        </div>
+                    </div>
+                </div>
+
+
+                @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType == "SingleLineText")
+                {
+                    <div id="SingleLineText" class="row text-content">
+                        <input name="FieldType" type="hidden" value="SingleLineText" />
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                                <input type="text" class="form-control" name="FieldName" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldName">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>    @*欄位長度*@  @Html.BMResource("BM_Field_length")</span></span>
+                                <input type="number" class="form-control" placeholder="@*字串長度*@@Html.BMResource("BM_String_length") 1-255" name="FieldLength" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldLength">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span>@*預設值*@ @Html.BMResource("BM_Default")</span></span>
+                                <input type="text" class="form-control" name="FieldValue" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldValue">
+                            </div>
+                        </div>
+
+                        @*必填欄位*@
+                        @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;">
+                                @Html.BMResource("BM_Required")
+                            </span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsRequiredField == "True")
+                            {
+                                <input type="checkbox" name="IsRequiredField" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsRequiredField" />
+                            }
+                        </div>*@
+
+
+
+                        <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsReadOnly == "True")
+                            {
+                                <input type="checkbox" name="IsReadOnly" checked="checked" />
+
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsReadOnly" />
+
+                            }
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                                <input type="text" class="form-control" name="FieldRemark" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldRemark">
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType == "MultiLineText")
+                {
+                    <div id="MultiLineText" class="row text-content">
+                        <input name="FieldType" type="hidden" value="MultiLineText" />
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                                <input type="text" class="form-control" name="FieldName" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldName">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@Html.BMResource("BM_Field_length")</span></span>
+                                @* 顯示行數，最少一行 *@
+                                <input type="number" min="1" max="999" class="form-control" placeholder="@Html.BMResource("BM_Display_line_number_at_least_1_line")" name="FieldRowCount" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldRowCount">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span>@*預設值*@ @Html.BMResource("BM_Default")</span></span>
+                                <textarea class="form-control" name="FieldValue" placeholder="" style="max-width:100%; width:100%;" rows="3">@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldValue</textarea>
+                            </div>
+                        </div>
+
+                        @*必填欄位*@
+                        @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;">
+                                @Html.BMResource("BM_Required")
+                            </span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsRequiredField == "True")
+                            {
+                                <input type="checkbox" name="IsRequiredField" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsRequiredField" />
+                            }
+                        </div>*@
+
+
+
+                        <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsReadOnly == "True")
+                            {
+                                <input type="checkbox" name="IsReadOnly" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsReadOnly" />
+                            }
+
+
+
+
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                                <input type="text" class="form-control" name="FieldRemark" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldRemark">
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType == "NumberText")
+                {
+                    <div id="NumberText" class="row text-content">
+                        <input name="FieldType" type="hidden" value="NumberText" />
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                                <input  class="form-control" name="FieldName" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldName">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>    @*欄位長度*@  @Html.BMResource("BM_Field_length")</span></span>
+                                <div class="form-control" style="height: auto;">
+                                    <input type="number" placeholder="0" style="border: 1px solid rgba(0, 0, 0, 0.2);border-radius: 4px; text-align: center;" name="MinValue" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].MinValue" required="required" >
+                                    ~
+                                    <input type="number" placeholder="999999.." style="border: 1px solid rgba(0, 0, 0, 0.2);border-radius: 4px; text-align: center;" name="MaxValue" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].MaxValue" required="required">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span>@*預設值*@ @Html.BMResource("BM_Default")</span></span>
+                                <input class="form-control" name="FieldValue" type="number" placeholder="" style="max-width:100%; width:100%;" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldValue">
+                            </div>
+                        </div>
+
+                        @*必填欄位*@
+                        @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;">
+                                @Html.BMResource("BM_Required")
+                            </span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsRequiredField == "True")
+                            {
+                                <input type="checkbox" name="IsRequiredField" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsRequiredField" />
+                            }
+                        </div>*@
+
+
+
+                        <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsReadOnly == "True")
+                            {
+                                <input type="checkbox" name="IsReadOnly" checked="checked" />
+
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsReadOnly" />
+
+                            }
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                                <input type="text" class="form-control" name="FieldRemark" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldRemark">
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType == "FileButton")
+                {
+                    <div id="FileButton" class="row text-content">
+                        <input name="FieldType" type="hidden" value="FileButton" />
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                                <input type="text" class="form-control" name="FieldName" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldName">
+                            </div>
+                        </div>
+
+                        @*必填欄位*@
+                        @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;">
+                                @Html.BMResource("BM_Required")
+                            </span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsRequiredField == "True")
+                            {
+                                <input type="checkbox" name="IsRequiredField" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsRequiredField" />
+                            }
+                        </div>*@
+
+
+
+                        <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsReadOnly == "True")
+                            {
+                                <input type="checkbox" name="IsReadOnly" checked="checked" />
+
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsReadOnly" />
+
+                            }
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                                <input type="text" class="form-control" name="FieldRemark" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldRemark">
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+                @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType == "DateSelect")
+                {
+                    <div id="DateSelect" class="row text-content">
+                        <input name="FieldType" type="hidden" value="DateSelect" />
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                                <input type="text" class="form-control" name="FieldName" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldName">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div id="DateType" class="input-group">
+                                <span class="input-group-addon"><span>@*預設值*@ @Html.BMResource("BM_Default")</span></span>
+                                <select class="form-control" name="FieldValueType">
+
+                                    @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldValue != null)
+                                    {
+
+                                        if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldValue == "@today")
+                                        {
+                                            @*無預設值*@
+                                            <option value="none">@Html.BMResource("BM_No_default_value")</option>
+                                            @*申請日期為預設值*@
+                                            @*<option value="preset" selected="selected">@Ede.Uof.Web.Areas.App_LocalResources.Language.Applied_date_is_default</option>*@
+                                            @*指定日期*@
+                                            <option value="designation" >@Html.BMResource("BM_Specify_date")</option>
+                                        }
+                                        else
+                                        {
+                                            @*無預設值*@
+                                            <option value="none">@Html.BMResource("BM_No_default_value")</option>
+                                            @*申請日期為預設值*@
+                                            @*<option value="preset">@Ede.Uof.Web.Areas.App_LocalResources.Language.Applied_date_is_default</option>*@
+                                            @*指定日期*@
+                                            <option value="designation" selected="selected">@Html.BMResource("BM_Specify_date")</option>
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @*無預設值*@
+                                        <option value="none" selected="selected">@Html.BMResource("BM_No_default_value")</option>
+                                        @*申請日期為預設值*@
+                                        @*<option value="preset">@Ede.Uof.Web.Areas.App_LocalResources.Language.Applied_date_is_default</option>*@
+                                        @*指定日期*@
+                                        <option value="designation">@Html.BMResource("BM_Specify_date")</option>
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 dis-no mb20" id="DesignationDate">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span>@*指定日期*@ @Html.BMResource("BM_Specify_date")</span></span>
+                                @*<input type="text" class="form-control" placeholder="之後會套成彈出日歷選擇" name="">*@
+                                @(Html.Kendo().DatePicker()
+                      .Name("FieldValueDate")
+                        .Value(Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldValue)
+                                )
+                            </div>
+                        </div>
+
+                        @*必填欄位*@
+                        @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;">
+                                @Html.BMResource("BM_Required")
+                            </span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsRequiredField == "True")
+                            {
+                                <input type="checkbox" name="IsRequiredField" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsRequiredField" />
+                            }
+                        </div>*@
+
+
+
+                        <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsReadOnly == "True")
+                            {
+                                <input type="checkbox" name="IsReadOnly" checked="checked" />
+
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsReadOnly" />
+
+                            }
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                                <input type="text" class="form-control" name="FieldRemark" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldRemark">
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+                @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType == "TimeSelect")
+                {
+                    <div id="TimeSelect" class="row text-content">
+                        <input name="FieldType" type="hidden" value="TimeSelect" />
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                                <input type="text" class="form-control" name="FieldName" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldName">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span>@*預設值*@ @Html.BMResource("BM_Default")</span></span>
+                                <select id="TimeType" class="form-control" name="FieldValueType">
+
+
+                                    @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldValue != null)
+                                    {
+
+                                        if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldValue == "@today")
+                                        {
+                                            @*無預設值*@
+                                            <option value="none">@Html.BMResource("BM_No_default_value")</option>
+                                            @*申請時間為預設值*@
+                                            @*<option value="preset" selected="selected">@Html.BMResource("BM_Applied_time_is_the_default_value")</option>*@
+                                            @*指定時間*@
+                                            <option value="designation" >@Html.BMResource("BM_Specified_time")</option>
+                                        }
+                                        else
+                                        {
+                                            @*無預設值*@
+                                            <option value="none" >@Html.BMResource("BM_No_default_value")</option>
+                                            @*申請時間為預設值*@
+                                            @*<option value="preset">@Html.BMResource("BM_Applied_time_is_the_default_value")</option>*@
+                                            @*指定時間*@
+                                            <option value="designation" selected="selected">@Html.BMResource("BM_Specified_time")</option>
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @*無預設值*@
+                                        <option value="none" selected="selected"> @Html.BMResource("BM_No_default_value")</option>
+                                        @*申請時間為預設值*@
+                                        @*<option value="preset">@Html.BMResource("BM_Applied_time_is_the_default_value")</option>*@
+                                        @*指定時間*@
+                                        <option value="designation">@Html.BMResource("BM_Specified_time")</option>
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 dis-no mb20" id="DesignationTime">
+                            <div class="input-group  timepicker">
+
+                                @(Html.Kendo().TimePicker()
+                              .Name("FieldValueTime")
+                 
+                         .Value(Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldValue)                 
+                         
+                                )
+                            </div>
+                        </div>
+
+
+                        @*必填欄位*@
+                        @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;">
+                                @Html.BMResource("BM_Required")
+                            </span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsRequiredField == "True")
+                            {
+                                <input type="checkbox" name="IsRequiredField" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsRequiredField" />
+                            }
+                        </div>*@
+
+
+
+
+
+
+                        <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+
+
+
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsReadOnly == "True")
+                            {
+                                <input type="checkbox" name="IsReadOnly" checked="checked" />
+
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsReadOnly" />
+
+                            }
+
+
+
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                                <input type="text" class="form-control" name="FieldRemark" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldRemark">
+
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType == "CheckBoxList")
+                {
+                    <div id="CheckBoxList" class="row text-content">
+                        <input name="FieldType" type="hidden" value="CheckBoxList" />
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                                <input type="text" class="form-control" name="FieldName" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldName">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*單行個數*@ @Html.BMResource("BM_Number_of_displayed_single_line")</span></span>
+                                <input type="number" class="form-control" name="RepeatColumns" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].RepeatColumns">
+
+
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group edit-wrap">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*欄位選項*@ @Html.BMResource("BM_Field_selection")</span></span>
+                                <div class="form-control" style="height:auto;" id="CheckBoxListItem">
+                                    @for (int i = 0; i < Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem.Count; i++)
+                                    {
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="ListItem" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem[i]"> @Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem[i]
+                                        </label>
+                                    }
+                                </div>
+                                <a href="#" class="edit" data-toggle="modal" data-target="#CheckBoxModal"><i class="fa fa-cog"></i></a>
+                            </div>
+
+                            @*勾選即為預設值*@
+                            @*<div class="tip">(@Ede.Uof.Web.Areas.App_LocalResources.Language.Check_marked_for_default_value)</div>*@
+                        </div>
+
+                        @*必填欄位*@
+                        @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;">
+                                @Html.BMResource("BM_Required")
+                            </span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsRequiredField == "True")
+                            {
+                                <input type="checkbox" name="IsRequiredField" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsRequiredField" />
+                            }
+                        </div>*@
+
+
+
+                        <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsReadOnly == "True")
+                            {
+                                <input type="checkbox" name="IsReadOnly" checked="checked" />
+
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsReadOnly" />
+
+                            }
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                                <input type="text" class="form-control" name="FieldRemark" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldRemark">
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType == "RadioButtonList")
+                {
+                    <div id="RadioButtonList" class="row text-content">
+                        <input name="FieldType" type="hidden" value="RadioButtonList" />
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                                <input type="text" class="form-control" name="FieldName" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldName">
+
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*單行個數*@ @Html.BMResource("BM_Number_of_displayed_single_line")</span></span>
+                                <input type="number" class="form-control"  name="RepeatColumns" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].RepeatColumns">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group edit-wrap">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*欄位選項*@ @Html.BMResource("BM_Field_selection")</span></span>
+                                <div class="form-control" style="height:auto;" id="RadioButtonListItem">
+
+                                    @for (int i = 0; i < Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem.Count; i++)
+                                    {
+
+                                        <label class="radio-inline">
+                                            <input type="radio" name="ListItem" id="inlineRadio1" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem[i]"> @Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem[i]
+                                        </label>
+                                    }
+
+
+                                </div>
+                                <a href="#" class="edit" data-toggle="modal" data-target="#CheckBoxModal"><i class="fa fa-cog"></i></a>
+                            </div>
+
+                            @*勾選即為預設值*@@*清空預設值*@ 
+                            @*<div class="tip">
+                                (@Ede.Uof.Web.Areas.App_LocalResources.Language.Check_marked_for_default_value)　
+                                <a href="#" onclick="setEmpty()" >@Ede.Uof.Web.Areas.App_LocalResources.Language.Clear_default_value</a>
+                            </div>*@
+                        </div>
+
+                        @*必填欄位*@
+                        @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;">
+                                @Html.BMResource("BM_Required")
+                            </span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsRequiredField == "True")
+                            {
+                                <input type="checkbox" name="IsRequiredField" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsRequiredField" />
+                            }
+                        </div>*@
+
+
+
+                        <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsReadOnly == "True")
+                            {
+                                <input type="checkbox" name="IsReadOnly" checked="checked" />
+
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsReadOnly" />
+
+                            }
+                        </div>
+
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                                <input type="text" class="form-control" name="FieldRemark" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldRemark">
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType == "DropDownList")
+                {
+                    <div id="DropDownList" class="row text-content">
+                        <input name="FieldType" type="hidden" value="DropDownList" />
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+
+                                <input type="text" class="form-control" name="FieldName" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldName">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group edit-wrap">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>@*欄位選項*@ @Html.BMResource("BM_Field_selection")</span></span>
+                                <div class="form-control" style="height:auto;" id="DropDownListItem">
+                                    @for (int i = 0; i < Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem.Count; i++)
+                                    {
+                                        <input type="checkbox"  name="ListItem" id="dropOption1" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem[i]"> @Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem[i]
+
+                                    }
+
+
+
+                                </div>
+                                <a href="#" class="edit" data-toggle="modal" data-target="#CheckBoxModal"><i class="fa fa-cog"></i></a>
+
+                            </div>
+
+                            @*選取即為預設值*@
+                            @*<div class="tip">(@Ede.Uof.Web.Areas.App_LocalResources.Language.Select_to_be_default_setting)</div>*@
+                        </div>
+
+                        @*必填欄位*@
+                        @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;">
+                                @Html.BMResource("BM_Required")
+                            </span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsRequiredField == "True")
+                            {
+                                <input type="checkbox" name="IsRequiredField" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsRequiredField" />
+                            }
+                        </div>*@
+
+
+
+                        <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsReadOnly == "True")
+                            {
+                                <input type="checkbox" name="IsReadOnly" checked="checked" />
+
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsReadOnly" />
+
+                            }
+                        </div>
+
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                                <input type="text" class="form-control" name="FieldRemark" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldRemark">
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType == "HyperLink")
+                {
+                    <div id="HyperLink" class="row text-content">
+                        <input name="FieldType" type="hidden" value="HyperLink" />
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span><span style="color:#FF0000;">*</span> @*欄位名稱*@  @Html.BMResource("BM_Field_name")</span></span>
+                                <input type="text" class="form-control" name="FieldName" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldName">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span>@*連結網址*@ @Html.BMResource("BM_URL")</span></span>
+                                @*placeholder = 字串長度*@
+                                <input type="text" class="form-control" placeholder="@Html.BMResource("BM_String_length") 1-255" name="FieldValue" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldValue">
+
+                            </div>
+                        </div>
+
+                        @*必填欄位*@
+                        @*<div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;">
+                                @Html.BMResource("BM_Required")
+                            </span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsRequiredField == "True")
+                            {
+                                <input type="checkbox" name="IsRequiredField" checked="checked" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsRequiredField" />
+                            }
+                        </div>*@
+
+
+                        <div class="col-sm-6 mb20 switch-type" style="line-height:34px;">
+                            <span style="margin-right:20px;"> @*唯　　讀*@ @Html.BMResource("BM_Read_only")</span>
+                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].IsReadOnly == "True")
+                            {
+                                <input type="checkbox" name="IsReadOnly" checked="checked" />
+
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="IsReadOnly" />
+
+                            }
+                        </div>
+                        <div class="col-sm-12 mb20">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span> @*欄位備註*@   @Html.BMResource("BM_Field_remark")</span></span>
+                                <input type="text" class="form-control" name="FieldRemark" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldRemark">
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+
+                <div class="text-center submit-btn">
+                    <button type="submit" class="btn btn-warning xs100 mb10">@*新增*@ @Html.BMResource("BM_ConfirmForAddCustomer")</button>
+                    <button type="button" class="btn btn-warning close-btn xs100 mb10" onclick="goBack()">@*取消*@ @Html.BMResource("BM_Cancel")</button>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <script>
+
+            $(document).ready(function () {
+                @*var selectedValue = $('#TextType option:selected').val();*@
+                var selectedValue = '@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].FieldType';
+
+                $('.submit-btn').show();
+                $('.text-content').hide();
+                $('#' + selectedValue).show();
+
+
+            });
+        </script>
+
+    }
+
+    <!-- 彈出CheckBox欄位設定視窗開始 -->
+    <div class="modal fade" id="CheckBoxModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="overflow:hidden;">
+                <div class="modal-header" style="background-color:#f39800; color:#fFF;">
+                    <!--<button type="button" style="color:#FFF;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                    @*核選欄位設定 @Html.BMResource("BM_Check_box_field_setup") *@
+                    設定欄位選項值
+                </div>
+
+                <div class="modal-body">
+                    @*輸入欲新增選項*@
+                    <input id="txtModalInput" style="width:auto; display:inline-block;" placeholder="@Html.BMResource("BM_Enter_created_options")" class="form-control mb10 xs100">
+                    <a href="#" class="btn btn-warning mb10 xs100" onclick="addListItem()">@*新增*@ @Html.BMResource("BM_New")</a>
+                    <a href="#" class="btn btn-danger mb10 xs100" onclick="deleteListItem()">@*刪除下列勾選項目*@ @Html.BMResource("BM_Delete_Selected_Item")</a>
+
+                    @*<div class="mb20" id="ListItem">*@
+                    <div class="mb20" id="ModalListItem">
+                        @*<label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox1" value="選項一"> 選項一
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox2" value="選項二"> 選項二
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox3" value="選項三"> 選項三
+                            </label>*@
+                        @if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA != null)
+                        {
+                            if (Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem.Count > 0)
+                            {
+                                for (var i = 0; i < Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem.Count; i++)
+                                {
+                                    <label class="checkbox-inline" id='@("ModalListItemCheck"+i)' >
+                                        <input type="checkbox" name="ModalListItemCheck" value="@Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem[i]"> @Model.CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[0].ListItem[i]
+                                    </label>
+                                }
+
+                            }
+                        }
+
+                        
+
+                           
+
+
+
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-warning" onclick="AddModalListItem()" data-dismiss="modal">@*確定*@ @Html.BMResource("BM_ConfirmForAddCustomer")</button>
+                        <button type="button" class="btn btn-warning" onclick="CancelModalListItem()" data-dismiss="modal">@*取消*@ @Html.BMResource("BM_Cancel")</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 彈出CheckBox欄位設定視窗結束 -->
+
+
+</form>
+
+<script>
+
+
+    $(function () {
+        $('form').submit(function () {
+            var a = $('#TextType').val(); //抓取欄位樣式SelectValue
+
+            var l_CUSTOM_FIELD_TYPE = $('#CUSTOM_FIELD_TYPE').val();
+            var l_FieldType = $('#' + a).find("input[name^='FieldType']").val(); //,
+            var l_FieldName = $('#' + a).find("input[name^='FieldName']").val(); //,
+            var l_IsRequiredField = $('#' + a).find("input[name^='IsRequiredField'] "); //,
+            var l_IsReadOnly = $('#' + a).find("input[name^='IsReadOnly'] "); //,
+            var l_FieldRemark = $('#' + a).find("input[name^='FieldRemark']").val(); //,
+
+            var l_FieldValue = '';
+
+            if (a == 'MultiLineText') {
+                l_FieldValue = $('#' + a).find("textarea[name^='FieldValue']").val(); //,
+
+            } else {
+                l_FieldValue = $('#' + a).find("input[name^='FieldValue']").val(); //,
+
+            }
+
+
+            var l_FieldLength = $('#' + a).find("input[name^='FieldLength']").val(); //,
+            var l_FieldRowCount = $('#' + a).find("input[name^='FieldRowCount']").val(); //,
+            var l_MaxValue = $('#' + a).find("input[name^='MaxValue']").val(); //,v
+            var l_MinValue = $('#' + a).find("input[name^='MinValue']").val(); //,
+            var l_RepeatColumns = $('#' + a).find("input[name^='RepeatColumns']").val(); //,
+            var l_ListItem = $('#' + a).find("input[name^='ListItem']");
+            var l_Field_ID = $('#CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA_0__FieldId').val(); //
+
+      
+
+
+            var array = [];
+
+            var JSON_ARRAY = {
+                CustomFiledType: [],
+                FieldType: [],
+                FieldName: [],
+                FieldRemark: [],
+                FieldValue: [],
+                FieldLength: [],
+                FieldRowCount: [],
+                MaxValue: [],
+                MinValue: [],
+                RepeatColumns: [],
+                IsRequiredField: [],
+                IsReadOnly: [],
+                ListItem: [],
+                FieldId: []
+            }
+
+            JSON_ARRAY.CustomFiledType = l_CUSTOM_FIELD_TYPE;
+            JSON_ARRAY.FieldLength = l_FieldLength;
+            JSON_ARRAY.FieldName = l_FieldName;
+            JSON_ARRAY.FieldRemark = l_FieldRemark;
+            JSON_ARRAY.FieldRowCount = l_FieldRowCount;
+            JSON_ARRAY.FieldType = l_FieldType;
+            JSON_ARRAY.FieldValue = l_FieldValue;
+            JSON_ARRAY.MaxValue = l_MaxValue;
+            JSON_ARRAY.MinValue = l_MinValue;
+            JSON_ARRAY.RepeatColumns = l_RepeatColumns;
+            JSON_ARRAY.IsRequiredField = l_IsRequiredField.is(':checked');
+            JSON_ARRAY.IsReadOnly = l_IsReadOnly.is(':checked');
+            JSON_ARRAY.FieldId = l_Field_ID;
+
+            if (l_ListItem.length > 0) {
+                for (var i = 0 ; i < l_ListItem.length; i++) {
+                    array.push(l_ListItem[i].value);
+                }
+                JSON_ARRAY.ListItem = array;
+            }
+
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify(JSON_ARRAY),
+                cache: false,
+                async: false,
+                dataType: 'json',
+                contentType: 'application/json',
+                url: '@Url.Action("CustomFieldSave", "Maintain")',
+                success: function (msg) {
+                    document.location = '@Url.Action("Maintain", "Maintain")';
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+
+
+
+<script>
+
+
+    //2016/06/15新增 如果資料剛LOADING 而TextType select 的是 日期欄位、時間欄位、
+    $(document).ready(function () {
+        var TextTypeValue = $('#TextType').val(); //抓取欄位樣式SelectValue
+
+        $('#TextType_Hidden').val(TextTypeValue);
+        
+
+
+        getSelectedValueDate();    //選擇自訂時顯示額外選項
+        ChangeITEM_CLASS_Time();
+    });
+
+    $(".menu-maintain").addClass("active");
+
+    jQuery(function ($) {
+        $('.switch-type input[type="checkbox"]').onoff();
+    });
+
+
+    $(".input-group").each(function () {
+        var label_height = $(this).height();
+        $(this).children(".form-control").css('height', label_height);
+    });
+
+    //選項隱藏
+    $('.text-content').hide();
+    $('.submit-btn').hide();
+
+
+    //選擇自訂時顯示額外選項
+    $('#TextType').change(function () { ChangeITEM_CLASS(); });
+    function ChangeITEM_CLASS() {
+
+
+
+
+        $('#main').find("input").removeAttr('required'); //remove所有的 required
+
+        var selectedValue = $('#TextType option:selected').val();
+        $('.submit-btn').show();
+
+        $('.text-content').hide();
+        $('#' + selectedValue).show();
+
+        var inputFieldName = $('#' + selectedValue).find("input[name=FieldName]")
+        var inputFieldLength = $('#' + selectedValue).find("input[name=FieldLength]")
+        var inputFieldRowCount = $('#' + selectedValue).find("input[name=FieldRowCount]")
+        var inputMinValue = $('#' + selectedValue).find("input[name=MinValue]")
+        var inputMaxValue = $('#' + selectedValue).find("input[name=MaxValue]")
+        var inputRepeatColumns = $('#' + selectedValue).find("input[name=RepeatColumns]")
+
+        if (inputFieldName.attr('name') != 'undefined') {
+            inputFieldName.prop('required', true);
+        }
+        if (inputFieldLength.attr('name') != 'undefined') {
+            inputFieldLength.prop('required', true);
+        }
+        if (inputFieldRowCount.attr('name') != 'undefined') {
+            inputFieldRowCount.prop('required', true);
+        }
+        if (inputMinValue.attr('name') != 'undefined') {
+            inputMinValue.prop('required', true);
+        }
+        if (inputMaxValue.attr('name') != 'undefined') {
+            inputMaxValue.prop('required', true);
+        }
+        if (inputRepeatColumns.attr('name') != 'undefined') {
+            inputRepeatColumns.prop('required', true);
+        }
+    }
+
+    //選擇自訂時顯示額外選項
+    $('#DateType').change(function () { ChangeITEM_CLASS_Date(); });
+
+    function ChangeITEM_CLASS_Date() {
+
+        getSelectedValueDate();
+
+    }
+    function getSelectedValueDate() {
+        var selectedValueDate = $('#DateType option:selected').val();
+
+        if (selectedValueDate == "designation") {
+            $('#DesignationDate').removeClass('dis-no');
+            var FieldValueDate = document.getElementById('FieldValueDate')
+            FieldValueDate.value = ""
+        }
+        else if (selectedValueDate == "preset") {
+
+            var FieldValueDate = document.getElementById('FieldValueDate')
+            FieldValueDate.value = "@@today"
+            $('#DesignationDate').addClass('dis-no');
+
+
+        }
+        else {
+            $('#DesignationDate').addClass('dis-no');
+        }
+    }
+
+
+
+
+
+
+    //選擇自訂時顯示額外選項
+    $('#TimeType').change(function () { ChangeITEM_CLASS_Time(); });
+    function ChangeITEM_CLASS_Time() {
+        var selectedValueTime = $('#TimeType option:selected').val();
+
+        if (selectedValueTime == "designation") {
+            $('#DesignationTime').removeClass('dis-no');
+            var FieldValueDate = document.getElementById('FieldValueTime')
+            FieldValueDate.value = "";
+        }
+        else if (selectedValueTime == "preset") {
+
+            var FieldValueDate = document.getElementById('FieldValueTime')
+            FieldValueDate.value = "@@today"
+            $('#DesignationTime').addClass('dis-no');
+
+
+
+        }
+        else {
+            $('#DesignationTime').addClass('dis-no');
+        }
+
+
+    }
+</script>
+
+
+

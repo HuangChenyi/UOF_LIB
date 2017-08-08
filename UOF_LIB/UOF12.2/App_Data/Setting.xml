@@ -1,0 +1,735 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Setting>
+    <Themes>
+        <item>DefaultTheme</item>
+        <item>SecondTheme</item>
+        <item>ThirdTheme</item>
+        <item>PinkWorld</item>
+        <item>Fashion</item>
+    </Themes>
+    <Cultures>
+        <item>en-US</item>
+        <item>zh-TW</item>
+        <item>zh-CN</item>
+    </Cultures>
+    <DataTimePattern>
+        <item Culture="en-US" Date="yyyy/MM/dd" Time="HH:mm" />
+        <item Culture="zh-TW" Date="yyyy/MM/dd" Time="HH:mm" />
+        <item Culture="zh-CN" Date="yyyy/MM/dd" Time="HH:mm" />
+        <item Culture="vi" Date="yyyy/MM/dd" Time="HH:mm" />
+        <item Culture="id" Date="yyyy/MM/dd" Time="HH:mm" />
+        <item Culture="mt-MT" Date="yyyy/MM/dd" Time="HH:mm" />
+    </DataTimePattern>
+  <TimeZones>
+    <TimeZone id="GMT Standard Time" tzdata="Europe/London">
+      <culture name="zh-TW">倫敦(UTC)</culture>
+      <culture name="zh-CN">伦敦(UTC)</culture>
+      <culture name="en-US">London(UTC)</culture>
+      <culture name="vi">倫敦(UTC)</culture>
+      <culture name="id">倫敦(UTC)</culture>
+    </TimeZone>
+    <TimeZone id="Romance Standard Time" tzdata="Europe/Paris">
+      <culture name="zh-TW">巴黎(UTC+1)</culture>
+      <culture name="zh-CN">巴黎(UTC+1)</culture>
+      <culture name="en-US">Paris(UTC+1)</culture>
+      <culture name="vi">巴黎(UTC+1)</culture>
+      <culture name="id">巴黎(UTC+1)</culture>
+    </TimeZone>
+    <TimeZone id="Egypt Standard Time" tzdata="Africa/Cairo">
+      <culture name="zh-TW">開羅(UTC+2)</culture>
+      <culture name="zh-CN">开罗(UTC+2)</culture>
+      <culture name="en-US">Cairo(UTC+2)</culture>
+      <culture name="vi">開羅(UTC+2)</culture>
+      <culture name="id">開羅(UTC+2)</culture>
+    </TimeZone>
+    <TimeZone id="Russian Standard Time" tzdata="Europe/Moscow">
+      <culture name="zh-TW">莫斯科(UTC+3)</culture>
+      <culture name="zh-CN">莫斯科(UTC+3)</culture>
+      <culture name="en-US">Moscow(UTC+3)</culture>
+      <culture name="vi">莫斯科(UTC+3)</culture>
+      <culture name="id">莫斯科(UTC+3)</culture>
+    </TimeZone>
+    <TimeZone id="Arabian Standard Time" tzdata="Asia/Dubai">
+      <culture name="zh-TW">杜拜(UTC+4)</culture>
+      <culture name="zh-CN">迪拜(UTC+4)</culture>
+      <culture name="en-US">Dubai(UTC+4)</culture>
+      <culture name="vi">杜拜(UTC+4)</culture>
+      <culture name="id">杜拜(UTC+4)</culture>
+    </TimeZone>
+    <TimeZone id="West Asia Standard Time" tzdata="Asia/Tashkent">
+      <culture name="zh-TW">塔什干(UTC+5)</culture>
+      <culture name="zh-CN">塔什干(UTC+5)</culture>
+      <culture name="en-US">Tashkent(UTC+5)</culture>
+      <culture name="vi">塔什干(UTC+5)</culture>
+      <culture name="id">塔什干(UTC+5)</culture>
+    </TimeZone>
+    <TimeZone id="India Standard Time" tzdata="Asia/Calcutta">
+      <culture name="zh-TW">新德里(UTC+5.5)</culture>
+      <culture name="zh-CN">新德里(UTC+5.5)</culture>
+      <culture name="en-US">New Delhi(UTC+5.5)</culture>
+      <culture name="vi">新德里(UTC+5.5)</culture>
+      <culture name="id">新德里(UTC+5.5)</culture>
+    </TimeZone>
+    <TimeZone id="Bangladesh Standard Time" tzdata="Asia/Dhaka">
+      <culture name="zh-TW">達卡(UTC+6)</culture>
+      <culture name="zh-CN">达卡(UTC+6)</culture>
+      <culture name="en-US">Dhaka(UTC+6)</culture>
+      <culture name="vi">達卡(UTC+6)</culture>
+      <culture name="id">達卡(UTC+6)</culture>
+    </TimeZone>
+    <TimeZone id="SE Asia Standard Time" tzdata="Asia/Bangkok">
+      <culture name="zh-TW">曼谷(UTC+7)</culture>
+      <culture name="zh-CN">曼谷(UTC+7)</culture>
+      <culture name="en-US">Bangkok(UTC+7)</culture>
+      <culture name="vi">曼谷(UTC+7)</culture>
+      <culture name="id">曼谷(UTC+7)</culture>
+    </TimeZone>
+    <TimeZone id="Taipei Standard Time" tzdata="Asia/Taipei">
+      <culture name="zh-TW">台北(UTC+8)</culture>
+      <culture name="zh-CN">台北(UTC+8)</culture>
+      <culture name="en-US">Taipei(UTC+8)</culture>
+      <culture name="vi">台北(UTC+8)</culture>
+      <culture name="id">台北(UTC+8)</culture>
+    </TimeZone>
+    <TimeZone id="Tokyo Standard Time" tzdata="Asia/Tokyo">
+      <culture name="zh-TW">東京(UTC+9)</culture>
+      <culture name="zh-CN">东京(UTC+9)</culture>
+      <culture name="en-US">Tokyo(UTC+9)</culture>
+      <culture name="vi">東京(UTC+9)</culture>
+      <culture name="id">東京(UTC+9)</culture>
+    </TimeZone>
+    <TimeZone id="Cen. Australia Standard Time" tzdata="Australia/Adelaide">
+      <culture name="zh-TW">阿德雷德(UTC+9.5)</culture>
+      <culture name="zh-CN">阿德莱德(UTC+9.5)</culture>
+      <culture name="en-US">Adelaide(UTC+9.5)</culture>
+      <culture name="vi">阿德雷德(UTC+9.5)</culture>
+      <culture name="id">阿德雷德(UTC+9.5)</culture>
+    </TimeZone>
+    <TimeZone id="AUS Eastern Standard Time" tzdata="Australia/Sydney">
+      <culture name="zh-TW">雪梨(UTC+10)</culture>
+      <culture name="zh-CN">悉尼(UTC+10)</culture>
+      <culture name="en-US">Sydney(UTC+10)</culture>
+      <culture name="vi">雪梨(UTC+10)</culture>
+      <culture name="id">雪梨(UTC+10)</culture>
+    </TimeZone>
+    <TimeZone id="Central Pacific Standard Time" tzdata="Pacific/Guadalcanal">
+      <culture name="zh-TW">努美阿(UTC+11)</culture>
+      <culture name="zh-CN">努美阿(UTC+11)</culture>
+      <culture name="en-US">Noumea(UTC+11)</culture>
+      <culture name="vi">努美阿(UTC+11)</culture>
+      <culture name="id">努美阿(UTC+11)</culture>
+    </TimeZone>
+    <TimeZone id="New Zealand Standard Time" tzdata="Pacific/Auckland">
+      <culture name="zh-TW">奧克蘭(UTC+12)</culture>
+      <culture name="zh-CN">奥克兰(UTC+12)</culture>
+      <culture name="en-US">Auckland(UTC+12)</culture>
+      <culture name="vi">奧克蘭(UTC+12)</culture>
+      <culture name="id">奧克蘭(UTC+12)</culture>
+    </TimeZone>
+    <TimeZone id="UTC-11" tzdata="Etc/GMT+11">
+      <culture name="zh-TW">中途島(UTC-11)</culture>
+      <culture name="zh-CN">中途岛(UTC-11)</culture>
+      <culture name="en-US">Midway(UTC-11)</culture>
+      <culture name="vi">中途島(UTC-11)</culture>
+      <culture name="id">中途島(UTC-11)</culture>
+    </TimeZone>
+    <TimeZone id="Hawaiian Standard Time" tzdata="Pacific/Honolulu">
+      <culture name="zh-TW">檀香山(UTC-10)</culture>
+      <culture name="zh-CN">檀香山(UTC-10)</culture>
+      <culture name="en-US">Honolulu(UTC-10)</culture>
+      <culture name="vi">檀香山(UTC-10)</culture>
+      <culture name="id">檀香山(UTC-10)</culture>
+    </TimeZone>
+    <TimeZone id="Alaskan Standard Time" tzdata="America/Anchorage">
+      <culture name="zh-TW">安克拉治(UTC-9)</culture>
+      <culture name="zh-CN">安克雷奇(UTC-9)</culture>
+      <culture name="en-US">Anchorage(UTC-9)</culture>
+      <culture name="vi">安克拉治(UTC-9)</culture>
+      <culture name="id">安克拉治(UTC-9)</culture>
+    </TimeZone>
+    <TimeZone id="Pacific Standard Time" tzdata="America/Los_Angeles">
+      <culture name="zh-TW">洛杉磯(UTC-8)</culture>
+      <culture name="zh-CN">洛杉矶(UTC-8)</culture>
+      <culture name="en-US">Los Angles(UTC-8)</culture>
+      <culture name="vi">洛杉磯(UTC-8)</culture>
+      <culture name="id">洛杉磯(UTC-8)</culture>
+    </TimeZone>
+    <TimeZone id="Mountain Standard Time" tzdata="America/Phoenix">
+      <culture name="zh-TW">亞歷桑那(UTC-7)</culture>
+      <culture name="zh-CN">亚利桑那(UTC-7)</culture>
+      <culture name="en-US">Arizona(UTC-7)</culture>
+      <culture name="vi">亞歷桑那(UTC-7)</culture>
+      <culture name="id">亞歷桑那(UTC-7)</culture>
+    </TimeZone>
+    <TimeZone id="Central Standard Time" tzdata="America/Chicago">
+      <culture name="zh-TW">芝加哥(UTC-6)</culture>
+      <culture name="zh-CN">芝加哥(UTC-6)</culture>
+      <culture name="en-US">Chicago(UTC-6)</culture>
+      <culture name="vi">芝加哥(UTC-6)</culture>
+      <culture name="id">芝加哥(UTC-6)</culture>
+    </TimeZone>
+    <TimeZone id="Eastern Standard Time" tzdata="America/New_York">
+      <culture name="zh-TW">紐約(UTC-5)</culture>
+      <culture name="zh-CN">紐約(UTC-5)</culture>
+      <culture name="en-US">New York(UTC-5)</culture>
+      <culture name="vi">紐約(UTC-5)</culture>
+      <culture name="id">紐約(UTC-5)</culture>
+    </TimeZone>
+    <TimeZone id="Atlantic Standard Time" tzdata="America/Halifax">
+      <culture name="zh-TW">大西洋時間(UTC-4)</culture>
+      <culture name="zh-CN">大西洋時間(UTC-4)</culture>
+      <culture name="en-US">Atlantic Time(UTC-4)</culture>
+      <culture name="vi">大西洋時間(UTC-4)</culture>
+      <culture name="id">大西洋時間(UTC-4)</culture>
+    </TimeZone>
+    <TimeZone id="E. South America Standard Time" tzdata="America/Sao_Paulo">
+      <culture name="zh-TW">里約熱內盧(UTC-3)</culture>
+      <culture name="zh-CN">里约热内卢(UTC-3)</culture>
+      <culture name="en-US">Rio de Janeiro(UTC-3)</culture>
+      <culture name="vi">里約熱內盧(UTC-3)</culture>
+      <culture name="id">里約熱內盧(UTC-3)</culture>
+    </TimeZone>
+    <TimeZone id="UTC-02" tzdata="Etc/GMT+2">
+      <culture name="zh-TW">費爾南多迪諾羅尼亞島(UTC-2)</culture>
+      <culture name="zh-CN">费尔南多·迪诺罗尼亚群岛(UTC-2)</culture>
+      <culture name="en-US">Ilha Fernando de Noronha(UTC-2)</culture>
+      <culture name="vi">費爾南多迪諾羅尼亞島(UTC-2)</culture>
+      <culture name="id">費爾南多迪諾羅尼亞島(UTC-2)</culture>
+    </TimeZone>
+    <TimeZone id="Azores Standard Time" tzdata="Atlantic/Azores">
+      <culture name="zh-TW">亞述群島(UTC-1)</culture>
+      <culture name="zh-CN">亚述群岛(UTC-1)</culture>
+      <culture name="en-US">Azores(UTC-1)</culture>
+      <culture name="vi">亞述群島(UTC-1)</culture>
+      <culture name="id">亞述群島(UTC-1)</culture>
+    </TimeZone>
+  </TimeZones>
+    <ThirdLogin>
+        <app name="EM" key="$$2011711##rrzz)@aF" iv="@em11$93*xZyjkFzr" expiredSeconds="300" defaultCulture="zh-TW" failUrlFormat="" />        
+    </ThirdLogin>
+    <Tasks>
+      <!--以下固定排程-->
+      <!--DMS-->
+      <Task type="Ede.Uof.DMS.DMSCryptoTask">
+        <culture name="zh-tw">文件管理-文件轉檔加密</culture>
+        <culture name="zh-cn">文件管理-文件转档加密</culture>
+        <culture name="en-us">DMS - DOC Convert &amp; Encrypt</culture>
+        <culture name="vi">Quản lý văn kiện- văn kiện chuyển đổi file thêm mật mã</culture>
+        <culture name="id">DMS - Mengubah DOC &amp;Encrypt</culture>
+        <culture name="mt-mt">DMS - DOC Convert &amp; Encrypt</culture>
+      </Task>
+      <Task type="Ede.Uof.DMS.DMSActiveStatusTask">
+        <culture name="zh-tw">文件管理-文件狀態變更</culture>
+        <culture name="zh-cn">文件管理-文件状态变更</culture>
+        <culture name="en-us">DMS - DOC Status Change</culture>
+        <culture name="vi">Quản lý văn kiện- thay đổi trạng thái văn kiện</culture>
+        <culture name="id">DMS - Status DOC berubah</culture>
+        <culture name="mt-mt">DMS - DOC Status Change</culture>
+      </Task>
+      <Task type="Ede.Uof.DMS.DMSDocBeforeInvalidTask">
+        <culture name="zh-tw">文件管理-文件到期通知</culture>
+        <culture name="zh-cn">文件管理-文件到期通知</culture>
+        <culture name="en-us">DMS - DOC Expired Notify</culture>
+        <culture name="vi">Quản lý văn kiện- thông báo văn kiện đến hạn</culture>
+        <culture name="id">DMS - Pemberitahuan DOC kadaluarsa</culture>
+        <culture name="mt-mt">DMS - DOC Expired Notify</culture>
+      </Task>
+      <Task type="Ede.Uof.DMS.DMSDocCheckOutLimitTask">
+        <culture name="zh-tw">文件管理-文件取出到期通知</culture>
+        <culture name="zh-cn">文件管理-文件取出到期通知</culture>
+        <culture name="en-us">DMS - DOC Check-in Expired Notify</culture>
+        <culture name="vi">Quản lý văn kiện- thông báo văn kiện đã đạt đến hạn</culture>
+        <culture name="id">DMS - Pemberitahuan kadaluarsa pemeriksaan DOC</culture>
+        <culture name="mt-mt">DMS - DOC Check-in Expired Notify</culture>
+      </Task>
+      <Task type="Ede.Uof.DMS.DMSPopularDocPermissionTask">
+        <culture name="zh-tw">文件管理-熱門文件統計</culture>
+        <culture name="zh-cn">文件管理-热门文档统计</culture>
+        <culture name="en-us">DMS-Popular Doc. Scheduling</culture>
+        <culture name="vi">Quản lý văn kiện DMS-Thống kê văn kiện phổ biến</culture>
+        <culture name="id">DMS-Penjadwalan dokumen populer</culture>
+        <culture name="mt-mt">DMS-Popular Doc. Scheduling</culture>
+      </Task>
+      <!--EIP-->
+      <Task type="Ede.Uof.EIP.Bulletin.AutoBulletinPublishTrigger">
+        <culture name="zh-tw">公告-自動上架</culture>
+        <culture name="zh-cn">公告-自动上架</culture>
+        <culture name="en-us">Bulletin - Auto On-Shelf</culture>
+        <culture name="vi">Thông cáo tự động lên kệ</culture>
+        <culture name="id">Buletin - otomatis bisa disimpan</culture>
+        <culture name="mt-mt">Bulletin - Auto On-Shelf</culture>
+      </Task>
+      <Task type="Ede.Uof.EIP.Duty.Settlement.Daily.Task">
+        <culture name="zh-tw">差勤-日結算處理</culture>
+        <culture name="zh-cn">差勤-日结算处理</culture>
+        <culture name="en-us">Leave - Daily Settlement</culture>
+        <culture name="vi">Quá trình xử lý ngày</culture>
+        <culture name="id">Cuti - Penyelesaian harian</culture>
+        <culture name="mt-mt">差勤-日結算處理</culture>
+      </Task>
+      <Task type="Ede.Uof.EIP.Duty.Punch.ExternalPunchTask">
+        <culture name="zh-tw">差勤-刷卡資料匯入</culture>
+        <culture name="zh-cn">差勤-刷卡资料汇入</culture>
+        <culture name="en-us">Leave - Duty Data Import</culture>
+        <culture name="vi">Nhập dữ liệu bấm thẻ</culture>
+        <culture name="id">Cuti- Memasukan data tugas</culture>
+        <culture name="mt-mt">ခွင့်တိုင်ကြားခြင်း−အလုပ်ချိန်အချက်အလက်သွင်းခြင်း။</culture>
+      </Task>
+      <Task type="Ede.Uof.EIP.PrivateMessage.Task.PrivateMessageTask">
+        <culture name="zh-tw">私人訊息-未歸檔訊息清除</culture>
+        <culture name="zh-cn">私人讯息-未归档讯息清除</culture>
+        <culture name="en-us">Message - Delete Not filed Message</culture>
+        <culture name="vi">Tin nhắn- Xóa tin nhắn chưa lưu</culture>
+        <culture name="id">Pesan - Hapus pesan tidak disimpan</culture>
+        <culture name="mt-mt">Message - Delete Not filed Message</culture>
+      </Task>
+      <Task type="Ede.Uof.EIP.Schedule.Meeting.SendMeetingNoticeTask">
+        <culture name="zh-tw">行事曆-預約發送會議通知</culture>
+        <culture name="zh-cn">工作日历-预约发送会议通知</culture>
+        <culture name="en-us">Schedule-Meeting Notice Booking</culture>
+        <culture name="vi">Lịch làm việc-Dự kiến gửi thông báo cuộc họp</culture>
+        <culture name="id">Jadwal-Pemesanan pemberitahuan meeting</culture>
+        <culture name="mt-mt">အချိန်ဇယား−အချိန်ဇယားသတိပြုရန်။</culture>
+      </Task>
+      <!--PMS-->
+      <Task type="Ede.Uof.EIP.PMS.TimeoutTask">
+        <culture name="zh-tw">專案管理-任務逾時通知</culture>
+        <culture name="zh-cn">专案管理-任务逾时通知</culture>
+        <culture name="en-us">Project - Task Expired Notify</culture>
+        <culture name="vi">Quản lý chuyên đề- thông báo nhiệm vụ hết hạn</culture>
+        <culture name="id">Proyek - Pemberitahuan kadaluarsa tugas</culture>
+        <culture name="mt-mt">Project - Task Expired Notify</culture>
+      </Task>
+      <!--QUE-->
+      <Task type="Ede.Uof.EIP.QUE.CloseQusTask">
+        <culture name="zh-tw">問卷-到期關閉</culture>
+        <culture name="zh-cn">问卷-到期关闭</culture>
+        <culture name="en-us">Questionnaire - Survey Expired</culture>
+        <culture name="vi">Khảo sát- đến hạn khóa</culture>
+        <culture name="id">Daftar pertanyaan - kadaluarsa peninjauan</culture>
+        <culture name="mt-mt">Questionnaire - Survey Expired</culture>
+      </Task>
+      <Task type="Ede.Uof.EIP.QUE.SendQueNoticeTask">
+        <culture name="zh-tw">問卷-預約發送問卷調查通知</culture>
+        <culture name="zh-cn">问卷-预约发送问卷调查通知</culture>
+        <culture name="en-us">Survey - Booking Servey Notice</culture>
+        <culture name="vi">Khảo sát- Dự kiến phát gửi điều tra bảng khảo sát</culture>
+        <culture name="id">問卷-預約發送問卷調查通知</culture>
+        <culture name="id">စီစစ်ခြင်း−အကြောင်းကြားစာကြိုတင်ပေးပို့ခြင်း။</culture>
+      </Task>
+      <!--Utility-->
+      <Task type="Ede.Uof.Utility.FileCenter.V3.Task.ClearFileTask">
+        <culture name="zh-tw">FileCenter-清除不使用檔案</culture>
+        <culture name="zh-cn">FileCenter-清除不使用档案</culture>
+        <culture name="en-us">FileCenter - Delete Unused File</culture>
+        <culture name="vi">FileCenter- Xóa file không sử dụng</culture>
+        <culture name="id">Pusat arsip - Hapus arsip tidak dipakai</culture>
+        <culture name="mt-mt">FileCenter - Delete Unused File</culture>
+      </Task>
+      <Task type="Ede.Uof.Utility.FileCenter.V3.Task.TransportTask">
+        <culture name="zh-tw">Proxy-檔案傳遞</culture>
+        <culture name="zh-cn">Proxy-档案传递</culture>
+        <culture name="en-us">Proxy - File Delivery</culture>
+        <culture name="vi">Proxy- chuyển file</culture>
+        <culture name="id">Proxy-Pengiriman arsip</culture>
+        <culture name="mt-mt">Proxy - File Delivery</culture>
+      </Task>
+      <Task type="Ede.Uof.Utility.Message.TaskPlugin">
+        <culture name="zh-tw">底層-郵件發送</culture>
+        <culture name="zh-cn">底层-邮件发送</culture>
+        <culture name="en-us">Framework - Mail Delivery</culture>
+        <culture name="vi">Cơ sở- hộp thư gửi đi</culture>
+        <culture name="id">Dasar - Pengiriman Mail</culture>
+        <culture name="mt-mt">Framework - Mail Delivery</culture>
+      </Task>
+      <Task type="Ede.Uof.Utility.Message.MessageCheckTask">
+          <culture name="zh-tw">底層-非立即寄送郵件處理</culture>
+          <culture name="zh-cn">底层-非立即寄送邮件处理</culture>
+          <culture name="en-us">Framework - Non-instant mail process</culture>
+          <culture name="vi">Khung -quá trình email không ngay lập tức</culture>
+          <culture name="id">Kerangka kerja- Proses email non instan</culture>
+          <culture name="mt-mt">လုပ်ငန်းစဉ်−အီးမေးအားချက်ချင်းအသုံးမပြု။</culture>
+      </Task>
+      <Task type="Ede.Uof.Utility.IndexService.Seekafile.Server.IndexServiceTask">
+        <culture name="zh-tw">底層-全文檢索</culture>
+        <culture name="zh-cn">底层-全文检索</culture>
+        <culture name="en-us">Framework - Full Text Index</culture>
+        <culture name="vi">Cơ sở- tìm kiếm toàn văn bản</culture>
+        <culture name="id">Dasar - indeks naskah penuh</culture>
+        <culture name="mt-mt">Framework - Full Text Index</culture>
+      </Task>   
+      <Task type="Ede.Uof.Utility.Task.Dynamic.DynamicTaskRecordClean">
+        <culture name="zh-tw">底層-動態排程紀錄清除</culture>
+        <culture name="zh-cn">底层-动态排程纪录清除</culture>
+        <culture name="en-us">Framework - Dynamic clear scheduling records</culture>
+        <culture name="vi">底層-動態排程紀錄清除</culture>
+        <culture name="id">Kerangka kerja - Catatan penjadwalan jelas dinamis</culture>
+        <culture name="mt-mt">လုပ်ငန်းစဉ်−အီးမေးအားချက်ချင်းအသုံးမပြု။</culture>
+      </Task>        
+      <!--WKF-->
+      <Task type="Ede.Uof.WKF.TimeoutFormNootify">
+        <culture name="zh-tw">電子簽核-表單與站點逾時通知</culture>
+        <culture name="zh-cn">电子签核-表单与站点逾时通知</culture>
+        <culture name="en-us">WorkFlow - Form &amp; Stop Delay Notify</culture>
+        <culture name="vi">Biểu đơn trình ký- biểu đơn và thông báo đến hạn</culture>
+        <culture name="id">Alurkerja-form &amp; Pemberitahuan penundaan penghentian</culture>
+        <culture name="mt-mt">WorkFlow - Form &amp; Stop Delay Notify</culture>
+      </Task>
+      <Task type="Ede.Uof.WKF.DeleteScriptGarbage">
+        <culture name="zh-tw">電子簽核-刪除無用草稿</culture>
+        <culture name="zh-cn">电子签核-删除无用草稿</culture>
+        <culture name="en-us">WorkFlow - Delete Unused Draft</culture>
+        <culture name="vi">Biểu đơn trình ký- xóa không lưu nháp</culture>
+        <culture name="id">Alurkerja - hapus konsep tidak dipakai</culture>
+        <culture name="mt-mt">WorkFlow - Delete Unused Draft</culture>
+      </Task>
+      <Task type="Ede.Uof.WKF.Design.AutoVersionIssue">
+        <culture name="zh-tw">電子簽核-表單版本自動發佈</culture>
+        <culture name="zh-cn">电子签核-表单版本自动发布</culture>
+        <culture name="en-us">WorkFlow - Form Auto Release</culture>
+        <culture name="vi">Biểu đơn trình ký - phiên bản biểu đơn tự động công bố</culture>
+        <culture name="id">Alurkerja - form rilis otomatis</culture>
+        <culture name="mt-mt">WorkFlow - Form Auto Release</culture>
+      </Task>
+      <Task type="Ede.Uof.WKF.CreateTaskByExternalDt">
+        <culture name="zh-tw">電子簽核-資料庫起單</culture>
+        <culture name="zh-cn">电子签核-资料库起单</culture>
+        <culture name="en-us">WorkFlow - DB Trigger</culture>
+        <culture name="vi">Biểu đơn trình ký- Kho dữ liệu</culture>
+        <culture name="id">Alurkerja - Pemicu DB</culture>
+        <culture name="mt-mt">WorkFlow - DB Trigger</culture>
+      </Task>
+      <Task type="Ede.Uof.WKF.CycleFormNotify">
+        <culture name="zh-tw">電子簽核-週期性簽核通知</culture>
+        <culture name="zh-cn">电子签核-週期性签核通知</culture>
+        <culture name="en-us">WorkFlow - Periodic Notify</culture>
+        <culture name="vi">Biểu đơn trình ký- Thông báo xét duyệt quá hạn</culture>
+        <culture name="id">Alurkerja - Pemberitahuan berkala</culture>
+        <culture name="mt-mt">WorkFlow - Periodic Notify</culture>
+      </Task>
+      <!--UChat-->
+      <Task type="Ede.Uof.EIP.UChat.ClearExpiredLogTask">
+        <culture name="zh-tw">清除Uchat過期的log資料</culture>
+        <culture name="zh-cn">清除Uchat过期的log数据</culture>
+        <culture name="en-us">Clear all expired log data of U-chat</culture>
+        <culture name="vi">清除Uchat過期的log資料</culture>
+        <culture name="id">清除Uchat過期的log資料</culture>
+        <culture name="mt-mt">清除Uchat過期的log資料</culture>
+      </Task>
+      <Task type="Ede.Uof.EIP.UChat.SyncMemberTask">
+        <culture name="zh-tw">同步內部員工資訊至公開聊天室</culture>
+        <culture name="zh-cn">同步内部员工信息至公开聊天室</culture>
+        <culture name="en-us">Synchronize information of Staff to Open chatroom</culture>
+        <culture name="vi">同步內部員工資訊至公開聊天室</culture>
+        <culture name="id">同步內部員工資訊至公開聊天室</culture>
+        <culture name="mt-mt">同步內部員工資訊至公開聊天室</culture>
+      </Task>
+      <!--以下動態排程-->
+      <!--DMS-->
+      <Task type="Ede.Uof.DMS.DMSConvertDoc">
+        <culture name="zh-tw">文件管理-文件轉檔</culture>
+        <culture name="zh-cn">文件管理-文件转档</culture>
+        <culture name="en-us">DMS - DOC Convert</culture>
+        <culture name="vi">Quản lý văn kiện- văn kiện chuyển đổi file</culture>
+        <culture name="id">DMS - Merubah DOC</culture>
+        <culture name="mt-mt">DMS - DOC Convert</culture>
+      </Task>
+      <Task type="Ede.Uof.DMS.DMSRemoteUploadTask">
+        <culture name="zh-tw">文件管理-文件異地發佈</culture>
+        <culture name="zh-cn">文件管理-文件异地发布</culture>
+        <culture name="en-us">DMS - DOC Release to Remote</culture>
+        <culture name="vi">Quản lý văn kiện- file phát hành ngoại vi</culture>
+        <culture name="id">DMS - Rilis DOC ke ukuran kecil</culture>
+        <culture name="mt-mt">DMS - DOC Release to Remote</culture>
+      </Task>
+      <Task type="Ede.Uof.Utility.Doc.DocConvertTask">
+        <culture name="zh-tw">底層-文件轉檔</culture>
+        <culture name="zh-cn">底层-文件转档</culture>
+        <culture name="en-us">Framework - DOC Convert</culture>
+        <culture name="vi">Cơ sở- văn kiện chuyển đổi file</culture>
+        <culture name="id">Dasar : Merubah DOC</culture>
+        <culture name="mt-mt">Framework - DOC Convert</culture>
+      </Task>
+      <Task type="Ede.Uof.DMS.DocListTask">
+        <culture name="zh-tw">文件管理-文件清冊文件到期通知</culture>
+        <culture name="zh-cn">文件管理-文件清册文件到期通知</culture>
+        <culture name="en-us">DMS-Document Invalid Notify</culture>
+        <culture name="vi">Quản lý văn kiện-Thông báo văn kiện đến kỳ hạn phải xóa</culture>
+        <culture name="id">DMS - Pemberitahuan dokumen tidak sah</culture>
+        <culture name="mt-mt">DMS-Document Invalid Notify</culture>
+      </Task>
+      <!--EIP-->
+      <Task type="Ede.Uof.EIP.Bulletin.SubscribeTrigger">
+        <culture name="zh-tw">公告-發佈與修改通知</culture>
+        <culture name="zh-cn">公告-发布与修改通知</culture>
+        <culture name="en-us">Bulletin - Release &amp; Modify Notify</culture>
+        <culture name="vi">Thông cáo phát hành và sửa đổi thông báo</culture>
+        <culture name="id">Buletin - Rilis &amp; Pemberitahuan merubah</culture>
+        <culture name="mt-mt">Bulletin - Release &amp; Modify Notify</culture>
+      </Task>
+      <Task type="Ede.Uof.EIP.Duty.Settlement.Stage.StageTask">
+        <culture name="zh-tw">差勤-月結算處理</culture>
+        <culture name="zh-cn">差勤-月结算处理</culture>
+        <culture name="en-us">Leave - Monthly Settlement</culture>
+        <culture name="vi">Nhiệm vụ: Xử lý kết sổ tháng</culture>
+        <culture name="id">Cuti -Penyelesain bulanan</culture>
+        <culture name="mt-mt">ခွင့်တိုင်ကြားခြင်း−လစဉ်အခြေပြုစာရင်း။</culture>
+      </Task>
+      <Task type="Ede.Uof.EIP.Push.NotifyTask">
+        <culture name="zh-tw">私人訊息-推播發送</culture>
+        <culture name="zh-cn">私人讯息​​-推播发送</culture>
+        <culture name="en-us">Message - Push Notice</culture>
+        <culture name="vi">Tin nhắn- thông báo push</culture>
+        <culture name="id">Pesan - Pemberitahuan push</culture>
+        <culture name="mt-mt">Message - Push Notice</culture>
+      </Task>
+      <Task type="Ede.Uof.EIP.SMS.SMSTask">
+        <culture name="zh-tw">簡訊-訊息發送</culture>
+        <culture name="zh-cn">简讯-讯息发送</culture>
+        <culture name="en-us">SMS - Send SMS</culture>
+        <culture name="vi">Tin nhắn- gửi tin nhắn</culture>
+        <culture name="id">SMS - Mengirim SMS</culture>
+        <culture name="mt-mt">SMS - Send SMS</culture>
+      </Task>
+      
+      <Task type="Ede.Uof.EIP.GoogleSync.CalendarSyncTask">
+        <culture name="zh-tw">行事曆-Google事件同步</culture>
+        <culture name="zh-cn">行事历-Google事件同步</culture>
+        <culture name="en-us">Calendar - Google Calendar Synchronizing</culture>
+        <culture name="vi">行事曆-Google事件同步</culture>
+        <culture name="id">行事曆-Google事件同步</culture>
+        <culture name="mt-mt">行事曆-Google事件同步</culture>
+      </Task>  
+      <Task type="Ede.Uof.EIP.GoogleSync.CalendarAllEventsSyncTask">
+        <culture name="zh-tw">行事曆-Google第一次同步</culture>
+        <culture name="zh-cn">行事历-Google第一次同步</culture>
+        <culture name="en-us">Calendar - Google Calendar Synchronized - the First time</culture>
+        <culture name="vi">行事曆-Google第一次同步</culture>
+        <culture name="id">行事曆-Google第一次同步</culture>
+        <culture name="mt-mt">行事曆-Google第一次同步</culture>
+      </Task>        
+      <Task type="Ede.Uof.EIP.GoogleSync.CalendarDelTask">
+        <culture name="zh-tw">行事曆-Google事件刪除</culture>
+        <culture name="zh-cn">行事历-Google事件删除</culture>
+        <culture name="en-us">Calendar - Google Calendar deletion</culture>
+        <culture name="vi">行事曆-Google事件刪除</culture>
+        <culture name="id">行事曆-Google事件刪除</culture>
+        <culture name="mt-mt">行事曆-Google事件刪除</culture>
+      </Task>   
+      <Task type="Ede.Uof.EIP.GoogleSync.CalendarOrgSyncTask">
+        <culture name="zh-tw">組織行事曆-Google事件同步</culture>
+        <culture name="zh-cn">组织行事历-Google事件同步</culture>
+        <culture name="en-us">Organization Calendar - Google Calendar Synchronizing</culture>
+        <culture name="vi">組織行事曆-Google事件同步</culture>
+        <culture name="id">組織行事曆-Google事件同步</culture>
+        <culture name="mt-mt">組織行事曆-Google事件同步</culture>
+      </Task>      
+        
+        
+      <!--Organization-->
+      <Task type="Ede.Uof.EIP.Organization.Util.AutoStartUserTask">
+        <culture name="zh-tw">使用者帳號自動解鎖</culture>
+        <culture name="zh-cn">使用者帐号自动解锁</culture>
+        <culture name="en-us">Account Auto Unlock</culture>
+        <culture name="vi">Tự động mở khóa tài khoản người dùng</culture>
+        <culture name="id">Pembuka akun otomatis</culture>
+        <culture name="mt-mt">Account Auto Unlock</culture>
+      </Task>
+      <!--QUE-->
+      <Task type="Ede.Uof.EIP.QUE.ExportExcel">
+        <culture name="zh-tw">問卷-統計資料匯出</culture>
+        <culture name="zh-cn">问卷-统计资料汇出</culture>
+        <culture name="en-us">Questionnaire - Statistics Data Export</culture>
+        <culture name="vi">Khảo sát- Nhập dữ liệu thống kê</culture>
+        <culture name="id">Daftar pertanyaan - Mengirimkan data statistik</culture>
+        <culture name="mt-mt">Questionnaire - Statistics Data Export</culture>
+      </Task>
+      <!--WKF-->
+      <Task type="Ede.Uof.WKF.ExportFormData.ExecuteFormExport">
+        <culture name="zh-tw">電子簽核-表單歸檔查詢匯出</culture>
+        <culture name="zh-cn">电子签核-表单归档查询汇出</culture>
+        <culture name="en-us">WorkFLow - Filing Data Export</culture>
+        <culture name="vi">Biểu đơn trình ký: nhập truy vấn biểu đơn</culture>
+        <culture name="id">Alurkerja - Mengirimkan data simpanan</culture>
+        <culture name="mt-mt">WorkFLow - Filing Data Export</culture>
+      </Task>
+      <Task type="Ede.Uof.WKF.Utility.EndFormCallbackTrigger">
+        <culture name="zh-tw">電子簽核-結案呼叫WS</culture>
+        <culture name="zh-cn">电子签核-结案呼叫WS</culture>
+        <culture name="en-us">WorkFLow - Call WS after Closure</culture>
+        <culture name="vi">Biểu đơn trình ký: kết sổ gọi WS</culture>
+        <culture name="id">Alurkerja - Memanggil WS setelah penutupan</culture>
+        <culture name="mt-mt">WorkFLow - Call WS after Closure</culture>
+      </Task>
+      <Task type="Ede.Uof.WKF.Utility.EventSiteCallbackTrigger">
+        <culture name="zh-tw">電子簽核-站點呼叫WS</culture>
+        <culture name="zh-cn">电子签核-站点呼叫WS</culture>
+        <culture name="en-us">WorkFlow - Call WS at Stop</culture>
+        <culture name="vi">Biểu đơn trình ký:trang web gọi WS</culture>
+        <culture name="id">Alurkerja - Memanggil WS saat berhenti</culture>
+        <culture name="mt-mt">WorkFlow - Call WS at Stop</culture>
+      </Task>
+      <Task type="Ede.Uof.WKF.Utility.RaWsTrigger">
+        <culture name="zh-tw">電子簽核-退回申請者呼叫WS</culture>
+        <culture name="zh-cn">电子签核-退回申请者呼叫WS</culture>
+        <culture name="en-us">WorkFlow - Call WS after Return to Applicant</culture>
+        <culture name="vi">Biểu đơn trình ký: người xin bị từ chối gọi WS</culture>
+        <culture name="id">Alurkerja - Memanggil WS setelah mengembalikan ke pemohon</culture>
+        <culture name="mt-mt">WorkFlow - Call WS after Return to Applicant</culture>
+      </Task>
+      <Task type="Ede.Uof.EIP.HR104.SyncHR.SyncDeptTask">
+        <culture name="zh-tw">104HR-部門同步</culture>
+        <culture name="zh-cn">104HR-部门同步</culture>
+        <culture name="en-us">104HR-部門同步</culture>
+      </Task>
+      <Task type="Ede.Uof.EIP.HR104.SyncHR.SyncUserTask">
+        <culture name="zh-tw">104HR-人員同步</culture>
+        <culture name="zh-cn">104HR-人员同步</culture>
+        <culture name="en-us">104HR-人員同步</culture>
+      </Task>
+      <Task type="Ede.Uof.EIP.HR104.Punch.ExportPunchTask">
+        <culture name="zh-tw">104HR-刷卡資料匯出</culture>
+        <culture name="zh-cn">104HR-刷卡数据导出</culture>
+        <culture name="en-us">104HR-刷卡資料匯出</culture>
+      </Task>
+    </Tasks>
+    <AdminRoles>
+        <Role name="BulletinManager">
+            <culture name="zh-tw">公告管理員</culture>
+            <culture name="zh-cn">公告管理员</culture>
+            <culture name="en-us">Announcement Administrator</culture>
+            <culture name="vi">Thông báo quản trị viên</culture>
+            <culture name="id"> pemberitahuan administrator</culture>
+            <culture name="mt-mt">ကြေညာချက် ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+        </Role>
+        <Role name="DMSAdmin">
+            <culture name="zh-tw">文件管理管理員</culture>
+            <culture name="zh-cn">文件管理管理员</culture>
+            <culture name="en-us">Document Administrator</culture>
+            <culture name="vi">Người quản trị tài liệu</culture>
+            <culture name="id"> manajemen dokumen administrator</culture>
+            <culture name="mt-mt">စာရွက်စာတမ်း ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+        </Role>
+        <Role name="ForumManager">
+            <culture name="zh-tw">討論管理員</culture>
+            <culture name="zh-cn">讨论管理员</culture>
+            <culture name="en-us">Forum Administrator</culture>
+            <culture name="vi">Thảo luận quản trị viên</culture>
+            <culture name="id">Diskusi administrator</culture>
+            <culture name="mt-mt">ဖိုရမ်(ဆွေးနွေးမှု) ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+        </Role>
+        <Role name="PlantManager">
+            <culture name="zh-tw">設備管理員</culture>
+            <culture name="zh-cn">设备管理员</culture>
+            <culture name="en-us">Keeper</culture>
+            <culture name="vi">Thiết bị quản trị viên</culture>
+            <culture name="id">Perangkat administrator</culture>
+            <culture name="mt-mt">ဘွတ်ကင်(ကြိုတင် စာရင်းပေးခြင်း) ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+        </Role>
+        <Role name="PMSManager">
+            <culture name="zh-tw">任務管理管理員</culture>
+            <culture name="zh-cn">任务管理管理员</culture>
+            <culture name="en-us">Teamwork Administrator</culture>
+            <culture name="vi">任務管理管理員</culture>
+            <culture name="id">任務管理管理員</culture>
+            <culture name="mt-mt">任務管理管理員</culture>
+        </Role>
+        <Role name="PollingManager">
+            <culture name="zh-tw">投票管理員</culture>
+            <culture name="zh-cn">投票管理员</culture>
+            <culture name="en-us">Vote Administrator</culture>
+            <culture name="vi">Bình chọn quản trị viên</culture>
+            <culture name="id">voting administrator</culture>
+            <culture name="mt-mt">ဆန္ဒမဲ ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+        </Role>
+        <Role name="QueAdmin">
+            <culture name="zh-tw">問卷管理員</culture>
+            <culture name="zh-cn">問卷管理员</culture>
+            <culture name="en-us">Questionnaire Administrator</culture>
+            <culture name="vi">Quản trị viên bảng hỏi</culture>
+            <culture name="id">Daftar Pertanyaan administrator</culture>
+            <culture name="mt-mt">စစ်တမ်းမေးခွန်းလွှာ ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+        </Role>
+        <Role name="SystemAdmin">
+            <culture name="zh-tw">系統管理員</culture>
+            <culture name="zh-cn">系统管理员</culture>
+            <culture name="en-us">System Administrator</culture>
+            <culture name="vi">Hệ thống quản trị viên</culture>
+            <culture name="id">sistem administrator</culture>
+            <culture name="mt-mt">စနစ် ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+        </Role>
+        <Role name="WKFManager">
+            <culture name="zh-tw">電子簽核管理員</culture>
+            <culture name="zh-cn">电子签核管理员</culture>
+            <culture name="en-us">Workflow Administrator</culture>
+            <culture name="vi">Duyệt điện tử quản trị viên</culture>
+            <culture name="id">tanda tangan elektronik administrator</culture>
+            <culture name="mt-mt">လုပ်ငန်းစဉ် ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+        </Role>
+        <Role name="SystemSloganAdmin">
+          <culture name="zh-tw">公司語錄管理員</culture>
+          <culture name="zh-cn">公司語錄管理員</culture>
+          <culture name="en-us">Motto Administrator</culture>
+          <culture name="vi">Quản trị viên phương châm </culture>
+          <culture name="id">kutipan perusahaan administrator</culture>
+          <culture name="mt-mt">ဆောင်ပုဒ် ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+        </Role>
+        <Role name="MovieManager">
+          <culture name="zh-tw">影音管理員</culture>
+          <culture name="zh-cn">影音管理員</culture>
+          <culture name="en-us">Video Administrator</culture>
+          <culture name="vi">Quản trị viên Video</culture>
+          <culture name="id">audio visual administrator</culture>
+          <culture name="mt-mt">ရုပ်မြင်သံကြား ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+        </Role>
+      <Role name="SMSManager">
+        <culture name="zh-tw">簡訊管理員</culture>
+        <culture name="zh-cn">簡訊管理員</culture>
+        <culture name="en-us">SMS Administrator</culture>
+        <culture name="vi">Quản trị viên tin nhắn</culture>
+        <culture name="id">sms administrator</culture>
+        <culture name="mt-mt">SMS (စာတိုဝန်ဆောင်မှု) ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+      </Role>
+      <Role name="AlbumManager">
+        <culture name="zh-tw">相簿管理員</culture>
+        <culture name="zh-cn">相簿管理员</culture>
+        <culture name="en-us">Album Administrator</culture>
+        <culture name="vi">Quản trị viên tập ảnh</culture>
+        <culture name="id">album administrator</culture>
+        <culture name="mt-mt">အယ်လ်ဘမ် (မှတ်တမ်း) ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+      </Role>
+      <Role name="DutyManager">
+        <culture name="zh-tw">差勤管理員</culture>
+        <culture name="zh-cn">差勤管理员</culture>
+        <culture name="en-us">Leave Administrator</culture>
+        <culture name="vi">Quản trị viên Duty</culture>
+        <culture name="id">kehadiran administrator</culture>
+        <culture name="mt-mt">差勤管理員</culture>
+      </Role>
+      <Role name="ElectronicDocumentMaster">
+        <culture name="zh-tw">電子公文管理員</culture>
+        <culture name="zh-cn">電子公文管理員</culture>
+        <culture name="en-us">Official Letter administrator</culture>
+        <culture name="vi">Người quản lý công văn điện tử</culture>
+        <culture name="id">Administrator surat remi</culture>
+        <culture name="mt-mt">တရားဝင် ရုံးစာ ဆိုင်ရာ အုပ်ချုပ်ရေးမှူး</culture>
+      </Role>
+      <Role name="UChatManager">
+        <culture name="zh-tw">聊天室管理員</culture>
+        <culture name="zh-cn">聊天室管理员</culture>
+        <culture name="en-us">Chat room administrator</culture>
+        <culture name="vi">Người quản lý phòng trò chuyện</culture>
+        <culture name="id">Ruang obrolan pengelola</culture>
+        <culture name="mt-mt">စကားပြောခန်းစီမံသူ</culture>
+      </Role>
+      <Role name="BMManager">
+        <culture name="zh-tw">業務系統管理員</culture>
+        <culture name="zh-cn">业务系统管理员</culture>
+        <culture name="en-us">BM Administrator</culture>
+        <culture name="vi">業務系統管理員</culture>
+        <culture name="id">業務系統管理員</culture>
+        <culture name="mt-mt">業務系統管理員</culture>
+      </Role>      
+      
+    </AdminRoles>
+</Setting>

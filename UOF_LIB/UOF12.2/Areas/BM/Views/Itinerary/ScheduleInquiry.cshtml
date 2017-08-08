@@ -1,0 +1,97 @@
+﻿@model List<Ede.Uof.EIP.BM.dl.Itinerary.SCHEDULE_DETAIL_DATA>
+
+<div class="form-group">
+    @*報表狀態*@
+    <div class="btn-title xs100 mb10">@Html.BMResource("BM_Report_Status")</div>
+    @Html.DropDownList("dllStatus", (IEnumerable<SelectListItem>)ViewBag.REPORT_STATUS, new { @class = "form-control xs100 mb10", @style = "width:auto; display:inline-block;" })
+
+    @*日期起訖*@
+    <div class="btn-title xs100 mb10"> @Html.BMResource("BM_Date_Start_End")</div>
+    @(Html.Kendo().DatePicker().Name("txtStartDate").Value(ViewBag.startDay).HtmlAttributes(new { @class = "xs100 mb10" }))
+    <div class="dis-ib xs100 text-center mb10">　~　</div>
+    @(Html.Kendo().DatePicker().Name("txtEndDate").Value(ViewBag.endDay).HtmlAttributes(new { @class = "xs100 mb10" }))
+
+    @*請輸入關鍵字查詢*@
+    <input id="txtScheduleKeyword" class="form-control xs100 mb10" placeholder="@Html.BMResource("BM_Key_word_to_inquire")" style="width:200px; display:inline-block;">
+
+    @*查詢鈕*@
+    <button class="btn btn-warning xs100 mb10" onclick="GetScheduleInquiryGrid();">@Html.BMResource("BM_Query")</button>
+</div>
+
+<div class="table-responsive">
+    @(Html.Kendo().Grid(Model).Name("gridSchedule").Columns(columns =>
+    {
+        @*時間*@
+        columns.Bound(c => c.CTB_EIP_BM_SCHEDULE.SCHEDULE_TIME)
+        .ClientTemplate(Html.ActionLink("#=CTB_EIP_BM_SCHEDULE.SCHEDULE_TIME#", "ItineraryIn", "Itinerary", new { SCHEDULE_ID = "#=CTB_EIP_BM_SCHEDULE.SCHEDULE_ID#" }, "").ToHtmlString())
+        .Title(Html.BMResource("BM_Time"));
+
+        @*拜訪客戶*@
+        columns.Bound(c => c.VISIT_CUSTOMER_NAME)
+        .ClientTemplate("#=gridColumn_ScheduleCustomer(C_CUSTOMER)#")
+        .Title(Html.BMResource("BM_Visit_Customer"));
+
+        @*案件代號*@
+        columns.Bound(c => c.CASE_NAME)
+        .ClientTemplate("#=gridColumn_Case(CTB_EIP_BM_CASE)#")
+        .Title(Html.BMResource("BM_Case_ID"));
+
+        @*搭配經銷商*@
+        columns.Bound(c => c.C_DEALER).Title(Html.BMResource("BM_Distributor"));
+
+        @*拜訪主旨*@
+        columns.Bound(c => c.CTB_EIP_BM_SCHEDULE_SUB.SUBJECT_NAME).Title(Html.BMResource("BM_Visit_Subject"));
+
+        @*聯絡人*@
+        columns.Bound(c => c.C_LIST_CUSTOMER_CONTENT)
+        .ClientTemplate("#=gridColumn_CustomerContant(C_LIST_CUSTOMER_CONTENT)#")
+        .Title(Html.BMResource("BM_Contact_person"));
+
+        @*拜訪備註*@
+        columns.Bound(c => c.CTB_EIP_BM_SCHEDULE.SCH_REMARK).Title(Html.BMResource("BM_Remark"));
+
+    }).Pageable(pageable => pageable.PageSizes(new[] { 10, 20, 30, 40, 50 })
+    .Messages(messages => messages.Display
+    (
+        Html.BMResource("BM_From") + " {0} " +
+        Html.BMResource("BM_To") + " {1} ," +
+        Html.BMResource("BM_Total") + ": {2} ")
+    ).Messages(messages => messages.ItemsPerPage(""))
+    .Messages(messages => messages.Last(""))
+    .Messages(messages => messages.Next(""))
+    .Messages(messages => messages.First(""))
+    .Messages(messages => messages.Previous(""))
+    .ButtonCount(5))
+    .DataSource(dataSource => dataSource
+                .Ajax()
+                .Batch(true)
+                .PageSize(10)
+                .ServerOperation(false)
+                .Events(events => events.Error("error_handler"))
+                .Model(model => model.Id(p => p.CTB_EIP_BM_SCHEDULE.SCHEDULE_ID))
+                .Destroy("ScheduleSubDelete", "Maintain"))
+    .Sortable())
+</div>
+
+<script type="text/javascript">
+    function GetScheduleInquiryGrid() {
+        $.ajax({
+            url: '@Url.Action("GetScheduleInquiryList")',
+            data: {
+                rptStatus: $("#dllStatus").val(),
+                keyword: $("#txtScheduleKeyword").val(),
+                startDay: $("#txtStartDate").val(),
+                endDay: $("#txtEndDate").val()
+            },
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                $("#gridSchedule").data("kendoGrid").dataSource.data(data);
+            }, error: function (data, textStatus, jqXHR) {
+                alert(data.error);
+            }
+        });
+    }
+</script>

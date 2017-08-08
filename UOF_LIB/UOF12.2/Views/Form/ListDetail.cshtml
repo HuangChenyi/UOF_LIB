@@ -1,0 +1,127 @@
+﻿
+
+<div class="pusher">
+    
+    <div class="ui large purple inverted fixed main  menu">
+        <div class="container">
+            <a class="active left item"  ng-click="goBack()">
+                <i class="arrow circle left icon"></i> 返回
+            </a>
+        </div>
+    </div>
+    <div class="full height">
+
+        <div class=" header segment">
+            <div class="container">
+                <div class="introduction">
+                    <h1 class="ui header blue ">
+                        {{ pool.viewTitle }}
+                    </h1>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="main container">
+
+            <div class="ui form">
+                <div class="ui bottom attached  segment green ">
+                    <div class="field required">
+                        <label>品名規格</label>
+                        <input type="text" ng-model="item.subject" name="name" placeholder="品名規格">
+                    </div>
+                    <div class="field required">
+                        <label>數量</label>
+                        <input type="text" ng-model="item.qty" name="qty" placeholder="數量">
+                    </div>
+                    <div class="field required">
+                        <label>單價</label>
+                        <input type="text" ng-model="item.price" name="price" placeholder="單價">
+                    </div>
+                    <div class="field">
+                        <label>合計</label>
+                        <input type="text" value="{{item.price * item.qty}}" readonly placeholder="0" readonly="">
+                    </div>
+                    <div class="field required">
+                        <label>需求日期</label>
+                        <input type="text" ng-model="item.date" name="date" placeholder="需求日期">
+                    </div>
+
+                    <div class="ui error message"></div>
+                    <div class="two fluid ui buttons">
+                        <div class="ui negative button" ng-click="confirm()">刪除</div>
+                        <div class="or" data-text="或"></div>
+                        <div class="ui positive button" ng-click="submit()">送出</div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ui small confirm modal">
+    <i class="close icon"></i>
+    <div class="header">
+        刪除
+    </div>
+    <div class="content">
+        <p>確定要刪除這筆明細嗎?</p>
+    </div>
+    <div class="actions">
+        <div class="ui negative button">
+            取消
+        </div>
+        <div class="ui positive right labeled icon button" ng-click="remove()">
+            確定
+            <i class="checkmark icon"></i>
+        </div>
+    </div>
+</div>
+<script>
+    
+        $('.ui.form')
+            .form({
+                name: {
+                    identifier: 'name',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: '請輸入品名規格'
+                        }
+                    ]
+                },
+                qty: {
+                    identifier: 'qty',
+                    rules: [
+                        {
+                            type: 'integer',
+                            prompt: '數量只能是數字'
+                        }
+                    ]
+                },
+                price: {
+                    identifier: 'price',
+                    rules: [
+                        {
+                            type: 'integer',
+                            prompt: '價格只能是數字'
+                        }
+                    ]
+                },
+                date: {
+                    identifier: 'date',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: '請輸入需求日期'
+                        }
+                    ]
+                },
+            }
+            , {
+                inline: true,
+                on: 'blur'
+            }
+            );
+</script>

@@ -1,0 +1,196 @@
+﻿@model List<Ede.Uof.EIP.BM.dl.Manager.MANAGER_CASE_CHANGE>
+
+@*交接業務*@
+<div class="btn-title xs100 mb10">
+    @Html.BMResource("BM_Account_Sender")
+</div>
+@Html.DropDownList("SalesFrom", (IEnumerable<SelectListItem>)ViewBag.SalesList, Html.BMResource("BM_Select"), new { @class = "form-control xs100 mb10", @style = "width:auto; display:inline-block;", @onchange = "onSelectSalesChange();" })
+
+@*承接業務*@
+<div class="btn-title xs100 mb10">
+    @Html.BMResource("BM_Account_Receiver")
+</div>
+<select class="form-control xs100 mb10" id="SalesTo" name="SalesTo" style="width:auto; display:inline-block;" disabled="disabled">
+    <option value="">
+        @Html.BMResource("BM_Select")
+    </option>
+</select>
+
+@*更換鈕*@
+<button class="btn btn-warning mb10 xs100" onclick="CaseChange();">
+    @Html.BMResource("BM_Switch")
+</button>
+@*請選擇承接業務*@
+<label id="SelectSalesErrorMessage" style="color:red;display:none;"> @Html.BMResource("BM_Account_Receiver_Required") </label>
+@*請選擇案件*@
+<label id="SelectSalesLengthErrorMessage" style="color:red;display:none;"> @Html.BMResource("BM_Case_Required") </label>
+
+<div id="CaseTransferGrid" class="table-responsive">
+    @(Html.Kendo().Grid(Model).Name("gridCaseChange").Columns(columns =>
+    {
+        columns.Template(@<text></text>).ClientTemplate("<input type='checkbox' name='gridCaseChangeChkbox'  class='chkbxq' />").HeaderTemplate("<input id='gridCaseChangeChkboxAll'  type='checkbox' onclick='ToggleChkBox(this.checked);' />").Title("選取"); ;
+
+        @*案件代號*@
+        columns.Bound(c => c.CASE_ID).
+        ClientTemplate(Html.ActionLink("#=CASE_NO#", "CaseIn", "Case",
+        new { CASE_ID = "#= CASE_ID#", CRUD_STATUS = "VIEW" }, "").ToHtmlString() + "<input type='hidden' value='#=CASE_ID#'").Title(Html.BMResource("BM_Case_ID"));
+
+        @*案件名稱*@
+        columns.Bound(c => c.CASE_NAME).Title(Html.BMResource("BM_Case_Name"));
+
+        @*客戶代號*@
+        columns.Bound(c => c.CUSTOMER_ID).
+        ClientTemplate(Html.ActionLink("#=CUSTOMER_ID#", "ClientIn", "Client",
+        new { CUSTOMER_ID = "#= CUSTOMER_ID#", CRUD_STATUS = "VIEW" }, "").ToHtmlString()).Title(Html.BMResource("BM_Customer_ID"));
+
+        @*客戶簡稱*@
+        columns.Bound(c => c.CUSTOMER_ABBREVIATION).Title(Html.BMResource("BM_Customer_abbreviation"));
+
+        @*負責人員*@
+        columns.Bound(c => c.NAME).ClientTemplate(Html.ActionLink("#=NAME#(#=ACCOUNT#)", "UserIn", "User", new { id = "#= USER_GUID#" }, "").ToHtmlString()).Title(Html.BMResource("BM_Owner"));
+
+        @*等級*@
+        columns.Bound(c => c.CASE_LEVEL).ClientTemplate("#=CASE_LEVEL_NAME#").Title(Html.BMResource("BM_Grade"));
+
+        @*狀態*@
+        columns.Bound(c => c.CASE_STATUS).ClientTemplate("#=gridColumn_reportStatus(CASE_STATUS)#").Title(Html.BMResource("BM_Status"));
+
+    }).Pageable(pageable => pageable.PageSizes(new[] { 10, 20, 30, 40, 50 })
+    .Messages(messages => messages.Display
+    (
+        Html.BMResource("BM_From") + " {0} " +
+        Html.BMResource("BM_To") + " {1} ," +
+        Html.BMResource("BM_Total") + ": {2} ")
+    ).Messages(messages => messages.ItemsPerPage(""))
+    .Messages(messages => messages.Last(""))
+    .Messages(messages => messages.Next(""))
+    .Messages(messages => messages.First(""))
+    .Messages(messages => messages.Previous(""))
+    .ButtonCount(5))
+    .DataSource(dataSource => dataSource
+                .Ajax()
+                .Batch(true)
+                .PageSize(10)
+                .ServerOperation(false)
+                .Events(events => events.Error("error_handler"))
+                .Model(model => model.Id(p => p.CASE_ID)))
+    .Sortable())
+</div>
+
+<script type="text/javascript">
+    function CaseChange() {
+        var SalesFrom = $("#SalesFrom").find(":selected").val();
+        var SalesTo = $("#SalesTo").find(":selected").val();
+        var json = [];
+        if (!SalesFrom || !SalesTo)
+        {
+            $('#SelectSalesErrorMessage').css({ 'display': '' });
+        } else {
+            $('#SelectSalesErrorMessage').css({ 'display': 'none' });
+        }
+        checkboxes = $('#gridCaseChange').find('input[type="checkbox"]:checked');
+        if (checkboxes.length <= 0) {
+            $('#SelectSalesLengthErrorMessage').css({ 'display': '' });
+            return false;
+        } else {
+            $('#SelectSalesErrorMessage').css({ 'display': 'none' });
+        }
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            var checkbox = checkboxes[i];
+            var currentRow = checkbox.parentNode.parentNode;
+            var secondColumn = currentRow.getElementsByTagName("td")[1];
+            var fourthColumn = currentRow.getElementsByTagName("td")[3];
+            var CaseID = $(secondColumn).find('input[type=hidden]').val();
+            var CusID = fourthColumn.firstChild.innerText
+            json.push({ "CASE_ID": CaseID, "CUS_ID": CusID });
+        }
+
+        $.ajax({
+            url: '@Url.Action("CaseChange", "Manager")',
+            data: {
+                SalesFrom: SalesFrom,
+                SalesTo: SalesTo,
+                CaseInput: json
+            },
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                getSalesChangeGrid(SalesFrom);
+                $('#SelectSalesErrorMessage').css({ 'display': 'none' });
+                $('#CaseChangeMessage').text(data);
+                $('.tip-wrap').css({ display: 'block', top: '-100px', opacity: '1' }).animate({ top: '100px' }, 500, function () {
+                    setTimeout(out, 2000);
+                });
+                function out() {
+                    $('.tip-wrap').animate({ top: '-100px', opacity: '0' }, 500, function () {
+                        $(this).css({ display: 'none' });
+                    });
+                }
+
+            }, error: function (data, textStatus, jqXHR) {
+                alert(data.error);
+            }
+        });
+        return false;
+        document.location = '@Url.Action("Role", "Manager")';
+    }
+
+    function onSelectSalesChange() {
+        var SalesFrom = $("#SalesFrom").find(":selected").val();
+        var SalesTo = $("#SalesTo").find(":selected").val();
+        if (!SalesFrom) {
+            $("#SalesTo").val($("#SalesTo option:first").val());
+            $('#SalesTo').attr('disabled', true);
+            $("#gridCaseChange").data('kendoGrid').dataSource.data([]);
+        } else {
+            $('#SalesTo').attr('disabled', false);
+            getSalesChangeOption(SalesFrom);
+            getSalesChangeGrid(SalesFrom);
+        }
+    }
+
+    function getSalesChangeOption(SalesFrom) {
+        $.ajax({
+            url: '@Url.Action("SalesChangeOption", "Manager")',
+            data: {
+                SalesFrom: SalesFrom
+            },
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                $('#SalesTo').find('option').remove().end().append('<option value=""> @Html.BMResource("BM_Select")</option>');
+                if (data.length > 0) {
+                    var Content = "";
+                    $.each(data, function (i, item) {
+                        $("#SalesTo").append($("<option></option>").attr("value", item.USER_GUID).text(item.NAME));
+                    })
+                }
+            }, error: function (data, textStatus, jqXHR) {
+                alert(data.error);
+            }
+        });
+    }
+
+    function getSalesChangeGrid(SalesFrom) {
+        $.ajax({
+            url: '@Url.Action("SalesChangeGrid", "Manager")',
+            data: {
+                SalesFrom: SalesFrom
+            },
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                $("#gridCaseChange").data("kendoGrid").dataSource.data(data);
+            }, error: function (data, textStatus, jqXHR) {
+                alert(data.error);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,119 @@
+﻿@{
+    ViewBag.Title = "人員選擇";
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+
+<style>
+    .onoffswitch-inner::before {
+        content: "選取";
+        background-color: #f0ad4e;
+    }
+
+    .onoffswitch-inner::after {
+        content: "取消";
+    }
+
+    .onoffswitch-inner::before, .onoffswitch-inner::after {
+        font-family: '微軟正黑體';
+    }
+
+    .onoffswitch-label {
+        margin-bottom: 0;
+    }
+
+    .onoffswitch {
+        margin: 0 auto;
+    }
+
+    .onoffswitch-switch, .onoffswitch-label {
+        border: 1px solid #494949;
+    }
+
+    td {
+        vertical-align: middle;
+    }
+</style>
+
+<div id="main" class="clearfix">
+    <div class="topTabs-header clearfix">
+        <h1 class="secInfo">
+            業務人員選擇
+            <input type="hidden" id="_Keyword" name="_Keyword" value="@ViewBag.KEYWORD" />
+         
+            <input type="hidden" id="_CASE_STATUS" name="_CASE_STATUS" value="@ViewBag.CASE_STATUS" />
+
+            <input type="hidden" id="_CASE_LEVEL_ID" name="_CASE_LEVEL_ID" value="@ViewBag.LEVEL" />
+
+        </h1>
+        <button class="return-btn" onclick="goBack()"><i class="fa fa-reply"></i></button>
+
+    </div>
+
+    <div class="tab-content">
+        <div class="table-responsive mb20">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th width="100" style="text-align:center;">
+                            權限
+                        </th>
+                        <th>
+                            人員
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox" />
+                        </td>
+                        <td>
+                            <a href="../User/UserIn">Emmy</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox" />
+                        </td>
+                        <td>
+                            <a href="../User/UserIn">Mark</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox" />
+                        </td>
+                        <td>
+                            <a href="../User/UserIn">Mixer</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox" />
+                        </td>
+                        <td>
+                            <a href="../User/UserIn">Apple</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox" />
+                        </td>
+                        <td>
+                            <a href="../User/UserIn">Nana</a>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center">
+            <button type="button" class="btn btn-warning xs100 mb10">確認</button>
+            <button type="button" class="btn btn-warning close-btn xs100 mb10" onclick="goBack()">取消</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    jQuery(function ($) {
+        $('input[type="checkbox"]').onoff();
+    });
+</script>

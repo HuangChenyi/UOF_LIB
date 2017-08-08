@@ -1,0 +1,235 @@
+﻿@model Ede.Uof.EIP.BM.dl.CTB_EIP_BM_CASE_LEVEL
+
+
+@{
+    //案件等級維護
+    ViewBag.Title = @Html.BMResource("BM_Case_Priority_Maintainence");
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+
+<style>
+    .onoffswitch {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .onoffswitch-inner::before {
+        content: "是";
+        background-color: #f0ad4e;
+    }
+
+    .onoffswitch-inner::after {
+        content: "否";
+    }
+
+    .onoffswitch-inner::before, .onoffswitch-inner::after {
+        font-family: '微軟正黑體';
+    }
+
+    .onoffswitch-label {
+        margin-bottom: 0;
+    }
+
+
+    .onoffswitch-switch, .onoffswitch-label {
+        border: 1px solid #AAA;
+    }
+        .input-group-addon, .input-group-btn {
+        white-space: initial;
+    }
+</style>
+
+
+
+<script>
+    function check() {    
+        $('#saveButton').click();
+    }
+
+    //丟入Srt 如果ParseInt成功則回傳INT  否則回傳 defaultValue
+    function TryParseInt(str, defaultValue) {
+        var retValue = defaultValue;
+        if (str !== null) {
+            if (str.length > 0) {
+                if (!isNaN(str)) {
+                    retValue = parseInt(str);
+                }
+            }
+        }
+        return retValue;
+    }
+
+
+    function StatusChange(chk) {
+
+        var id = chk.id
+
+        if (document.getElementById(id).checked) {
+            if (id == "IS_VISIT_FREQ") {
+
+                document.getElementById('VISIT_FREQ').required = true;
+             
+            } else {
+                document.getElementById('VISIT_FREQ').required = false;
+               
+            }
+
+            if (id == "IS_UPGRADE_LIMIT") {
+                document.getElementById('UPGRADE_LIMIT').required = true;
+            } else {
+                document.getElementById('UPGRADE_LIMIT').required = false;
+            }
+        }
+        else {
+            if (id == "IS_VISIT_FREQ") {
+                document.getElementById('VISIT_FREQ').required = false;             
+            } 
+
+            if (id == "IS_UPGRADE_LIMIT") {
+                document.getElementById('UPGRADE_LIMIT').required = false;
+            } 
+        }
+    }
+</script>
+
+
+
+
+
+<div id="main" class="clearfix">
+    <div class="topTabs-header clearfix">
+        <h1 class="secInfo">
+            @*案件等級維護*@
+            @Html.BMResource("BM_Case_Priority_Maintainence")
+        </h1>
+        <button class="return-btn" onclick="goBack()"><i class="fa fa-reply"></i></button>
+    </div>
+    @using (Html.BeginForm("CaseLevelSave", "Maintain", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    { 
+        @Html.HiddenFor(model => model.CASE_LEVEL_ID)
+        <div class="tab-content">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon">
+                            <span>
+                                <span style="color:#FF0000;">*</span>
+                                @*名稱*@
+                                @Html.BMResource("BM_Grade_Name")
+                            </span>
+                        </span>
+                        @*請輸入等級名稱*@
+                        @Html.TextBoxFor(model => model.CASE_LEVEL_NAME, new { @class = "form-control", placeholder = @Html.BMResource("BM_enter_name_of_grade"), required = "required" })
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon">
+                            <span>
+                                <span style="color:#FF0000;">*</span>
+                                @*等級*@
+                                @Html.BMResource("BM_Grade")
+                            </span>
+                        </span>
+                        @*請輸入數字*@
+                        @Html.TextBoxFor(model => model.CASE_LEVEL, new { @class = "form-control", type = "number", placeholder = @Html.BMResource("BM_enter_numbers"), required = "required" })
+                    </div>
+                </div>
+                </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon">
+                            <span>
+                                @*拜訪頻率*@
+                                @Html.BMResource("BM_Visit_Frequency")
+                            </span>
+                        </span>
+                                                                                                                                                                  @*"請輸入天數*@
+                        @Html.TextBoxFor(model => model.VISIT_FREQ, new { @class = "form-control",@min="1", placeholder = @Html.BMResource("BM_enter_number_of_days"), type = "number" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6 mb20" style="line-height:34px;">
+                    <span style="margin-right:20px;">
+                        @*拜訪頻率是否控管*@
+                        @Html.BMResource("BM_If_visit_frequency_in_control")
+                    </span>
+
+                    @Html.CheckBoxFor(model => model.IS_VISIT_FREQ, new { onchange = "StatusChange(this)" })
+                </div>
+
+                </div>
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon">
+                            <span>
+                                @*升等天數*@
+                                @Html.BMResource("BM_Dates_of_customer_status_upgrade")
+                            </span>
+                        </span>
+                                                                                                                                                                 @*"請輸入天數*@
+                        @Html.TextBoxFor(model => model.UPGRADE_LIMIT, new { @class = "form-control", placeholder = @Html.BMResource("BM_enter_number_of_days"), type = "number" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6 mb20" style="line-height:34px;">
+                    <span style="margin-right:20px;">
+                        @*升等天數是否控管*@
+                        @Html.BMResource("BM_Dates_of_customer_status_upgrade_in_control")
+                    </span>
+
+                    @Html.CheckBoxFor(model => model.IS_UPGRADE_LIMIT, new { onchange = "StatusChange(this)" })
+                </div>
+
+
+                <div class="col-sm-12">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon bg-red-o br15 bd-white color-w">
+                            <span>
+                                @*備註*@
+                                @Html.BMResource("BM_Remark")
+                            </span>
+                        </span>
+
+                        @Html.BMTextAreaFor(model => model.REMARK, new { @class = "form-control bg-black-o color-w", @rows = "6", @style = "max-width:100%;" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="button" onclick="return check()" class="btn btn-warning xs100 xs-mb10">
+                    @*儲存*@
+                    @Html.BMResource("BM_Save")
+                </button>
+                <button type="submit" id="saveButton" class="btn btn-warning xs100 xs-mb10" style="margin:0 10px;display:none;">
+                    @*儲存*@
+                    @Html.BMResource("BM_Save")
+                </button>
+                <button type="button" class="btn btn-warning xs100" onclick="goBack()">
+                    @*返回*@
+                    @Html.BMResource("BM_Return")
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+
+    $(".menu-maintain").addClass("active");
+
+    jQuery(function ($) {
+        $('input[type="checkbox"]').onoff();
+    });
+</script>
+
+<!-- 英文溢位調整 -->
+<script>
+    $(".input-group").each(function () {
+        var label_height = $(this).height();
+        $(this).children(".form-control").css('height', label_height);
+    });
+</script>

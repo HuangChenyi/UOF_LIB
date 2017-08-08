@@ -1,0 +1,206 @@
+﻿@{
+    ViewBag.Title = @Html.BMResource("BM_Sperior_Function");
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+
+<style>
+    .k-picker-wrap.k-state-default {
+        height: 32px;
+        overflow: hidden;
+    }
+
+        .k-picker-wrap.k-state-default .k-input {
+            position: relative;
+            top: -3px;
+        }
+</style>
+
+<div id="main" class="clearfix manager-body">
+    <div class="topTabs-header clearfix">
+        <h1 class="secInfo">
+            @*主管功能*@
+            @Html.BMResource("BM_Sperior_Function")
+        </h1>
+        <ul class="tabs">
+            <li class="tab active">
+                <a href="#ScheduleInquiry" data-toggle="tab">
+                    <span>
+                        @*行程查詢*@
+                        @Html.BMResource("BM_Schedule_Inquiry")
+                    </span>
+                </a>
+            </li>
+            <li class="tab">
+                <a href="#CaseInquiry" data-toggle="tab">
+                    <span>
+                        @*案件查詢*@
+                        @Html.BMResource("BM_Case_Inquiry")
+                    </span>
+                </a>
+            </li>
+            <li class="tab ScheduleConfirmation">
+                <a href="#ScheduleConfirmation" onclick="ReLoadScheduleConfirmation();" data-toggle="tab">
+                    <span class="ScheduleConfirmation">
+                        @*行程審核*@
+                        @Html.BMResource("BM_Schedule_Confirmation")
+                    </span>
+
+                </a>
+            </li>
+            <li class="tab CaseConfirmation">
+                <a href="#CaseConfirmation" onclick="ReLoadCaseConfirmation();" data-toggle="tab">
+                    <span class="CaseConfirmation">
+                        @*案件審核*@
+                        @Html.BMResource("BM_Case_Confirmation")
+                    </span>
+                </a>
+            </li>
+            <li class="tab">
+                <a href="#CaseTransfer" data-toggle="tab">
+                    <span>
+                        @*案件交接*@
+                        @Html.BMResource("BM_Case_transfer")
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content">
+        @*行程查詢*@
+        <div class="tab-pane fade in active" id="ScheduleInquiry">
+            @Html.Action("ScheduleInquiry")
+        </div>
+
+        @*案件查詢*@
+        <div class="tab-pane fade" id="CaseInquiry">
+            @Html.Action("CaseInquiry")
+        </div>
+
+        @*行程審核*@
+        <div class="tab-pane fade" id="ScheduleConfirmation">
+            @Html.Action("ScheduleConfirmation")
+        </div>
+
+        @*案件審核*@
+        <div class="tab-pane fade" id="CaseConfirmation">
+            @Html.Action("CaseConfirmation")
+        </div>
+
+        @*案件交接*@
+        <div class="tab-pane fade" id="CaseTransfer">
+            @Html.Action("CaseTransfer")
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(".menu-manager").addClass("active");
+
+    function ReLoadScheduleConfirmation() {
+        $.ajax({
+            url: '@Url.Action("GetScheduleConfirmationList", "Manager")',
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                $("#gridReportConfirm").data("kendoGrid").dataSource.data(data);
+            }, error: function (data, textStatus, jqXHR) {
+                alert(data.error);
+            }
+        });
+    }
+
+    function ReLoadCaseConfirmation() {
+        $.ajax({
+            url: '@Url.Action("GetCaseConfirmationList", "Manager")',
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                $("#gridCaseConfirm").data("kendoGrid").dataSource.data(data);
+            }, error: function (data, textStatus, jqXHR) {
+                alert(data.error);
+            }
+        });
+    }
+
+    function gridColumn_ScheduleCustomer(input) {
+        var result = "";
+        if (input != null && input != '') {
+            if (input.CUSTOMER_NAME != null && input.CUSTOMER_NAME != '' && input.CUSTOMER_ID != null && input.CUSTOMER_ID != '') {
+                var url = '@Url.Action("ClientIn", "Client")';
+                result += "<a href='" + url + "/?CUSTOMER_ID=" + input.CUSTOMER_ID + "'" + ">" + input.CUSTOMER_ABBREVIATION + "</a>";
+            }
+        }
+        return result;
+    }
+
+    function getJsTimeStringFromKendoContainer(input) {
+        var a = kendo.parseDate(input, "yyyy/MM/dd HH:mm");
+        return kendo.toString(new Date(a), "yyyy/MM/dd HH:mm")
+    }
+
+    function gridColumn_Case(input) {
+        var result = "";
+        if (input != null && input != '') {
+            if (input.CASE_NO != null && input.CASE_NO != '' && input.CASE_ID != null && input.CASE_ID != '') {
+                var url = '@Url.Action("CaseIn", "Case")';
+                result += "<a href='" + url + "/?CASE_ID=" + input.CASE_ID + "'" + ">" + input.CASE_NO + "</a>";
+            }
+        }
+        return result;
+    }
+
+    function gridColumn_CustomerContant(input) {
+        var result = "";
+        if (input != null) {
+            var j = input.length;
+            for (var i = 0; i < j; i++) {
+                if (i == 0) {
+                    result += input[i].CONTACT_NAME;
+                } else {
+                    result += ',' + input[i].CONTACT_NAME;
+                }
+            }
+        }
+        return result;
+    }
+
+    function gridColumn_reportStatus(input) {
+        var result = "";
+        if (input == "Draft") {
+            result = "<span>@Html.BMResource("BM_Draft")</span>";
+        }
+        else if (input == "Confirm") {
+            result = "<span>@Html.BMResource("BM_Confirm")</span>";
+        }
+        else if (input == "Adopt") {
+            result = "<span>@Html.BMResource("BM_Approved")</span>";
+        }
+        else if (input == "Reject") {
+            result = "<span>@Html.BMResource("BM_Reject")</span>";
+        }
+        return result;
+    }
+
+    function gridColumn_reportDate(input) {
+        var date = kendo.parseDate(input, "yyyy/MM/dd");
+        return kendo.toString(new Date(date), "d")
+    }
+
+    function printCoustomer(input) {
+        var result = "";
+        var j = input.length;
+        var url = '@Url.Action("ClientIn", "Client")';
+        for (var i = 0; i < j; i++) {
+            if (i == 0) {
+                result += "<a href='" + url + "/?CUSTOMER_ID=" + input[i].CUSTOMER_ID + "' " + ">" + input[i].CUSTOMER_ABBREVIATION + "</a>";
+            } else {
+                result += ",<a href='" + url + "/?CUSTOMER_ID=" + input[i].CUSTOMER_ID + "' " + ">" + input[i].CUSTOMER_ABBREVIATION + "</a>";
+            }
+        }
+        return result;
+    }
+</script>

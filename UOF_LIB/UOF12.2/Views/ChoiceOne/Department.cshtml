@@ -1,0 +1,40 @@
+﻿
+
+<div class="ui top orange attached secondary  segment">
+    <h3 class="ui left floated  header">
+        <div class="content">
+            部門
+        </div>
+    </h3>
+</div>
+
+<div class="ui attached segment" ng-show="showBack()">
+    <h3 class="ui left floated header" ng-click="goBack()">
+        <div class="content">
+            <i class="icon ellipsis horizontal"></i>
+        </div>
+    </h3>
+</div>
+<div class="ui attached segment" ng-repeat="group in groups">
+    <h4 class="ui left floated header">
+         <uof-multi-state-checkbox key="group.GroupId"
+                                                      text="group.Name"
+                                                      default-icon="choice-group-default"
+                                                      check-icon="choice-group-check"
+                                                      plus-icon="choice-group-plus"
+                                                      status="3"
+                                                      on-toogle="onToogle(state, prevState, key, text)"
+                                                      on-loaded="onLoaded(group.GroupId)">
+                            </uof-multi-state-checkbox>
+    </h4>
+    <div ng-show="group.ChildrenCount + group.UserCount > 0"
+         ng-click="goToDepartment(group.GroupId)"
+         class="ui right floated right aligned icon purple button ">
+        <i class="icon chevron right"></i>
+    </div>
+
+</div>
+
+
+
+

@@ -1,0 +1,15 @@
+﻿
+
+<div class="ui clearing attached segment" ng-repeat="item in results">
+    <h4 class="ui left floated header">
+        <span ng-class="setImage(item)"></span>{{item.text}}
+    </h4>
+    <div ng-click="remove(item)"
+         class="ui right floated right aligned icon red button ">
+        <i class="icon trash outline right"></i>
+    </div>
+
+
+</div>
+<div class="ui hidden divider"></div>
+<div class="fluid ui button purple" ng-click="save()">確定</div>

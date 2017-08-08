@@ -1,0 +1,205 @@
+﻿@model List<Ede.Uof.EIP.BM.dl.Case.CASE>
+
+@{
+    //案件功能
+    ViewBag.Title = Html.BMResource("BM_Case_Function");
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+<script>
+
+    function gridColumn_CaseStatus(input) {
+
+        var result = "";
+        if (input == "Draft") {
+            //草稿
+            result = "<span>@Html.BMResource("BM_Draft")</span>";
+        }
+        else if (input == "Confirm") {
+            //審核中
+            result = "@Html.BMResource("BM_Approval_in_process")";
+        }
+        else if (input == "Adopt") {
+            //核准
+            result = "<span>@Html.BMResource("BM_Approved")</span>";
+        }
+        else if (input == "Reject") {
+            //否決
+            result = "<span>@Html.BMResource("BM_Reject")</span>";
+        }
+        return result;
+    }
+    function gridColumn_CaseDate(input) {
+        var date = kendo.parseDate(input, "yyyy/MM/dd");
+        return kendo.toString(new Date(date), "d")
+    }
+    function gridColumn_CaseLink(CaseNo, Case_Status, CASE_ID) {
+
+
+        var result = "";
+        //如果是審核中，則導向審核中頁面
+        if (Case_Status == "Confirm") {
+
+            var url = '@Url.Action("CaseIn", "Case")';
+
+            result = "<a href='" + url + "?CASE_ID=" + CASE_ID + "'" + ">" + CaseNo + "</a>";
+        }
+
+        else{
+            var url = '@Url.Action("CASETurnEdit", "Case")';
+            result = "<a href='" + url + "?id=" + CASE_ID + "'" + ">" + CaseNo + "</a>";
+        }
+        return result;
+    }
+
+
+    function gridColumn_reportDelete(CaseID, STATUS) {
+        var result = "";
+        var url = '@Url.Action("CaseDelete", "Case")';
+        if (STATUS == "Draft") {
+            //刪除
+
+            result = "<a class='k-button k-button-icontext ' href='" + url + "?CASE_ID=" + CaseID + "' >@Html.BMResource("BM_Delete")</a>";
+        }
+
+        return result;
+    }
+
+    //從kendo 時間容器 取得 時間字串(yyyy/MM/dd)
+    function getJsDateStringFromKendoContainer(input) {
+        var a = kendo.parseDate(new Date(input), "yyyy/MM/dd");
+        return kendo.toString(new Date(a), "d")
+    }
+</script>
+
+<div id="main" class="clearfix case-body" >
+    <div class="topTabs-header clearfix">
+        <h1 class="secInfo">
+            @* 案件功能 *@
+            @Html.BMResource("BM_Case_Function") 
+        </h1>
+    </div>
+
+    <div class="tab-content">
+
+        <div class="clearfix">
+          @using (Html.BeginForm("CaseSelect", "Case", FormMethod.Post))
+            {
+            <div class="btn-title xs100 mb10">
+                @* 案件狀態 *@
+                @Html.BMResource("BM_Case_Status")  
+            </div>
+            @Html.DropDownList("[0].CASE_STATUS", (IEnumerable<SelectListItem>)ViewBag.StatusList, new { @class = "form-control mb10 xs100 ", @style = "width:auto; display:inline-block;"})
+           
+
+            <div class="btn-title xs100 mb10">
+                @*案件等級*@
+                @Html.BMResource("BM_Case_Priority")  
+            
+            </div> 
+                                                                                                                    @*全部*@
+            @Html.DropDownListFor(model => model[0].CASE_LEVEL_ID, (IEnumerable<SelectListItem>)ViewBag.LevelList, Html.BMResource("BM_All"), new { @class = "form-control mb10 xs100 ", @style = "width:auto; display:inline-block;" })
+
+
+    <input id="KEYWORD" name="KEYWORD" class="form-control mb10 xs100" value="@ViewBag.KEYWORD" placeholder="@Html.BMResource("BM_Key_word_to_inquire")" style="width:auto; display:inline-block;">
+            <button class="btn btn-warning xs100 mb10"> 
+                @*查詢*@                
+                @Html.BMResource("BM_Query")
+             </button>
+          }
+            <div class="float-r xs100 mb10">
+                    <a href="@Url.Action("CaseNew","Case")" class="btn btn-danger xs100">
+                        @*新增案件*@
+                        @Html.BMResource("BM_Create_a_Case")  
+                    </a>
+                    @*刪除案件*@ @*沒有刪除LOG檔TABLE 所以這邊先註解*@
+                    @*<button class="btn btn-danger" type="submit" data-toggle="modal" data-target="#DeleteModal">
+                       
+                        @Html.BMResource("BM_Delete_Case")                        
+                    </button>*@
+            </div>
+        </div>
+        <div class="table-responsive">
+            @(Html.Kendo().Grid(Model).Name("gridCASE").Columns(columns =>
+            {
+                @*案件代號*@
+                columns.Bound(c => c.CASE_NO).ClientTemplate("#=gridColumn_CaseLink(CASE_NO,CASE_STATUS,CASE_ID) #").Title(Html.BMResource("BM_Case_ID"));
+
+                @*案件名稱*@
+                columns.Bound(c => c.CASE_NAME).Title(Html.BMResource("BM_Case_Name"));
+
+                @*客戶*@
+                columns.Bound(c => c.CUSTOMER_NAME).Title(Html.BMResource("BM_Customer"));
+
+                @*產品名稱*@
+                columns.Bound(c => c.PROD_NAME).Title(Html.BMResource("BM_Product_Name"));
+
+                @*搭配經銷商*@
+                columns.Bound(c => c.DEALER_ID).Title(Html.BMResource("BM_Distributor"));
+
+                @*等級*@
+                columns.Bound(c => c.CASE_LEVEL).ClientTemplate("#=CASE_LEVEL_NAME#").Title(Html.BMResource("BM_Grade"));
+
+                @*狀態*@
+                columns.Bound(c => c.CASE_STATUS).ClientTemplate("#=gridColumn_CaseStatus(CASE_STATUS)#").Title(Html.BMResource("BM_Status"));
+
+                @*建立日期*@
+                columns.Bound(c => c.EntryDate).ClientTemplate("#=EntryDate#").Title(Html.BMResource("BM_Date"));
+
+                @*刪除*@
+                columns.Bound(c=>c.CASE_ID).ClientTemplate("#=gridColumn_reportDelete(CASE_ID,CASE_STATUS)#").Title(Html.BMResource("BM_Delete"));
+
+            }).Pageable(pageable => pageable.PageSizes(new[] { 10, 20, 30, 40, 50 })
+            .Messages(messages => messages.Display
+            (
+                Html.BMResource("BM_From") + " {0} " +
+                Html.BMResource("BM_To") + " {1} ," +
+                Html.BMResource("BM_Total") + ": {2} ")
+            )
+            .Messages(messages => messages.ItemsPerPage(""))
+            .Messages(messages => messages.Last(""))
+            .Messages(messages => messages.Next(""))
+            .Messages(messages => messages.First(""))
+            .Messages(messages => messages.Previous(""))
+            .ButtonCount(5))
+            .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .Batch(true)
+                        .PageSize(10)
+                        .ServerOperation(false)
+                        .Events(events => events.Error("error_handler"))
+                        .Model(model => model.Id(p => p.CASE_ID))
+                        .Destroy("ScheduleSubDelete", "Maintain"))
+            .Sortable())
+        </div>
+
+
+    </div>
+</div>
+
+<!-- 彈出刪除視窗開始 -->
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="overflow:hidden;">
+            <div class="modal-header" style="background-color:#f39800; color:#fFF;">
+                <button type="button" style="color:#FFF;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                @*刪除原因*@
+                @Html.BMResource("BM_Delete_Reason")   
+            </div>
+            <div class="modal-body">
+                <textarea style="max-width:100%; padding:10px;" rows="5" class="w100 mb10" placeholder="案件狀態為草稿時不會彈出此視窗"></textarea>
+
+
+                <div class="text-center">
+                    <button type="button" class="btn btn-submit xs-mb10 xs100" data-dismiss="modal">送出</button>
+                    <button type="button" class="btn btn-close xs100" data-dismiss="modal">關閉</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 彈出刪除視窗結束 -->
+
+<script>
+    $(".menu-case").addClass("active");
+</script>

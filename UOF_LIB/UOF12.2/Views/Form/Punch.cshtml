@@ -1,0 +1,29 @@
+﻿@using System.Web.Optimization;
+
+@{
+    ViewBag.Title = "補刷卡單";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section head{
+
+
+}
+
+
+@section  scripts{
+  
+
+@Scripts.Render("~/bundles/jquery",
+    "~/bundles/semanticui/js",
+    "~/bundles/angular",
+    "~/mForm/ng/formPunch.js",
+    "~/bundles/ng/js",
+    "~/mForm/ng/services/punchService.js",
+    "~/bundles/choice/js",
+    "~/bundles/uof/js",
+    "~/bundles/picker/js"
+    )
+
+
+}

@@ -1,0 +1,56 @@
+﻿@model List<string>
+
+@{
+    if (Model.Any(p => p == "BMSales"))
+    {
+    <li class="menu-case">
+        <a href="@Url.Action("Case", "Case")">
+            <i class="fa fa-briefcase"></i>
+            <br>
+            @*案件功能*@
+            @Html.BMResource("BM_Case_Function")
+        </a>
+    </li>
+    <li class="menu-itinerary">
+        <a href="@Url.Action("Itinerary", "Itinerary")">
+
+            <i class="fa fa-clock-o"></i>
+            <br>
+            @*行程功能*@
+            @Html.BMResource("BM_Daily_Schedule_Function")
+        </a>
+    </li>
+    }
+    if (Model.Any(p => p == "BMSuperior"))
+    {
+    <li class="menu-manager">
+        <a href="@Url.Action("Manager", "Manager")">
+            <i class="fa fa-users">
+                @Html.Action("NewSignoff", "Main", new { area = "BM" })
+            </i>
+            <br>
+            @*主管功能*@
+            @Html.BMResource("BM_Sperior_Function")
+        </a>
+    </li>
+    }
+    if (Model.Any(p => p == "BMManager"))
+    {
+    <li class="menu-gerent">
+        <a href="@Url.Action("Gerent", "Gerent")">
+            <i class="fa fa-street-view"></i>
+            <br>
+            @*管理者功能*@
+            @Html.BMResource("BM_Managerment_Function")
+        </a>
+    </li>
+    <li class="menu-maintain">
+        <a href="@Url.Action("Maintain", "Maintain")">
+            <i class="fa fa-cogs"></i>
+            <br>
+            @*主檔維護*@
+            @Html.BMResource("BM_Maintain_Main_file")
+        </a>
+    </li>
+    }
+}

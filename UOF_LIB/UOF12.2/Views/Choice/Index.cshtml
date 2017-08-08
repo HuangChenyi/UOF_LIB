@@ -1,0 +1,97 @@
+﻿
+<style>
+    html.ios, html.ios body{height:100% !important;}
+</style>
+<div class="ui bottom attached segment sidebarContext">
+
+    <div class="ui inverted left vertical sidebar menu">
+        <a class="item" ui-sref=".department" ng-click="show()">
+            <i class="home icon"></i>
+            部門
+        </a>
+        <a class="item" ui-sref=".department" ng-click="show()">
+            <i class="home icon"></i>
+            部門
+        </a>
+        <a class="item" ui-sref=".employee" ng-click="show()">
+            <i class="block layout icon"></i>
+            員工
+        </a>
+        <a class="item" ui-sref=".jobtitle" ng-click="show()">
+            <i class="smile icon"></i>
+            職級
+        </a>
+        <a class="item" ui-sref=".jobfunction" ng-click="show()">
+            <i class="calendar icon"></i>
+            職務
+        </a>
+        <a class="item" ui-sref=".search" ng-click="show()">
+            <i class="calendar icon"></i>
+            搜尋
+        </a>
+    </div>
+
+    <div class="pusher">
+        <div class="ui large orange inverted fixed menu">
+            
+                <a class="active item" ng-click="goBack()">
+                    <i class="arrow circle left icon"></i> 返回
+                </a>
+                <a class="item sidebarMenu">
+                    <i class="sidebar icon"></i>
+                    選項
+                </a>
+                <a class="active right item" ng-click="goResult()">
+                    選擇結果<i class="arrow circle right icon"></i>
+                </a>
+            
+        </div>
+        <div class="full height">
+
+            <div class=" header segment">
+                <div class="container">
+                    <div class="introduction">
+                        <h1 class="ui header blue" ng-bind-html="pool.viewTitle">
+                        </h1>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="main container">
+                <div ui-view></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ui modal confirmChoice">
+    <i class="close icon"></i>
+    <div class="header">
+        確認
+    </div>
+    <div class="content">
+        <div class="ui two column grid">
+            <div class="column three wide">
+                <h1 class="ui header">
+                    <i class="yellow warning sign icon"></i>
+                </h1>
+            </div>
+            <div class="column thirteen wide">
+                <h2 class="ui header">
+                    您還有選取的項目未送出,確定要離開嗎?
+                </h2>
+            </div>
+        </div>
+      
+    </div>
+    <div class="actions">
+        <div class="ui negative button">
+            取消
+        </div>
+        <div class="ui positive right labeled icon button" ng-click="goHome()">
+            確定
+            <i class="checkmark icon"></i>
+        </div>
+    </div>
+</div>

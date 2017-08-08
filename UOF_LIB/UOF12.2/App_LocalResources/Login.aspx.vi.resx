@@ -1,0 +1,423 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="accTXTResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="accTXTResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="applyCaMsgByErrorResource1.Text" xml:space="preserve">
+    <value>Chứng nhận máy khách bị lỗi &lt;br/&gt; Vui lòng liên hệ quản trị viên </value>
+  </data>
+  <data name="applyCaMsgResource1.Text" xml:space="preserve">
+    <value>Chứng nhận máy khách bị lỗi, tài khoản không tồn tại ở AD</value>
+  </data>
+  <data name="btnForgetResource1.Text" xml:space="preserve">
+    <value>Gửi</value>
+  </data>
+  <data name="btnForgetResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="caIPRangeMsgResource1.Text" xml:space="preserve">
+    <value>Không thể đăng nhập, IP không nằm trong phạm vi hạn chế chứng nhận</value>
+  </data>
+  <data name="caMsgResource1.Text" xml:space="preserve">
+    <value>用戶端憑證驗證錯誤&lt;br/&gt;發生原因有(未申請憑證、登入帳號與憑證不符)</value>
+  </data>
+  <data name="cboKeepaccountResource1.Text" xml:space="preserve">
+    <value>Ghi nhớ tài khoản của bạn</value>
+  </data>
+  <data name="cboKeepaccountResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CheckBrowserMsg" xml:space="preserve">
+    <value>Không phải phiên bản trình duyệt tốt nhất</value>
+  </data>
+  <data name="CheckBrowserType" xml:space="preserve">
+    <value>Hệ thống này không hỗ trợ các phiên bản trình duyệt bạn đang sử dụng \r\n Vui lòng thay đổi việc sử dụng các trình duyệt sau: \r\n\r\nWindows hệ điều hành \r\n ------------------------------------------ \r\nIE: 10 hoặc nhiều hơn \r\nChrome: 30 hoặc nhiều hơn \r\nFirefox: 20 hoặc nhiều hơn \r\n\r\n hệ điều hành Mac \r\n ------------------------------------------ \r\nSafari: 7.0</value>
+  </data>
+  <data name="cvalidInfoResource1.ErrorMessage" xml:space="preserve">
+    <value>找不到此帳號及Mail資訊,請重新輸入</value>
+  </data>
+  <data name="cvalidInfoResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvalidInfoResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvalidLoginForDomainMsgResource1.Text" xml:space="preserve">
+    <value>Tài khoản hay mật khẩu sai. </value>
+  </data>
+  <data name="cvalidLoginForDomainMsgResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvalidLoginMsgResource1.Text" xml:space="preserve">
+    <value>Tài khoản hay mật khẩu sai. &lt;br/&gt; Nếu sử dụng hiệu lực AD, nhập tài khoản như sau: AD miền\Tài khoản, ví dụ, ABC\admin</value>
+  </data>
+  <data name="cvalidLoginMsgResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvalidLoginResource1.ErrorMessage" xml:space="preserve">
+    <value>Tài khoản hay mật khẩu sai. &lt;br/&gt; Nếu sử dụng hiệu lực AD, nhập tài khoản như sau: AD miền\Tài khoản, ví dụ, ABC\admin</value>
+  </data>
+  <data name="cvalidLoginResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvalidLoginResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvLicenseExpiredResource1.ErrorMessage" xml:space="preserve">
+    <value>Giấy phép hết hạn, không thể đăng nhập</value>
+  </data>
+  <data name="cvLicenseExpiredResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvLicenseExpiredResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvLicenseFileResource1.ErrorMessage" xml:space="preserve">
+    <value>Thông tin giấy phép không đúng, không thể bắt đầu ứng dụng</value>
+  </data>
+  <data name="cvLicenseFileResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvLicenseFileResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvLicenseFullResource1.ErrorMessage" xml:space="preserve">
+    <value>Số lượng cho phép đầy đủ, không thể đăng nhập</value>
+  </data>
+  <data name="cvLicenseFullResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvLicenseFullResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvLogoutResource1.ErrorMessage" xml:space="preserve">
+    <value>Bạn đã đăng xuất</value>
+  </data>
+  <data name="cvLogoutResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvLogoutResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvSuccessResource1.ErrorMessage" xml:space="preserve">
+    <value>寄出密碼通知成功</value>
+  </data>
+  <data name="cvSuccessResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvSuccessResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvUSBKeyResource1.ErrorMessage" xml:space="preserve">
+    <value>Vui lòng xác nhận khóa USB đã được điền chính xác</value>
+  </data>
+  <data name="cvUSBKeyResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="cvUSBKeyResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ddlDomainResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DropDownList1Resource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="hlApplyCAResource1.Text" xml:space="preserve">
+    <value>Xin chứng nhận</value>
+  </data>
+  <data name="hlAutoLogonResource1.Text" xml:space="preserve">
+    <value>Đăng nhập tự động</value>
+  </data>
+  <data name="hlForgetpwResource1.Text" xml:space="preserve">
+    <value>Quên mật khẩu</value>
+  </data>
+  <data name="hlForgetpwResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="imgLoadingResource1.AlternateText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="imgLoadingResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="imgLogoResource1.AlternateText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="imgLogoResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="installDriverLinkResource1.Text" xml:space="preserve">
+    <value>Cài đặt driver khóa USB</value>
+  </data>
+  <data name="installDriverLinkResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Label1Resource1.Text" xml:space="preserve">
+    <value>Tài khoản</value>
+  </data>
+  <data name="Label1Resource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Label2Resource1.Text" xml:space="preserve">
+    <value>Mật khẩu</value>
+  </data>
+  <data name="Label2Resource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Label3Resource1.Text" xml:space="preserve">
+    <value>Thao tác hệ thống vượt quá giới hạn quyền hạn hoặc thời gian, vui lòng đăng nhập lại</value>
+  </data>
+  <data name="Label3Resource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Label4Resource1.Text" xml:space="preserve">
+    <value>tập tin tải xuống</value>
+  </data>
+  <data name="Label4Resource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Label5Resource1.Text" xml:space="preserve">
+    <value>Khi tải xuống hoàn tất, nhấp vào đây để đóng cửa sổ</value>
+  </data>
+  <data name="Label5Resource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Label6Resource1.Text" xml:space="preserve">
+    <value>ngôn ngữ</value>
+  </data>
+  <data name="Label6Resource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lbCopyRightResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lbCopyRightResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lbCopyRightResource2.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lbCopyRightResource2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblDomainResource1.Text" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="lblDomainResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblLicenseExpireDateResource1.Text" xml:space="preserve">
+    <value>系統授權即將在{0}後到期,屆時將無法登入系統</value>
+  </data>
+  <data name="lbLoginWaitResource1.Text" xml:space="preserve">
+    <value>Đang đăng nhập, vui lòng chờ</value>
+  </data>
+  <data name="lbLoginWaitResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Literal1Resource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lockedUserMsgResource1.Text" xml:space="preserve">
+    <value>Tài khoản của bạn đã bị khóa</value>
+  </data>
+  <data name="lockedUserMsgResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="msgDaysMsgResource1.Text" xml:space="preserve">
+    <value>Những ngày</value>
+  </data>
+  <data name="msgHoursResource1.Text" xml:space="preserve">
+    <value>Tập tin đính kèm Form</value>
+  </data>
+  <data name="overdueUserMsgResource1.Text" xml:space="preserve">
+    <value>Tài khoản của bạn đã quá hạn</value>
+  </data>
+  <data name="overdueUserMsgResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="PageResource1.Title" xml:space="preserve">
+    <value>Chào mừng đến với hệ thống U-Office Force tốt nhất</value>
+  </data>
+  <data name="pwdTXTResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="pwdTXTResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="resetBTNResource1.Text" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="resetBTNResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="rvalidAccountResource1.ErrorMessage" xml:space="preserve">
+    <value>Account is required.</value>
+  </data>
+  <data name="rvalidAccountResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="rvalidAccountResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="rvalidEmailResource1.ErrorMessage" xml:space="preserve">
+    <value>nhập thư điện tử</value>
+  </data>
+  <data name="rvalidEmailResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="rvalidEmailResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="submitBTNResource1.Text" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="submitBTNResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="suspendedUserMsgResource1.Text" xml:space="preserve">
+    <value>Tài khoản của bạn đã bị treo</value>
+  </data>
+  <data name="suspendedUserMsgResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="WebImageButtonClearResource1.Text" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="WebImageButtonClearResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="WebImageButtonSubmitResource1.Text" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="WebImageButtonSubmitResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblExceedUserAccountResource1.Text" xml:space="preserve">
+    <value>授權人數已滿無法登入(以帳號人數計算)</value>
+  </data>
+  <data name="lblForgetADdescResource1.Text" xml:space="preserve">
+    <value>系統會寄送給您一個臨時的UOF密碼，如果您是使用AD驗證登入，忘記密碼時請另洽AD管理員</value>
+  </data>
+</root>

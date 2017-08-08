@@ -1,0 +1,105 @@
+﻿@model List<Ede.Uof.EIP.BM.dl.Manager.MANAGER_CASE>
+
+<div class="form-group">
+    <label class="select-lable">@*選擇業務*@ @Html.BMResource("BM_Sales_Selection")</label>
+    <div class="select-input">
+        @Html.Kendo().MultiSelect().Name("cus").Placeholder(Html.BMResource("BM_Key_word_to_inquire")).BindTo((IEnumerable<SelectListItem>)ViewBag.SalesList)
+    </div>
+</div>
+<div class="form-group">
+    @*案件狀態*@
+    <div class="btn-title xs100 mb10">@Html.BMResource("BM_Case_Status")</div>
+    @Html.DropDownList("ddlCaseStatus", (IEnumerable<SelectListItem>)ViewBag.StatusList, new { @class = "form-control mb10 xs100 ", @style = "width:auto; display:inline-block;" })
+
+    @*案件等級*@
+    <div class="btn-title xs100 mb10">@Html.BMResource("BM_Case_Priority")</div>
+    @Html.DropDownList("ddlCaseLevel", (IEnumerable<SelectListItem>)ViewBag.LevelList, Html.BMResource("BM_All"), new { @class = "form-control mb10 xs100", @style = "width:auto; display:inline-block;" })
+
+    @*關鍵字*@
+    <input id="txtCaseKeyword" name="CaseKeyword" class="form-control xs100 mb10" placeholder="@Html.BMResource("BM_Key_word_to_inquire")" style="width:200px; display:inline-block;">
+
+    @*查詢鈕*@
+    <button type="button" onclick="GetCaseInquiryGrid();" class="btn btn-warning xs100 mb10 ">@Html.BMResource("BM_Query")</button>
+</div>
+
+<div id="CaseInquiryGrid" class="table-responsive">
+    @(Html.Kendo().Grid(Model).Name("gridCase").Columns(columns =>
+    {
+        @*案件代號*@
+        columns.Bound(c => c.CASE_ID).
+        ClientTemplate(Html.ActionLink("#=CASE_NO#", "CaseIn", "Case", new { CASE_ID = "#= CASE_ID#", CRUD_STATUS = "VIEW" }, "").ToHtmlString())
+        .Title(Html.BMResource("BM_Case_ID"));
+
+        @*案件名稱*@
+        columns.Bound(c => c.CASE_NAME).Title(Html.BMResource("BM_Case_Name"));
+
+
+        @*客戶代號*@
+        columns.Bound(c => c.CUSTOMER_ID).
+        ClientTemplate(Html.ActionLink("#=CUSTOMER_ID#", "ClientIn", "Client", new { CUSTOMER_ID = "#= CUSTOMER_ID#", CRUD_STATUS = "VIEW" }, "").ToHtmlString())
+        .Title(Html.BMResource("BM_Customer_ID"));
+
+        @*客戶簡稱*@
+        columns.Bound(c => c.CUSTOMER_ABBREVIATION).Title(Html.BMResource("BM_Customer_abbreviation"));
+
+        @*負責人員*@
+        columns.Bound(c => c.NAME).ClientTemplate(Html.ActionLink("#=NAME#(#=ACCOUNT#)", "UserIn", "User", new { id = "#= USER_GUID#" }, "").ToHtmlString()).Title(Html.BMResource("BM_Owner"));
+
+        @*拜訪行程*@
+        columns.Bound(c => c.CASE_ID).
+        ClientTemplate(Html.ActionLink(Html.BMResource("BM_Visit_Schedule"), "VisitSchedule", "Manager", new { CASE_ID = "#= CASE_ID#" }, new { @class = "modal-link" }).ToHtmlString())
+        .Title(Html.BMResource("BM_Visit_Schedule"));
+
+        @*等級*@
+        columns.Bound(c => c.CASE_LEVEL).ClientTemplate("#=CASE_LEVEL_NAME#").Title(Html.BMResource("BM_Grade"));
+
+       @*狀態*@
+        columns.Bound(c => c.CASE_STATUS).ClientTemplate("#=gridColumn_reportStatus(CASE_STATUS)#").Title(Html.BMResource("BM_Status"));
+
+        @*送簽時間*@
+        columns.Bound(c => c.SendSignDateTime).ClientTemplate("#=SendSignDateTime#").Title(Html.BMResource("BM_Send_out_time"));
+
+    }).Pageable(pageable => pageable.PageSizes(new[] { 10, 20, 30, 40, 50 })
+    .Messages(messages => messages.Display
+    (
+        Html.BMResource("BM_From") + " {0} " +
+        Html.BMResource("BM_To") + " {1} ," +
+        Html.BMResource("BM_Total") + ": {2} ")
+    ).Messages(messages => messages.ItemsPerPage(""))
+    .Messages(messages => messages.Last(""))
+    .Messages(messages => messages.Next(""))
+    .Messages(messages => messages.First(""))
+    .Messages(messages => messages.Previous(""))
+    .ButtonCount(5))
+    .DataSource(dataSource => dataSource
+                .Ajax()
+                .Batch(true)
+                .PageSize(10)
+                .ServerOperation(false)
+                .Events(events => events.Error("error_handler"))
+                .Model(model => model.Id(p => p.CASE_ID)))
+    .Sortable())
+</div>
+
+<script type="text/javascript">
+    function GetCaseInquiryGrid() {
+        $.ajax({
+            url: '@Url.Action("GetCaseInquiryList", "Manager")',
+            data: {
+                cus: $('#cus').val(),
+                caseStatus: $("#ddlCaseStatus").val(),
+                caseLevel: $("#ddlCaseLevel").val(),
+                keyword: $("#txtCaseKeyword").val()
+            },
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                $("#gridCase").data("kendoGrid").dataSource.data(data);
+            }, error: function (data, textStatus, jqXHR) {
+                alert(data.error);
+            }
+        });
+    }
+</script>

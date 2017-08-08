@@ -1,0 +1,31 @@
+﻿
+
+<div class="ui bottom attached segment sidebarContext">
+    
+    <div class="pusher">
+        <div class="ui large purple inverted fixed menu">
+            <div class="container">
+                <a class="active left item" ng-hide="uploader.isUploading" ng-click="goBack()">
+                    <i class="arrow circle left icon"></i> 返回
+                </a>
+            </div>
+        </div>
+        <div class="full height">
+
+            <div class=" header segment">
+                <div class="container">
+                    <div class="introduction">
+                        <h1 class="ui header blue" ng-bind-html="pool.viewTitle">
+                        </h1>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="main container">
+                <div ui-view></div>
+            </div>
+        </div>
+    </div>
+</div>
+

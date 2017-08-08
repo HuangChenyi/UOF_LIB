@@ -1,0 +1,331 @@
+﻿/*bootstrap預設更改*/
+ul {
+    padding:0;
+    margin:0;
+    list-style:none;
+}
+
+.h1, .h2, .h3, h1, h2, h3, .h4, .h5, .h6, h4, h5, h6 {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-family: "微軟正黑體";
+}
+
+.table{
+    margin-bottom:0;
+}
+
+.modal {
+    z-index:9999;
+}
+
+.modal-backdrop {
+    z-index:9998;
+}
+
+.w100 {
+    width:100%;
+}
+
+.mb5 {
+    margin-bottom:5px;
+}
+
+.mb10 {
+    margin-bottom:10px;
+}
+
+.mb20 {
+    margin-bottom:20px;
+}
+
+.mb40 {
+    margin-bottom:40px;
+}
+
+.mb60 {
+    margin-bottom:60px;
+}
+
+.po-r {
+    position: relative;
+}
+
+.po-a {
+    position: absolute;
+}
+
+.po-f {
+    position: fixed;
+}
+
+.dis-b {
+    display: block;
+}
+
+.dis-ib {
+    display: inline-block;
+}
+
+.dis-t {
+    display: table;
+}
+
+.dis-tc {
+    display: table-cell;
+}
+
+.dis-no {
+    display:none;
+}
+
+.vis-no {
+    visibility:hidden;
+}
+
+.float-r {
+    float: right;
+}
+
+.float-l {
+    float: left;
+}
+
+.shadow {
+    box-shadow:2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+.v-top {
+    vertical-align: top;
+}
+
+.v-mid {
+    vertical-align: middle;
+}
+
+.v-bot {
+    vertical-align: bottom;
+}
+
+/*字型設定*/
+* {
+    font-family: "微軟正黑體";
+}
+
+
+.h1, h1 {
+    font-size: 1.875em !important;
+}
+
+.h2, h2 {
+    font-size: 1.562em !important;
+}
+
+.h3, h3 {
+    font-size: 1.25em !important;
+}
+
+.h4, h4 {
+    font-size: 1.125em !important;
+}
+
+.h5, h5 {
+    font-size: 0.875em !important;
+}
+
+.h6, h6 {
+    font-size: 0.812em !important;
+}
+
+/*各裝置對齊*/
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .md-center {
+        text-align: center;
+    }
+
+    .md-left {
+        text-align: left;
+    }
+
+    .md-right {
+        text-align: right;
+    }
+
+    /*.h1 {
+        font-size: 30px !important;
+    }
+
+    .h2 {
+        font-size: 25px !important;
+    }
+
+    .h3 {
+        font-size: 20px !important;
+    }
+
+    .h4 {
+        font-size: 18px !important;
+    }
+
+    .h5 {
+        font-size: 14px !important;
+    }
+
+    .h6 {
+        font-size: 13px !important;
+    }*/
+}
+
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .sm-center {
+        text-align: center;
+    }
+
+    .sm-left {
+        text-align: left;
+    }
+
+    .sm-right {
+        text-align: right;
+    }
+
+    /*.h1 {
+        font-size: 29px !important;
+    }
+
+    .h2 {
+        font-size: 24px !important;
+    }
+
+    .h3 {
+        font-size: 19px !important;
+    }
+
+    .h4 {
+        font-size: 17px !important;
+    }
+
+    .h5 {
+        font-size: 13px !important;
+    }
+
+    .h6 {
+        font-size: 12px !important;
+    }*/
+}
+
+/* Phone devices (tablets, 767px and down) */
+@media (max-width: 767px) {
+    body {
+        font-size: 13px !important;
+    }
+
+    .xs-center {
+        text-align: center;
+    }
+
+    .xs-center-block {
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .xs-left {
+        text-align: left;
+    }
+
+    .xs-right {
+        text-align: right;
+    }
+
+    .xs100 {
+        width:100%!important;
+    }
+
+    .xs-mb10 {
+        margin-bottom:10px;
+    }
+
+    .xs-mb20 {
+        margin-bottom:20px;
+    }
+
+    .xs-dis-b {
+        display:block;
+    }
+
+    /*.h1 {
+        font-size: 26px !important;
+    }
+
+    .h2 {
+        font-size: 23px !important;
+    }
+
+    .h3 {
+        font-size: 18px !important;
+    }
+
+    .h4 {
+        font-size: 16px !important;
+    }
+
+    .h5 {
+        font-size: 12px !important;
+    }
+
+    .h6 {
+        font-size: 11px !important;
+    }*/
+}
+
+
+
+
+.fw-b {
+    font-weight: bold;
+}
+
+.lh135 {
+    line-height: 135%;
+}
+
+.lh175 {
+    line-height: 175%;
+}
+
+.lh200 {
+    line-height: 200%;
+}
+
+
+
+a:hover, a:focus {
+    text-decoration: none;
+}
+
+/*產生點點*/
+.txt-dot {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+
+div.input-group > span.form-control{
+    background-color: #dedede
+}
+
+div.input-group > span.form-control > span{
+    color: #999;
+}
+
+.datetimepicker, .datepicker, .timepicker, .monthpicker{
+    width: 100% !important; 
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}

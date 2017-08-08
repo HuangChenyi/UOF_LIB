@@ -1,0 +1,103 @@
+﻿@{
+    ViewBag.Title = @Html.BMResource("BM_Managerment_Function");
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+
+<div id="main" class="clearfix">
+    <div class="topTabs-header clearfix gerent-body">
+        <h1 class="secInfo">
+            @*管理者功能*@
+            @Html.BMResource("BM_Managerment_Function")
+        </h1>
+        <ul class="tabs">
+            <li class="tab active">
+                <a href="#ScheduleManagement" data-toggle="tab">
+                    <span>
+                        @*行程資料管理*@
+                        @Html.BMResource("BM_Schedule_Management")
+                    </span>
+                </a>
+            </li>
+            <li class="tab">
+                <a href="#CaseManagement" data-toggle="tab">
+                    <span>
+                        @*案件資料管理*@
+                        @Html.BMResource("BM_Case_Info_Management")
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="ScheduleManagement">
+            @Html.Action("ScheduleManagement")
+        </div>
+        <div class="tab-pane fade" id="CaseManagement">
+            @Html.Action("CaseManagement")
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(".menu-gerent").addClass("active");
+
+    function getJsTimeStringFromKendoContainer(input) {
+        var a = kendo.parseDate(input, "yyyy/MM/dd HH:mm");
+        return kendo.toString(new Date(a), "yyyy/MM/dd HH:mm")
+    }
+
+    function gridColumn_ScheduleCustomer(input) {
+        var result = "";
+        if (input != null && input != '') {
+            if (input.CUSTOMER_NAME != null && input.CUSTOMER_NAME != '' && input.CUSTOMER_ID != null && input.CUSTOMER_ID != '') {
+                var url = '@Url.Action("ClientIn", "Client")';
+                result += "<a href='" + url + "/?CUSTOMER_ID=" + input.CUSTOMER_ID + "'" + ">" + input.CUSTOMER_NAME + "</a>";
+            }
+        }
+        return result;
+    }
+
+    function gridColumn_Case(input) {
+        var result = "";
+        if (input != null && input != '') {
+            if (input.CASE_NO != null && input.CASE_NO != '' && input.CASE_ID != null && input.CASE_ID != '') {
+                var url = '@Url.Action("CaseIn", "Case")';
+                result += "<a href='" + url + "/?CASE_ID=" + input.CASE_ID + "'" + ">" + input.CASE_NO + "</a>";
+            }
+        }
+        return result;
+    }
+
+    function gridColumn_CustomerContant(input) {
+        var result = "";
+        if (input != null) {
+            var j = input.length;
+            for (var i = 0; i < j; i++) {
+                if (i == 0) {
+                    result += input[i].CONTACT_NAME;
+                } else {
+                    result += ',' + input[i].CONTACT_NAME;
+                }
+            }
+        }
+        return result;
+    }
+
+    function getStatus(input) {
+        var result = "";
+        if (input == "Draft") {
+            result = "<span> @Html.BMResource("BM_Draft")</span>";
+        }
+        else if (input == "Confirm") {
+            result = "@Html.BMResource("BM_Approval_in_process")";
+        }
+        else if (input == "Adopt") {
+            result = "<span>@Html.BMResource("BM_Approved")</span>";
+        }
+        else if (input == "Reject") {
+            result = "<span>@Html.BMResource("BM_Reject")</span>";
+        }
+        return result;
+    }
+</script>

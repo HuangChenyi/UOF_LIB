@@ -1,0 +1,869 @@
+﻿@model Ede.Uof.EIP.BM.dl.Itinerary.VM_createDayReport
+@{
+    @*報表維護*@
+    ViewBag.Title = @Html.BMResource("BM_Daily_Report_Maintainence");
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+
+@if (TempData["TempMessage"] != null)
+{
+    <div id="CreateMessage">
+        <div class="tip-wrap-message" style="background-color:#000;">@TempData["TempMessage"]</div>
+        <script type="text/javascript">
+            $(function(){
+                $('.tip-wrap-message').css({ display: 'block', top: '-100px', opacity: '1' }).animate({ top: '100px' }, 500, function () {
+                    setTimeout(function () {
+                        $('.tip-wrap-message').animate({ top: '-100px', opacity: '0' }, 500, function () {
+                            $('.tip-wrap-message').css({ display: 'none' });
+                            $("#CreateMessage").remove();
+                        });
+                    }, 2000);
+                });
+            })
+        </script>
+    </div>
+}
+
+<style>
+    .buttonToALink {
+        border: none;
+        background: none;
+        color: #2D706B;
+    }
+        /*微調radio-button*/
+    .form-control.revise > label {
+    margin-right: 10px;
+}
+
+.form-control.revise input {
+    margin-right: 3px;
+    margin-top:0;
+}
+</style>
+<script>
+    $(".menu-itinerary").addClass("active");
+
+    $(document).ready(function () {
+        $('#btnAdd').click(function (e) {
+            document.getElementById('CLIENT_STATUS').value = 'Add';
+        });
+        $('#btnSave').click(function (e) {
+            document.getElementById('CLIENT_STATUS').value = 'Save';
+        });
+        $('#btnSend').click(function (e) {
+            document.getElementById('CLIENT_STATUS').value = 'Send';
+        });
+        $('#btnDeleteOne').click(function (e) {
+            //  alert('btnDeleteOne');
+            document.getElementById('CLIENT_STATUS').value = 'DeleteOne';
+        });
+        $('#btnEditOne').click(function (e) {
+            //  alert('btnEditOne');
+            document.getElementById('CLIENT_STATUS').value = 'EditOne';
+        });
+        $('#btnBack').click(function (e) {
+            //  alert('btnEditOne');
+            document.getElementById('CLIENT_STATUS').value = '';
+        });
+
+        // var l_AllFieldValue = $('#divReportNewFieldData').find("input[type='hidden'].");
+    });
+
+    function deleteOneClick(input) {
+
+        document.getElementById('CLIENT_STATUS').value = 'DeleteOne';
+        var l_delete = document.getElementById('DELETE_ID');
+        l_delete.value = input;
+    }
+
+    function editOneClick(input) {
+        document.getElementById('CLIENT_STATUS').value = 'EditOne';
+        var l_edit = document.getElementById('EDIT_ID');
+        l_edit.value = input;
+    }
+
+
+
+    //set all CheckBoxList fieldvalue
+    function setFieldValueFromCheckBoxList() {
+        //var l_divCheckBoxList = $("#divFieldCheckBoxList");
+        var l_grdChkBox = $("#divFieldCheckBoxList").find('input:checkbox');
+
+        var l_divCheckBoxList = $('#divReportNewFieldData').find("input[type='hidden'][value='CheckBoxList']");
+
+        //var q = $('#divReportNewFieldData').find('input[type='hidden'][value='CheckBoxList'].FieldDataFieldId');
+
+        //selectedTd.parents('tr').find("td:first").next("td").find('input:checkbox');
+        for (var j = 0; j < l_divCheckBoxList.length; j++) {
+            var l_fieldvalue = '';
+            //input
+            var l_inputCheckBoxList = l_divCheckBoxList[j];
+
+            var MyFirstDiv;
+
+            for (var i = 0; i < 100; i++) {
+                if ($(l_inputCheckBoxList).next().prop('nodeName') == "DIV") {
+                    MyFirstDiv = $(l_inputCheckBoxList).next();
+                    break;
+                }
+                else {
+                    l_inputCheckBoxList = $(l_inputCheckBoxList).next();
+                }
+            }
+
+            // alert(MyFirstDiv);
+            //return false;
+
+            if (MyFirstDiv.length) {
+                //alert("GOT:" + MyFirstDiv.prop("id"));
+                //如果有找到DIV，找DIV底下所有的INPUT
+                var l_count = 0;
+                MyFirstDiv.find("input").each(
+                    function (index) {
+                        if ($(this).prop("type") == "checkbox") {
+                            //alert('in type checkbox');
+                            //alert($.trim($(this).prop("checked")));
+                            if ($.trim($(this).prop("checked")) == "true") {
+                                if (l_count == 0) {
+                                    l_fieldvalue += $(this).prop("id");
+                                } else {
+                                    l_fieldvalue += "@@" + $(this).prop("id");
+                                }
+                                l_count++;
+                            }
+
+                            // alert("勾選：" + $(this).prop("checked") + "  " + $(this).prop("id") + ":" + $(this).val());
+                        }
+                    }
+                );
+
+                //alert(l_fieldvalue);
+            }
+
+
+            var l_inputFieldValue = $(MyFirstDiv).next("input[type='hidden'].reportInputFieldValue");
+
+
+            $(l_inputFieldValue).val(l_fieldvalue);
+            l_fieldvalue = '';
+
+        }
+    }
+
+    //set all dropdownlist fieldvalue
+    function setFieldValueFromDropDownList() {
+
+        var l_divDropDownList = $('#divReportNewFieldData').find("input[type='hidden'][value='DropDownList']");
+
+        //selectedTd.parents('tr').find("td:first").next("td").find('input:checkbox');
+        for (var j = 0; j < l_divDropDownList.length; j++) {
+
+            var l_fieldvalue = '';
+            //input
+            var l_DropDownList = l_divDropDownList[j];
+
+            var MyFirstDiv;
+
+            for (var i = 0; i < 100; i++) {
+
+                if ($(l_DropDownList).next().prop('nodeName') == "DIV") {
+                    MyFirstDiv = $(l_DropDownList).next();
+                    break;
+                }
+                else {
+                    l_DropDownList = $(l_DropDownList).next();
+                }
+            }
+
+            if (MyFirstDiv.length) {
+                l_fieldvalue = MyFirstDiv.find('option:selected').val();
+            }
+
+            var l_inputFieldValue = $(MyFirstDiv).next("input[type='hidden'].reportInputFieldValue");
+            $(l_inputFieldValue).val(l_fieldvalue);
+
+        }
+    }
+
+    //set all radioButton fieldvalue
+    function setFieldValueFromRadioButtonList() {
+
+        var l_divRadioButtonList = $('#divReportNewFieldData').find("input[type='hidden'][value='RadioButtonList']");
+
+        for (var j = 0; j < l_divRadioButtonList.length; j++) {
+
+            var l_fieldvalue = '';
+            ////input
+            var l_RadioButtonList = l_divRadioButtonList[j];
+            var MyFirstDiv;
+
+            for (var i = 0; i < 100; i++) {
+
+                if ($(l_RadioButtonList).next().prop('nodeName') == "DIV") {
+                    MyFirstDiv = $(l_RadioButtonList).next();
+                    break;
+                }
+                else {
+                    l_RadioButtonList = $(l_RadioButtonList).next();
+                }
+            }
+            if (MyFirstDiv.length) {
+                l_fieldvalue = MyFirstDiv.find('input:radio:checked').val();
+            }
+            var l_inputFieldValue = $(MyFirstDiv).next("input[type='hidden'].reportInputFieldValue");
+            $(l_inputFieldValue).val(l_fieldvalue);
+
+        }
+    }
+
+    function setFieldValue() {
+
+        setFieldValueFromCheckBoxList();
+
+
+
+        setFieldValueFromRadioButtonList();
+
+    }
+
+    function setFieldValueBeforeSave(p_input) {
+
+        if (p_input == '0') {
+            $('#msgGrid').text('行程最少為一筆');
+            return false;
+        }
+
+        $('#msgGrid').text('');
+
+        setFieldValueFromCheckBoxList();
+
+        setFieldValueFromDropDownList();
+
+        setFieldValueFromRadioButtonList();
+
+    }
+
+    //從kendo 時間容器 取得 時間字串(yyyy/MM/dd)
+    function getJsDateStringFromKendoContainer(input) {
+        var a = kendo.parseDate(input, "yyyy/MM/dd HH:mm");
+        return kendo.toString(new Date(a), "d")
+    }
+
+    //從kendo 時間容器 取得 時間字串(yyyy/MM/dd)
+    function getJsTimeStringFromKendoContainer(input) {
+        var a = kendo.parseDate(input, "yyyy/MM/dd HH:mm");
+        return kendo.toString(new Date(a), "yyyy/MM/dd HH:mm")
+    }
+
+    function gridColumn_reportStatus(input) {
+        var result = "";
+        var j = input.length;
+
+        var url = '@Url.Action("ClientIn", "Client")';
+
+        for (var i = 0; i < j; i++) {
+            if (i == 0) {
+                result += "<a href='" + url + "/?CUSTOMER_ID=" + input[i].CUSTOMER_ID + "&CRUD_STATUS=VIEW' " + ">" + input[i].CUSTOMER_NAME + "</a>";
+            }
+            else {
+                result += ",<a href='" + url + "/?CUSTOMER_ID=" + input[i].CUSTOMER_ID + "' " + ">" + input[i].CUSTOMER_NAME + "</a>";
+            }
+        }
+
+        return result;
+    }
+
+
+
+
+    //grid的案件欄位
+    function gridColumn_Case(inputID,inputNO) {
+
+        var result = "";
+        if (inputID && inputNO) {
+            var url = '@Url.Action("CaseIn", "Case")';
+            result += "<a href='" + url + "/?CASE_ID=" + inputID + "'" + ">" + inputNO + "</a>";
+        }
+
+        return result;
+    }
+
+    //grid的搭配經銷商
+    function gridColumn_CUSTOMER_ABBREVIATION(input) {
+
+        var result = "";
+        if (input != null && input != '') {
+            result = input;
+        }
+        return result;
+    }
+
+    //grid的客戶欄位
+    function gridColumn_Customer(input) {
+        //Html.ActionLink("#=C_DEALER.CUSTOMER_ABBREVIATION#", "", new { id = "#=C_DEALER.DEALER_ID#" }).ToHtmlString()
+        var result = ""
+        if (input != null) {
+            if (input.CUSTOMER_ABBREVIATION != null && input.CUSTOMER_ABBREVIATION != '' && input.CUSTOMER_ID != null && input.CUSTOMER_ID != '') {
+                var url = '@Url.Action("ClientIn", "Client")';
+                result += "<a href='" + url + "/?CUSTOMER_ID=" + input.CUSTOMER_ID + "'" + ">" + input.CUSTOMER_ABBREVIATION + "</a>";
+            }
+        }
+
+        return result;
+    }
+
+    function gridColmn_CONTENT(input) {
+        var aa = input;
+        return aa;
+    }
+
+    function goItinerary() {
+        document.location = '@Url.Action("Itinerary", "Itinerary")';
+    }
+
+</script>
+
+<div id="main" class="clearfix reportnew-body">
+    <div class="topTabs-header clearfix">
+        <h1 class="secInfo">
+            @ViewBag.Title
+        </h1>
+        <button type="button" class="return-btn" onclick="goBack()"><i class="fa fa-reply"></i></button>
+    </div>
+    @using (Html.BeginForm("CreateReport", "Itinerary", FormMethod.Post, new
+    {
+        model = @Model,
+        @id = "CreateReportForm",
+        name = "CreateReportForm",
+        enctype = "multipart/form-data"
+    }))
+    {
+        @Html.HiddenFor(m => m.REPORT_ID)
+        @Html.HiddenFor(m => m.CLIENT_STATUS);
+        @Html.HiddenFor(m => m.CRUD_STATUS)
+        @Html.HiddenFor(m => m.CREATOR)
+        @Html.HiddenFor(m => m.CREATE_DATE)
+        @Html.HiddenFor(m => m.MODIFY_DATE)
+
+        @Html.Hidden("DELETE_ID", Model.DELETE_ID)
+        @Html.Hidden("EDIT_ID", Model.EDIT_ID)
+
+        
+        <div class="tab-content">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon bg-red-o br15 bd-white color-w"><span><span style="color:#FF0000">*</span>@*日期*@ @Html.BMResource("BM_Apply_Date")</span></span>
+                        @Html.HiddenFor(m => m.REPORT_DATE)
+                        @Html.BMUserDateFor(m => m.REPORT_DATE, new { isedit = false, @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6" style="display:none">
+                    <div class="input-group mb20">
+                        @Html.TextBoxFor(p=>p.REPORT_ID)
+                        <div >@Model.REPORT_ID</div>
+                        <span id="" class="input-group-addon bg-red-o br15 bd-white color-w"><span>@*狀態*@ @Html.BMResource("BM_Status")</span></span>
+                        @Html.HiddenFor(model => model.REPORT_STATUS, new { @Value = "Draft" })
+                        <div class="form-control no-edit">
+                            @if (Model.REPORT_STATUS == "Draft")
+                            {
+                                <span>@*草稿*@ @Html.BMResource("BM_Draft")</span>
+                            }
+                            else if (Model.REPORT_STATUS == "Confirm")
+                            {
+                                <span>@*審核中*@ @Html.BMResource("BM_Approval_in_process")</span>
+                            }
+                            else if (Model.REPORT_STATUS == "Adopt")
+                            {
+                                <span>@*核准*@ @Html.BMResource("BM_Approved")</span>
+                            }
+                            else if (Model.REPORT_STATUS == "Reject")
+                            {
+                                <span>@*否決*@ @Html.BMResource("BM_Reject")</span>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon bg-red-o br15 bd-white color-w"><span>@*備註*@ @Html.BMResource("BM_Remark")</span></span>
+                        @Html.BMTextAreaFor(model => model.REPORT_REMARK, new { @class = "form-control ", @rows = "6", @style = "max-width:100%;", @Value= Model.REPORT_ID })
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="mb20" id="divReportNewFieldData">
+
+                        @for (int i = 0; i < Model.CTB_EIP_BM_CUSTOM_FIELD.Count; i++)
+                        {
+                            //記"類別"用
+                            @Html.Hidden("CUSTOM_FIELD_TYPE", Model.CTB_EIP_BM_CUSTOM_FIELD[i].CUSTOM_FIELD_TYPE)
+                            @Html.HiddenFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CREATE_DATE, new { @display = "none" })
+                            @Html.HiddenFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CREATE_FROM, new { @display = "none" })
+                            @Html.HiddenFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CREATOR, new { @display = "none" })
+                            @Html.HiddenFor(c => c.CTB_EIP_BM_CUSTOM_FIELD[i].CUSTOM_FIELD_CONENT, new { @display = "none" })
+
+                            if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA != null)
+                            {
+                                for (int j = 0; j < Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA.Count; j++)
+                                {
+                                    //紀錄FieldType
+                                    @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType)
+                                    @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName)
+                                    @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldLength)
+                                    @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark)
+                                    @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRowCount)
+                                    @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].CustomFiledType)
+                                    @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly)
+                                    @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField)
+
+                                    if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "SingleLineText") //單行文字欄位
+                                    {
+                                        @*@Html.Hidden("FieldId" + j, Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)*@
+                                        @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                        <div class="input-group mb20">
+                                            <span class="input-group-addon"><span>@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span></span>
+                                            @*<input class="form-control" type="text" placeholder="">*@
+                                            @Html.TextBoxFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new { @class = "form-control inputFieldValue" })
+
+                                        </div>
+                                        @*<div class="tip"> @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark </div>*@
+                                    }
+                                    if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "MultiLineText") //多行文字欄位
+                                    {
+                                        @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                        <div class="input-group mb20">
+                                            <span class="input-group-addon">
+                                                <span>@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span>
+                                            </span>
+                                            @Html.TextAreaForRequiredAndReonly(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new { @class = "form-control inputFieldValue" },
+                                               @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false, @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True") ? true : false)
+                                          
+                                            
+                                              @*<textarea class="form-control" rows="6" style="max-width:100%;" placeholder=""></textarea>*@
+                                        </div>
+                                        @*<div class="tip">@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark</div>*@
+                                    }
+                                    if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "NumberText") //數值欄位
+                                    {
+                                        @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                        <div class="input-group mb20">
+                                            <span class="input-group-addon"><span>@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span></span>
+                                            @*<input class="form-control" type="number" placeholder="">*@
+                                            @Html.TextBoxForRequiredAndReonly(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new
+                                                {
+                                                    @class = "form-control inputFieldValue",
+                                                    type = "number",
+                                                    min = @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].MinValue,
+                                                    max = @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].MaxValue
+
+                                                }, @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false, @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True") ? true : false
+                                            )
+                                                </div>
+                                                @*<div class="tip"> @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark </div>*@
+                                    }
+
+
+
+
+
+                                    @*檔案選取欄位*@
+                                    if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "FileButton")
+                                    {
+                                        @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                        <div class="input-group mb20">
+                                            <span class="input-group-addon">
+                                                <span>
+                                                    @Html.FieldNameWithRequiredMark(Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName, Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false)
+                                                </span>
+                                            </span>
+                                            @if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].l_FILE != null)
+                                            {
+                                                for (int k = 0; k < Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].l_FILE.Count; k++)
+                                                {
+                                                    if (!string.IsNullOrEmpty(Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].l_FILE[k].FILE_NAME))
+                                                    {
+                                                        <input type="text" readonly="" class="form-control" value="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].l_FILE[k].FILE_NAME">
+                                                        @Html.HiddenFor(model => Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue)
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="text" readonly="" class="form-control" value="">
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <input type="text" readonly="" class="form-control" value="">
+                                            }
+                                            <span class="input-group-btn">
+                                                <span class="btn btn-warning btn-file" style="font-size: 14px!important">
+                                                    @Html.BMResource("BM_Select_File")
+                                                    @if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("False") && Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("False"))
+                                                    {
+                                                        <input type="file" id="FileFieldValue" name="FileFieldValue" />
+                                                    }
+                                                    else if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") && Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True"))
+                                                    {
+                                                        <input type="file" id="FileFieldValue" readonly="readonly" name="FileFieldValue" />
+                                                    }
+                                                    else if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True"))
+                                                    {
+                                                        <input type="file" id="FileFieldValue" name="FileFieldValue" />
+                                                    }
+                                                    else if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True"))
+                                                    {
+                                                        <input type="file" id="FileFieldValue" readonly="readonly" name="FileFieldValue" />
+                                                    }
+                                                </span>
+                                            </span>
+                                        </div>
+                                    }
+
+
+
+                                    if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "DateSelect")//日期選擇欄位
+                                    {
+                                        @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                        <div class="input-group mb20">
+                                            <span class="input-group-addon">
+                                                <span>@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span>
+                                            </span>
+
+                                            <div class="input-group bootstrap-timepicker timepicker">
+                                             
+                                                @Html.KendoDatePickerRequiredAndReonly("CTB_EIP_BM_CUSTOM_FIELD[" + i + "].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[" + j + "].FieldValue", @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new { onkeypress = "keyperss(event)" }, @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false, @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True") ? true : false)
+
+
+                                            </div>
+                                        </div>
+                                 
+                                    }
+                                    if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "TimeSelect") //時間選擇欄位
+                                    {
+                                        @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                        <div class="input-group mb20">
+                                            <span class="input-group-addon">
+                                                <span>@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span>
+                                            </span>
+
+                                            <div class="input-group bootstrap-timepicker timepicker">
+                                                   @Html.KendoTimePickerRequiredAndReonly("CTB_EIP_BM_CUSTOM_FIELD[" + i + "].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[" + j + "].FieldValue", @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new { onkeypress = "keyperss(event)" }, @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false, @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True") ? true : false)
+
+                                             </div>
+                                        </div>
+                                
+                                    }
+                                    if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "CheckBoxList") //核取方塊選擇欄位
+                                    {
+                                        @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                        <div class="input-group mb20">
+                                            <span class="input-group-addon"><span>@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span></span>
+                                            <div class="form-control" style="height:auto;" id="divFieldCheckBoxList">
+                                                @for (int k = 0; k < Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem.Count; k++)
+                                                {
+                                                    if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue != null && Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem != null)
+                                                    {
+                                                        if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue.IndexOf(Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]) >= 0)
+                                                        {
+                                                            <label class="checkbox-inline">
+                                                                <input type="checkbox" checked="checked" id="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]" value="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]"> @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+                                                            </label>
+                                                        }
+                                                        else
+                                                        {
+                                                            <label class="checkbox-inline">
+                                                                <input type="checkbox" id="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]" value="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]"> @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+
+                                                            </label>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <label class="checkbox-inline">
+                                                            <input type="checkbox" id="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]" value="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]"> @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+
+                                                        </label>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                        @Html.HiddenFor(model => Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new { @class = " reportInputFieldValue" })
+                                        @*<div class="tip">@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark</div>*@
+                                    }
+                                    if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "RadioButtonList") //單選圓形按鈕
+                                    {
+                                        @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                        <div class="input-group mb20">
+                                            <span class="input-group-addon"><span>@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName</span></span>
+                                            <div class="form-control revise" style="height:auto;">
+                                                @for (int k = 0; k < Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem.Count; k++)
+                                                {
+                                                    if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue != null && Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem != null)
+                                                    {
+                                                        if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue.IndexOf(Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]) >= 0)
+                                                        {
+                                                            <label class="">
+                                                                <input type="radio" checked="checked" name="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId" id="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j]" value="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]"> @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+                                                            </label>
+                                                        }
+                                                        else
+                                                        {
+
+                                                            <label class="">
+                                                                <input type="radio" name="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId" id="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j]" value="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]"> @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+                                                            </label>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <label class="">
+                                                            <input type="radio" name="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId" id="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j]" value="@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]"> @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].ListItem[k]
+
+                                                        </label>
+                                                    }
+                                                }
+
+                                            </div>
+                                        </div>
+                                        @Html.HiddenFor(model => Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new { @class = "reportInputFieldValue" })
+                                        @*<div class="tip">@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark</div>*@
+                                    }
+
+                                    @*超連結欄位*@
+                                    if (Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldType == "HyperLink")
+                                    {
+                                        var fieldInfo = Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j];
+                                        @Html.HiddenFor(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                        <div class="input-group mb20">
+                                            <span class="input-group-addon">
+                                                @Html.FieldNameWithRequiredMark(Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName, Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false)
+                                            </span>
+                                            @if (string.IsNullOrEmpty(fieldInfo.FieldValue))
+                                            {
+                                                @Html.TextBoxForRequiredAndReonly(model => model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new
+                                           {
+                                               @class = "form-control",
+                                               @style = "height:auto;"
+                                           }, Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsRequiredField.Equals("True") ? true : false, Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].IsReadOnly.Equals("True") ? true : false)
+                                            }
+                                            else
+                                            {
+                                                var linkId = "link" + i + j;
+                                                @Html.HiddenFor(m => m.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldValue, new { id = "hidHyperLinkValue" + i + j })
+                                                <span class="form-control"><a id="@linkId" target="_blank" href="@fieldInfo.FieldValue">@fieldInfo.FieldValue</a></span>
+                                            }
+
+                                            @if (fieldInfo.IsReadOnly.Equals("False") && !string.IsNullOrEmpty(fieldInfo.FieldValue))
+                                            {
+                                                var linkHidId = "hidHyperLinkValue" + i + j;
+                                                var linkId = "link" + i + j;
+                                                var modelId = "mdHyperLinkValue" + i + j;
+                                                <div class="modal fade" id="@modelId" tabindex="-1" role="dialog">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">
+                                                                    @fieldInfo.FieldName
+                                                                </h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                @Html.TextBox("txtHyperLinkValue" + i + j, fieldInfo.FieldValue, new { @class = "form-control" })
+                                                            </div>
+                                                            <div class="modal-footer" style="margin-top: 35px;">
+                                                                @*確定*@
+                                                                <button type="button" class="btn btn-submit xs100 xs-mb10" onclick="var linqValue=$('#txtHyperLinkValue'+'@i'+'@j').val();if(linqValue != '' || '@fieldInfo.IsRequiredField' == 'False'){$('#'+'@linkId').attr('href',linqValue);$('#'+'@linkId').html(linqValue);$('#'+'@linkHidId').val(linqValue);$('#'+'@modelId').modal('hide');}else{alert('@Html.BMResource("BM_RequiredField")');}">@Html.BMResource("BM_ConfirmForAddCustomer")</button>
+                                                                @* 關閉*@
+                                                                <button type="button" class="btn btn-close xs100 asdfsadf" data-dismiss="modal">@Html.BMResource("BM_EXIT") </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span class="input-group-btn">
+                                                    <span style="font-size: 14px!important" class="btn btn-warning" data-toggle="modal" data-target="#@modelId">
+                                                        @*修改*@
+                                                        @Html.BMResource("BM_Modify")
+                                                    </span>
+                                                </span>
+                                            }
+                                        </div>
+                                    }
+                                }
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="clearfix">
+                <div class="dis-ib mb10 xs100">
+                    @*日行程列表*@ @Html.BMResource("BM_Daily_Schedule_List")
+                </div>
+
+                <div class="float-r xs100">
+                    <div class="btn-group btn-group-2 mb10 xs100">
+
+                        <button class="btn btn-danger" id="btnAdd" onclick="return setFieldValue();">
+                            @*新增行程*@ @Html.BMResource("BM_Create_a_Schedule")
+                        </button>
+
+                        @*<a href="@Url.Action("../Itinerary/ItineraryNew",this.Model)" class="btn btn-danger">
+                                新增行程
+                            </a>*@
+                        @*<button class="btn btn-danger" data-toggle="modal" data-target="#DeleteModal">
+                                刪除行程
+                            </button>*@
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+
+                @(Html.Kendo().Grid(Model.List_CTB_EIP_BM_SCHEDULE)
+                    .Name("gridSCHEDULESUB")
+                    .Columns(columns =>
+                    {
+                        //"時間"
+                        columns.Bound(c => c.SCHEDULE_ID)
+                            .ClientTemplate("<button id='btnEditOne' onclick=\"editOneClick('#=SCHEDULE_ID#')\";  class='buttonToALink'  > #=getJsTimeStringFromKendoContainer(SCH_START_TIME)#" + "~" + "#=getJsTimeStringFromKendoContainer(SCH_END_TIME)# </button>")
+                            .Title(@Html.BMResource("BM_Time"));
+
+                        //拜訪客戶
+                        columns.Bound(c => c.CUSTOMER_ID)
+                            .ClientTemplate("#=gridColumn_Customer(C_CUSTOMER)#")
+                            .Title(@Html.BMResource("BM_Visit_Customer"));
+
+                        //案件代號
+                        columns.Bound(c => c.CASE_ID)
+                            //.ClientTemplate(@Html.ActionLink("#=CASE_NO#", "CaseIn", "Case", new { id = "#=CASE_ID#" }, null).ToHtmlString())
+                            .ClientTemplate("#=gridColumn_Case(CASE_ID,CASE_NO)#")
+                            .Title(@Html.BMResource("BM_Case_ID"));//
+
+                        //搭配經銷商
+                        columns.Bound(c => c.CUSTOMER_ABBREVIATION)
+                            .ClientTemplate("#=gridColumn_CUSTOMER_ABBREVIATION(DEALER_ID)#")
+                            .Title(@Html.BMResource("BM_Distributor"));
+
+                        //行程主旨
+                        columns.Bound(c => c.SUBJECT_NAME).Title(@Html.BMResource("BM_Schedule_Subject"));
+
+                        //拜訪紀錄
+                        columns.Bound(c => c.SCH_CONTENT).ClientTemplate("#=gridColmn_CONTENT(SCH_CONTENT)#").Title(@Html.BMResource("BM_Visit_Record")).FooterHtmlAttributes(new { style = "white-space: normal" }).HtmlAttributes(new { style = "white-space: normal" });
+
+                        //拜訪備註
+                        columns.Bound(c => c.SCH_REMARK).ClientTemplate("#=gridColmn_CONTENT(SCH_CONTENT)#").Title(@Html.BMResource("BM_Remark"));
+
+                        //刪除
+                        columns.Bound(c => c.SCHEDULE_ID)
+                            .ClientTemplate("<button id='btnDeleteOne' onclick=\"deleteOneClick('#=SCHEDULE_ID#');\" >" + @Html.BMResource("BM_Delete") + "</button>"
+                            )
+                            .Title(@Html.BMResource("BM_Delete"));
+
+                        //columns.Command(command =>
+                        //{
+                        //    command.Destroy().Text("刪除");
+                        //}).Title("操作");
+
+                    })
+                    .Pageable(pageable => pageable.PageSizes(new[] { 10, 20, 30, 40, 50 })
+                    .Messages(messages => messages.Display(
+                        @Html.BMResource("BM_From") + " {0} "
+                                        + @Html.BMResource("BM_To") + " {1} ,"
+                                        + @Html.BMResource("BM_Total") + ": {2} ")) //{0} - {1} of {2} items
+                    .Messages(messages => messages.ItemsPerPage(""))
+                    .Messages(messages => messages.Last(""))
+                    .Messages(messages => messages.Next(""))
+                    .Messages(messages => messages.First(""))
+                    .Messages(messages => messages.Previous(""))
+                    .ButtonCount(5)) // Enable paging
+                    .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .Batch(true)
+                    .PageSize(10)
+                    .ServerOperation(false)
+                    .Events(events => events.Error("error_handler"))
+                    .Model(model => model.Id(p => p.SUBJECT_ID))
+                    .Destroy("ScheduleSubDelete", "Maintain"))
+                    .Sortable() // Enable sorting
+                )
+
+    @*@if (Model.List_CTB_EIP_BM_SCHEDULE != null)
+    {
+    <div style="display:none">
+        @Model
+        @for (int i = 0; i < Model.List_CTB_EIP_BM_SCHEDULE.Count; i++)
+        {
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CASE_ID)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CASE_NO)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CREATE_DATE)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CREATE_FROM)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CREATOR)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CUST_CONTACT_USER)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CUSTOM_FIELD_DATA)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CUSTOMER_ABBREVIATION)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].CUSTOMER_ID)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].DEALER_CONTACT_USER)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].DEALER_ID)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].MODIFIER)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].MODIFY_DATE)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].MODIFY_FROM)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].NEXT_SCH_DATE)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].NEXT_SCH_SUB)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].NEXT_SCH_WORK_GUID)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].OTHER_SUBJECT_NAME)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].REPORT_ID)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SCH_CONTENT)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SCH_END_TIME)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SCH_REMARK)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SCH_START_TIME)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SCH_WORK_GUID)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SCHEDULE_ID)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SUBJECT_ID)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SUBJECT_NAME)
+            @Html.TextBoxFor(c => Model.List_CTB_EIP_BM_SCHEDULE[i].SUBJECT_TYPE)
+        }
+    </div>
+    }*@
+            </div>
+
+            <div id="msgGrid" style="color:red">
+
+            </div>
+            <div class="text-center">
+                @if (Model.REPORT_STATUS != "Reject") { 
+                    <button class="btn btn-submit xs100 xs-mb10" id="btnSave" onclick="return setFieldValueBeforeSave();">@*儲存*@ @Html.BMResource("BM_Save")</button>
+                }
+                <button class="btn btn-submit xs100 xs-mb10" id="btnSend" onclick="return setFieldValueBeforeSave( '@(Model.List_CTB_EIP_BM_SCHEDULE==null?0: Model.List_CTB_EIP_BM_SCHEDULE.Count)' );">@*送簽*@ @Html.BMResource("BM_Confirm")</button>
+                <button type="button" class="btn btn-close xs100" id="btnBack" onclick="goItinerary();">@*返回*@ @Html.BMResource("BM_Return")</button>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- 彈出刪除視窗開始 -->
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="overflow:hidden;">
+            <div class="modal-header" style="background-color:#f39800; color:#fFF;">
+                <button type="button" style="color:#FFF;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                刪除原因
+            </div>
+            <div class="modal-body">
+                <textarea style="max-width:100%; padding:10px;" rows="5" class="w100 mb10" placeholder="0"></textarea>
+
+
+                <div class="text-center">
+                    <button type="button" class="btn btn-submit xs100 xs-mb10" data-dismiss="modal">送出</button>
+                    <button type="button" class="btn btn-close xs100" data-dismiss="modal">關閉</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 彈出刪除視窗結束 -->

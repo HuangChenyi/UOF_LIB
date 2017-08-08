@@ -1,0 +1,67 @@
+﻿@model Ede.Uof.EIP.BM.dl.CTB_EB_CUS_CUSTOMER_MEMO
+@{
+    //"客戶備忘錄"; 
+    ViewBag.Title = @Html.BMResource("BM_Notepad");
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+
+
+<div id="main" class="clearfix">
+    <div class="topTabs-header clearfix">
+        <h1 class="secInfo">
+            @*客戶備忘錄*@ @Html.BMResource("BM_Notepad")
+        </h1>
+        <!-- /SecInfo -->
+        <button class="return-btn" onclick="goBack()"><i class="fa fa-reply"></i></button>
+    </div>
+
+    @using (Html.BeginForm("CustomerMemoSave", "Client", FormMethod.Post))
+    {
+        @Html.HiddenFor(model => model.CUSTOMER_ID)
+        @Html.Hidden("CRUD_STATUS", "INSERT")
+    @Html.HiddenFor(model => model.MEMO_ID)
+        <div class="tab-content">
+
+            @if (Model !=null){
+
+        @(Html.Kendo().Editor()
+              .Name("MEMO_CONTENT")
+
+      .Resizable(resizable => resizable.Content(true).Toolbar(true))
+      //.ImageBrowser(imageBrowser => imageBrowser
+      //    .Image("~/Content/UserFiles/Images/{0}")
+      //    .Read("Read", "ImageBrowser")
+      //    .Create("Create", "ImageBrowser")
+      //    .Destroy("Destroy", "ImageBrowser")
+      //    .Upload("Upload", "ImageBrowser")
+      //    .Thumbnail("Thumbnail", "ImageBrowser")
+      //)
+              .Value(string.IsNullOrEmpty(Model.MEMO_CONTENT) ? "" : Model.MEMO_CONTENT)
+        )
+        }
+        else
+        {
+        @(Html.Kendo().Editor()
+              .Name("MEMO_CONTENT")
+
+      .Resizable(resizable => resizable.Content(true).Toolbar(true))
+                //.ImageBrowser(imageBrowser => imageBrowser
+                //    .Image("~/Content/UserFiles/Images/{0}")
+                //    .Read("Read", "ImageBrowser")
+                //    .Create("Create", "ImageBrowser")
+                //    .Destroy("Destroy", "ImageBrowser")
+                //    .Upload("Upload", "ImageBrowser")
+                //    .Thumbnail("Thumbnail", "ImageBrowser")
+                //)
+              .Value("")
+        )
+        }
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-submit xs100 xs-mb10">@*儲存*@ @Html.BMResource("BM_Save")</button>
+                <button type="button" class="btn btn-close xs100" onclick="goBack()">@*返回*@ @Html.BMResource("BM_Return")</button>
+            </div>
+        </div>
+
+    }
+</div>

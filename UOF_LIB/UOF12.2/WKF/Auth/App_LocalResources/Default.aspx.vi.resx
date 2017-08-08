@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ElectronicDocumentMaster" xml:space="preserve">
+    <value>Người quản lý công văn điện tử</value>
+  </data>
+  <data name="Grid1Resource1.Caption" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Grid1Resource1.EmptyDataText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Grid1Resource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Label1Resource1.Text" xml:space="preserve">
+    <value>Danh sách nhân vật</value>
+  </data>
+  <data name="Label1Resource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Label2Resource1.Text" xml:space="preserve">
+    <value>Danh sách chức năng có thể sử dụng</value>
+  </data>
+  <data name="Label2Resource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblElectronicDocumentResource1.Text" xml:space="preserve">
+    <value>Người phụ trách công văn điện tử, có thể kiểm tra tất cả các công văn điện tử</value>
+  </data>
+  <data name="lblElectronicDocumentResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblFuncNameResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblFuncNameResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblRoleDescResource1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblRoleDescResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblRoleResource1.Text" xml:space="preserve">
+    <value>Mô tả nhân vật:</value>
+  </data>
+  <data name="lblRoleResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblWKFArchiveUserResource1.Text" xml:space="preserve">
+    <value>Những thành viên được ấn định như người điền Form</value>
+  </data>
+  <data name="lblWKFArchiveUserResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblWKFDesignerResource1.Text" xml:space="preserve">
+    <value>Thành viên được thiết lập như người thiết kế có thể truy cập vào mất cứ chức năng nào trong mô đun thiết kế</value>
+  </data>
+  <data name="lblWKFDesignerResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblWKFInnerUserResource1.Text" xml:space="preserve">
+    <value>Có nghĩa là tất cả thành viên trong công ty</value>
+  </data>
+  <data name="lblWKFInnerUserResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblWKFManagerResource1.Text" xml:space="preserve">
+    <value>Quản trị viên có thể truy cập vào tất cả các chức năng luồng công việc và có thể thiết lập người thiết kế. Thiết lập tại QUẢN TRỊ HỆ THỐNG&gt;&gt;CẤU HÌNH HỆ THỐNG&gt;&gt;THIẾT LẬP QUẢN TRỊ VIÊN</value>
+  </data>
+  <data name="lblWKFManagerResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblWKFOuterUserResource1.Text" xml:space="preserve">
+    <value>Có nghĩa là thành viên bên ngoài công ty</value>
+  </data>
+  <data name="lblWKFOuterUserResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblWKFReaderUserResource1.Text" xml:space="preserve">
+    <value>Kiểm tra người được thiết lập để hình thành đội ngũ nhân viên, hoạt động "xem xét lại bởi các hình thức truy vấn."</value>
+  </data>
+  <data name="lblWKFReaderUserResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="lblWKFUserResource1.Text" xml:space="preserve">
+    <value>Những thành viên được ấn định như người dùng</value>
+  </data>
+  <data name="lblWKFUserResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="PageResource1.Title" xml:space="preserve">
+    <value>Cấp độ giấy phép được thiết lập</value>
+  </data>
+  <data name="TemplateFieldResource1.AccessibleHeaderText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TemplateFieldResource1.FooterText" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TemplateFieldResource1.HeaderText" xml:space="preserve">
+    <value>Tên chức năng</value>
+  </data>
+  <data name="UltraWebTree1Resource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="WKFArchiveUser" xml:space="preserve">
+    <value>người sở hữu tập tin</value>
+  </data>
+  <data name="WKFDesigner" xml:space="preserve">
+    <value>Nhà thiết kế</value>
+  </data>
+  <data name="WKFInnerUser" xml:space="preserve">
+    <value>Người sử dụng nội bộ</value>
+  </data>
+  <data name="WKFManager" xml:space="preserve">
+    <value>Người quản lý luồng công việc</value>
+  </data>
+  <data name="WKFOuterUser" xml:space="preserve">
+    <value>Người sử dụng bên ngoài</value>
+  </data>
+  <data name="WKFReader" xml:space="preserve">
+    <value>Người xem biểu Form</value>
+  </data>
+  <data name="WKFResponsible" xml:space="preserve">
+    <value>Người quản lý biểu Form </value>
+  </data>
+  <data name="WKFResponsibleResource1.Text" xml:space="preserve">
+    <value>Được thiết lập để tạo thành người phụ trách nhân sự, hoạt động "quản lý chịu trách nhiệm Form."</value>
+  </data>
+  <data name="WKFResponsibleResource1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="WKFUser" xml:space="preserve">
+    <value>Người sử dụng biểu Form</value>
+  </data>
+</root>

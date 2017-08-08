@@ -1,0 +1,53 @@
+﻿@model List<Ede.Uof.EIP.BM.dl.Manager.MANAGER_REPORT_CONFIRM>
+
+<div id="CaseConfirmationGrid" class="table-responsive">
+    @(Html.Kendo().Grid(Model).Name("gridReportConfirm").Columns(columns =>
+    {
+        @*報表日期*@
+        columns.Bound(c => c.REPORT_DATE).
+        ClientTemplate(Html.ActionLink("#=gridColumn_reportDate(REPORT_DATE)#", "ReportIn", "Itinerary", new { REPORT_ID = "#= REPORT_ID#", CRUD_STATUS = "INSERT" }, "").ToHtmlString())
+        .Title(Html.BMResource("BM_Report_Date"));
+
+        @*負責人員*@
+        columns.Bound(c => c.NAME).
+        ClientTemplate(Html.ActionLink("#=NAME#(#=ACCOUNT#)", "UserIn", "User", new { id = "#=SALES_USER_GUID#" }, "").ToHtmlString())
+        .Title(Html.BMResource("BM_Owner"));
+
+        @*拜訪客戶*@
+        columns.Bound(c => c.l_CTB_EB_CUS_CUSTOMER).ClientTemplate("#=printCoustomer(l_CTB_EB_CUS_CUSTOMER)#").Title(Html.BMResource("BM_Visit_Customer"));
+
+        @*送簽時間*@
+        columns.Bound(c => c.SendSignDateTime).ClientTemplate("#=SendSignDateTime#").Title(Html.BMResource("BM_Send_out_time"));
+
+    }).Pageable(pageable => pageable.PageSizes(new[] { 10, 20, 30, 40, 50 })
+    .Messages(messages => messages.Display
+    (
+    Html.BMResource("BM_From") + " {0} " +
+    Html.BMResource("BM_To") + " {1} ," +
+    Html.BMResource("BM_Total") + ": {2} ")
+    ).Messages(messages => messages.ItemsPerPage(""))
+    .Messages(messages => messages.Last(""))
+    .Messages(messages => messages.Next(""))
+    .Messages(messages => messages.First(""))
+    .Messages(messages => messages.Previous(""))
+    .ButtonCount(5))
+    .DataSource(dataSource => dataSource
+                .Ajax()
+                .Batch(true)
+                .PageSize(10)
+                .ServerOperation(false)
+                .Events(events => events.Error("error_handler"))
+                .Model(model => model.Id(p => p.REPORT_ID))
+                .Destroy("ScheduleSubDelete", "Maintain"))
+    .Sortable())
+</div>
+@if (Model != null)
+{
+    string ScheduleConfirmationTitle = string.Format("{0}( {1} )", Html.BMResource("BM_Schedule_Confirmation"), Model.Count());
+
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $("span.ScheduleConfirmation").html("@ScheduleConfirmationTitle");
+            });
+    </script>
+}

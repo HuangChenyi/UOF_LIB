@@ -1,0 +1,665 @@
+﻿@model Ede.Uof.EIP.BM.dl.CTB_EIP_BM_CASE_LEVEAndCTB_EIP_BM_CUSTOM_FIELDAndCTB_EIP_BM_SCHEDULE_SUB
+
+
+@{
+    //案件功能
+    ViewBag.Title = Html.BMResource("BM_Maintain_Main_file");
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+
+
+<script>
+    function getBusiness(input) {
+        var result = "";
+        if (input == "Business") {
+            //草稿
+            result = " @Html.BMResource("BM_Sales_Schedule")";
+        }
+        else if (input == "NonBusiness") {
+            //審核中
+            result = "@Html.BMResource("BM_None_Sales_Schedule")";
+        }
+
+        return result;
+
+
+    }
+
+    function getFrequencyAndUpgrade(input) {
+        var result = "";
+        if (input == false) {
+            //草稿
+            result = " @Html.BMResource("BM_No")";
+        }
+        else if (input == true) {
+            //審核中
+            result = "@Html.BMResource("BM_Yes")";
+        }
+
+        return result;
+
+
+    }
+    function gridColumn_reportDelete(CASE_LEVEL_ID, DATA_TYPE) {
+
+    
+        var result = "";
+        var url = '@Url.Action("CaseLevelDelete", "Maintain")';
+        if (DATA_TYPE != "System") {
+            //刪除
+
+            result = "<a class='k-button k-button-icontext ' href='" + url + "?CASE_LEVEL_ID=" + CASE_LEVEL_ID + "' >@Html.BMResource("BM_Delete")</a>";
+        }
+
+        return result;
+    }
+
+    function gridColumn_LevelName(LEVEL_NAME, LEVEL_ID) {
+
+        var result = "";
+        var url = '@Url.Action("CaseLevelTurnEdit", "Maintain")';
+        if (LEVEL_ID == "Dial" || LEVEL_ID == "Lost") {
+            result = "<a  href='#'>" + LEVEL_NAME + "</a>";
+
+        }
+        else
+        {
+            result = "<a  href=' " + url + "/" + LEVEL_ID + "'>" + LEVEL_NAME + "</a>";
+
+        }
+
+         
+
+        return result;
+    }
+
+    function gridColumn_SubjectDelete(SUBJECT_ID) {
+
+
+
+        var result = "";
+        var url = '@Url.Action("ScheduleSubDelete", "Maintain")';
+      
+
+        result = "<a class='k-button k-button-icontext ' href='" + url + "?SUBJECT_ID=" + SUBJECT_ID + "' >@Html.BMResource("BM_Delete")</a>";
+        
+
+        return result;
+    }
+
+    
+
+</script>
+
+
+
+
+<style>
+    /*.setting-btn{
+            border: 1px solid #494949!important;
+            padding: 15px;
+        }*/
+
+
+    .checkbox {
+        display: inline-block;
+        margin: 0;
+    }
+
+        .checkbox input {
+            vertical-align: top;
+        }
+
+
+    .item-wrap {
+        background-color: #fff;
+        border: 1px solid #494949;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        padding: 10px 15px 10px 10px;
+        cursor: move;
+        position: relative;
+        transition: all .3s;
+    }
+
+        .item-wrap:hover {
+            padding: 10px 40px 10px 10px;
+        }
+
+        .item-wrap > input:first-child {
+            position: relative;
+            top: -10px;
+        }
+
+    .edit {
+        background-color: #d9534f;
+        color: #d9534f;
+        font-size: 0.9em;
+        height: 100%;
+        padding: 3px;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        top: 0;
+        vertical-align: middle;
+        width: 3px;
+        border-left: 1px solid #494949;
+        cursor: pointer;
+        overflow: hidden;
+        transition: all .3s;
+    }
+
+    .item-wrap:hover .edit {
+        width: 30px;
+        color: #FFF;
+    }
+
+    .edit::after {
+        content: "";
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+        width: 0;
+    }
+
+    .edit > span {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .tip {
+        text-align: right;
+        font-size: 0.975em;
+        color: #757574;
+        margin-top: 5px;
+    }
+</style>
+
+
+
+<div id="main" class="clearfix maintain-body">
+    <div class="topTabs-header clearfix">
+        <h1 class="secInfo">
+            @*主檔維護*@
+            @Html.BMResource("BM_Maintain_Main_file")
+        </h1>
+        <ul class="tabs">
+            <li class="tab active">
+                <a href="#maintain-tab2" data-toggle="tab">
+                    <span>
+                        @*自訂欄位*@
+                        @Html.BMResource("BM_Customized_field")
+                    </span>
+                </a>
+            </li>
+            <li class="tab">
+                <a href="#maintain-tab3" data-toggle="tab">
+                    <span>
+                        @*行程主旨*@
+                        @Html.BMResource("BM_Schedule_Subject")
+                    </span>
+                </a>
+            </li>
+            <li class="tab">
+                <a href="#maintain-tab4" data-toggle="tab">
+                    <span>
+                        @*案件等級*@
+                        @Html.BMResource("BM_Case_Priority")
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="maintain-tab2">
+
+            @using (Html.BeginForm("MaintainSelect", "Maintain", FormMethod.Post, new { @class = "clearfix" }))
+            {
+                
+                <div class="btn-title xs100 mb10">
+                    @*主功能選擇*@
+                    @Html.BMResource("BM_Main_Function")
+                </div>
+
+
+                @*@Html.DropDownList("CUSTOM_FIELD_TYPE", @ViewBag.CUSTOM_FIELD_TYPE, (IEnumerable<SelectListItem>)ViewBag.CUSTOM_FIELD_LIST, new { @class = "form-control xs100 mb10", @style = "width:auto; display:inline-block;", @name = "CUSTOM_FIELD_TYPE", @id = "CUSTOM_FIELD_TYPE" })*@
+                @Html.DropDownList("CUSTOM_FIELD_TYPE", (IEnumerable<SelectListItem>)ViewBag.CUSTOM_FIELD_LIST, new { @class = "form-control xs100 mb10", @style = "width:auto; display:inline-block;" })
+
+
+                <button class="btn btn-warning mb10 xs100">
+                    @*查詢*@
+                    @Html.BMResource("BM_Query")
+                </button>
+
+
+                <div class="float-r xs100">
+                    <div class="btn-group btn-group-2 xs100 mb10">
+
+                        <a class="btn btn-danger" href="@Url.Action("AddCustomPage","Maintain")">
+                            @*新增欄位*@
+                            @Html.BMResource("BM_New_field")
+                        </a>
+
+                        <button type="button" onclick="SetDelete()" class="btn btn-danger">
+                            @*刪除欄位*@
+                            @Html.BMResource("BM_Delete_Field")
+                        </button>
+                    </div>
+                </div>
+            }
+            <ul id="sortable">
+                @for (int i = 0; i < Model.CTB_EIP_BM_CUSTOM_FIELD.Count; i++)
+                {
+                    @Html.Hidden("CUSTOM_FIELD_TYPE", Model.CTB_EIP_BM_CUSTOM_FIELD[i].CUSTOM_FIELD_TYPE)
+                    for (int j = 0; j < Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA.Count; j++)
+                    {
+                        var fieldModel = Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j];
+                        if (fieldModel.FieldType == "SingleLineText") //單行文字欄位
+                        {
+                            <li class="item-wrap">
+                                <input type="checkbox" data-provide="switch">
+                                @Html.Hidden("FieldId" + j, fieldModel.FieldId)
+                                <a href="@Url.Action("CustomFieldTurnEdit", "Maintain", new { id = Model.CTB_EIP_BM_CUSTOM_FIELD[i].CUSTOM_FIELD_TYPE, field_id = fieldModel.FieldId })" class="maintain-edit"><span>修改</span></a>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span>@fieldModel.FieldName</span></span>
+                                    @Html.BMTextBox("FieldId" + j, fieldModel.FieldValue, new { isEdit = fieldModel.IsReadOnly.ToLower() == "false", @class="form-control" })
+                                </div>
+                                <div class="tip"> @fieldModel.FieldRemark </div>
+                            </li>
+                        }
+                        if (fieldModel.FieldType == "MultiLineText") //多行文字欄位
+                        {
+                            <li class="item-wrap">
+                                <input type="checkbox" data-provide="switch">
+                                @Html.Hidden("FieldId" + j, fieldModel.FieldId)
+                                <a href="@Url.Action("CustomFieldTurnEdit", "Maintain", new { id = fieldModel.CustomFiledType, field_id = fieldModel.FieldId })" class="maintain-edit"><span>修改</span></a>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <span>@fieldModel.FieldName</span>
+                                    </span>
+                                    @Html.BMTextArea("FieldId" + j, fieldModel.FieldValue, new { isEdit = fieldModel.IsReadOnly.ToLower() == "false", @class = "form-control", rows = fieldModel.FieldRowCount })
+                                </div>
+                                <div class="tip">@fieldModel.FieldRemark</div>
+                            </li>
+                        }
+                        if (fieldModel.FieldType == "NumberText") //數值欄位
+                        {
+                            <li class="item-wrap">
+                                <input type="checkbox" data-provide="switch">
+                                @Html.Hidden("FieldId" + j, fieldModel.FieldId)
+                                <a href="@Url.Action("CustomFieldTurnEdit", "Maintain", new { id = fieldModel.CustomFiledType, field_id = fieldModel.FieldId })" class="maintain-edit"><span>修改</span></a>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span>@fieldModel.FieldName</span></span>
+                                    @Html.BMTextBox("FieldId" + j, fieldModel.FieldValue, new { isEdit = fieldModel.IsReadOnly.ToLower() == "false", @class="form-control", type = "number", min = fieldModel.MinValue, max = fieldModel.MaxValue })
+                                </div>
+                                <div class="tip"> @fieldModel.FieldRemark </div>
+                            </li>
+                        }
+                        if (fieldModel.FieldType == "FileButton") //檔案選取欄位
+                        {
+                            <li class="item-wrap">
+                                <input type="checkbox" data-provide="switch">
+                                @Html.Hidden("FieldId" + j, Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId)
+                                <a href="@Url.Action("CustomFieldTurnEdit", "Maintain", new { id = Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].CustomFiledType, field_id = Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldId })" class="maintain-edit"><span>修改</span></a>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <span>
+                                            @Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldName
+                                        </span>
+                                    </span>
+                                    <input type="text" readonly="" class="form-control">
+                                    <span class="input-group-btn">
+                                        <span class="btn btn-warning btn-file" style="font-size: 14px!important">
+                                            @Html.BMResource("BM_Select_File")
+                                            <input type="file" multiple="">
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="tip">@Model.CTB_EIP_BM_CUSTOM_FIELD[i].CTB_EIP_BM_CUSTOM_FIELD_XML_SCHEMA[j].FieldRemark</div>
+                            </li>
+                        }
+                        if (fieldModel.FieldType == "DateSelect")//日期選擇欄位
+                        {
+                            <li class="item-wrap">
+                                <input type="checkbox" data-provide="switch">
+                                @Html.Hidden("FieldId" + j, fieldModel.FieldId)
+                                <a href="@Url.Action("CustomFieldTurnEdit", "Maintain", new { id = fieldModel.CustomFiledType, field_id = fieldModel.FieldId })" class="maintain-edit"><span>修改</span></a>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <span>@fieldModel.FieldName</span>
+                                    </span>
+
+                                    <div class="input-group bootstrap-timepicker timepicker">
+                                        @(Html.Kendo().DatePicker().Name(fieldModel.FieldId).Value(fieldModel.FieldValue))
+                                    </div>
+                                </div>
+                                <div class="tip">@fieldModel.FieldRemark</div>
+                            </li>
+                        }
+                        if (fieldModel.FieldType == "TimeSelect") //時間選擇欄位
+                        {
+                            <li class="item-wrap">
+                                <input type="checkbox" data-provide="switch">
+                                @Html.Hidden("FieldId" + j, fieldModel.FieldId)
+                                <a href="@Url.Action("CustomFieldTurnEdit", "Maintain", new { id = fieldModel.CustomFiledType, field_id = fieldModel.FieldId })" class="maintain-edit"><span>修改</span></a>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <span>@fieldModel.FieldName</span>
+                                    </span>
+
+                                    <div class="input-group bootstrap-timepicker timepicker">
+                                        @(Html.Kendo().TimePicker().Name(fieldModel.FieldId).Value(fieldModel.FieldValue))
+                                    </div>
+                                </div>
+                                <div class="tip">@fieldModel.FieldRemark</div>
+                            </li>
+                        }
+                        if (fieldModel.FieldType == "CheckBoxList") //核取方塊選擇欄位
+                        {
+                            <li class="item-wrap">
+                                <input type="checkbox" data-provide="switch">
+                                @Html.Hidden("FieldId" + j, fieldModel.FieldId)
+                                <a href="@Url.Action("CustomFieldTurnEdit", "Maintain", new { id = fieldModel.CustomFiledType, field_id = fieldModel.FieldId })" class="maintain-edit"><span>修改</span></a>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span>@fieldModel.FieldName</span></span>
+                                    <div class="form-control" style="height:auto;">
+                                        @for (int k = 0; k < fieldModel.ListItem.Count; k++)
+                                        {
+
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" id="inlineCheckbox1" value="option1"> @fieldModel.ListItem[k]
+                                            </label>
+
+                                        }
+
+
+                                    </div>
+                                </div>
+                                <div class="tip">@fieldModel.FieldRemark</div>
+                            </li>
+                        }
+                        if (fieldModel.FieldType == "RadioButtonList") //單選圓形按鈕
+                        {
+                            <li class="item-wrap">
+                                <input type="checkbox" data-provide="switch">
+                                @Html.Hidden("FieldId" + j, fieldModel.FieldId)
+                                <a href="@Url.Action("CustomFieldTurnEdit", "Maintain", new { id = fieldModel.CustomFiledType, field_id = fieldModel.FieldId })" class="maintain-edit"><span>修改</span></a>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span>@fieldModel.FieldName</span></span>
+                                    <div class="form-control" style="height:auto;">
+                                        @for (int k = 0; k < fieldModel.ListItem.Count; k++)
+                                        {
+
+                                            <label class="checkbox-inline">
+                                                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> @fieldModel.ListItem[k]
+                                            </label>
+
+                                        }
+
+                                    </div>
+                                </div>
+                                <div class="tip">@fieldModel.FieldRemark</div>
+                            </li>
+                        }
+                        if (fieldModel.FieldType == "DropDownList") //下拉式選單
+                        {
+                            <li class="item-wrap">
+                                <input type="checkbox" data-provide="switch">
+                                @Html.Hidden("FieldId" + j, fieldModel.FieldId)
+                                <a href="@Url.Action("CustomFieldTurnEdit", "Maintain", new { id = fieldModel.CustomFiledType, field_id = fieldModel.FieldId })" class="maintain-edit"><span>修改</span></a>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <span>@fieldModel.FieldName</span>
+                                    </span>
+
+                                    <select class="form-control">
+
+                                        @for (int k = 0; k < fieldModel.ListItem.Count; k++)
+                                        {
+
+                                            <option class="checkbox-inline">
+                                                @fieldModel.ListItem[k]
+                                            </option>
+
+                                        }
+
+                                    </select>
+                                </div>
+                                <div class="tip">@fieldModel.FieldRemark</div>
+                            </li>
+                        }
+                        if (fieldModel.FieldType == "HyperLink") //超連結欄位
+                        {
+                            <li class="item-wrap">
+                                <input type="checkbox" data-provide="switch">
+                                @Html.Hidden("FieldId" + j, fieldModel.FieldId)
+                                <a href="@Url.Action("CustomFieldTurnEdit", "Maintain", new { id = fieldModel.CustomFiledType, field_id = fieldModel.FieldId })" class="maintain-edit"><span>修改</span></a>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <span>@fieldModel.FieldName</span>
+                                    </span>
+                                    <div class="form-control" style="height:auto;"><a  target="_blank" href="@fieldModel.FieldValue"> @fieldModel.FieldValue</a></div>
+                                </div>
+                                <div class="tip">@fieldModel.FieldRemark</div>
+                            </li>
+                        }
+
+                    }
+
+                }
+
+
+            </ul>
+
+
+        </div>
+        <div class="tab-pane fade" id="maintain-tab3">
+            <div class="clearfix">
+                <div class="text-right mb10">
+                    <a href="@Url.Action("ItineraryPurport", "Maintain")" class="btn btn-danger xs100">
+                        @*新增主旨*@
+                        @Html.BMResource("BM_New")
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="table-responsive">
+                @(Html.Kendo().Grid(Model.CTB_EIP_BM_SCHEDULE_SUB)
+                        .Name("gridSCHEDULESUB")
+        .Columns(columns =>
+        {
+            @*columns.Template(@<text><input type='checkbox' class="chkbxq" /></text>).HeaderTemplate("<input id='chkbxCASELEVEL'  type='checkbox' onclick='ToggleChkBox(this.checked);' />").Title("選取");*@
+            //columns.Template(c => @Html.ActionLink(c.SUBJECT_NAME, "ScheduleSubTurnEdit", new { id = c.SUBJECT_ID })).Title("名稱");
+            columns.Bound(c => c.SUBJECT_NAME).ClientTemplate(@Html.ActionLink("#=SUBJECT_NAME#", "ScheduleSubTurnEdit", new { id = "#=SUBJECT_ID#" }).ToHtmlString()).Title(@Html.BMResource("BM_Schedule_Subject"));
+
+            //類別
+            columns.Bound(c => c.SUBJECT_TYPE).ClientTemplate("#=getBusiness(SUBJECT_TYPE)#").Title(@Html.BMResource("BM_Category"));
+
+
+            columns.Bound(c => c.SUBJECT_ID)
+.ClientTemplate("#=gridColumn_SubjectDelete(SUBJECT_ID)#")
+                //"刪除"
+                   .Title(@Html.BMResource("BM_Delete"));
+            
+            
+        
+
+
+        })
+                                                .Pageable(pageable => pageable.PageSizes(new[] { 10, 20, 30, 40, 50 })
+                                                        .Messages(messages => messages.Display(
+                                                                         @Html.BMResource("BM_From") + " {0} "
+                                                                                          + @Html.BMResource("BM_To") + " {1} ,"
+                                                                                          + @Html.BMResource("BM_Total") + ": {2} ")) //{0} - {1} of {2} items
+                                                                     .Messages(messages => messages.ItemsPerPage("")) //{0} - {1} of {2} items
+                                                        .Messages(messages => messages.ItemsPerPage(""))
+                                                        .Messages(messages => messages.Last(""))
+                                                        .Messages(messages => messages.Next(""))
+                                                        .Messages(messages => messages.First(""))
+                                                        .Messages(messages => messages.Previous(""))
+                                                        .ButtonCount(5)) // Enable paging
+                                                 .DataSource(dataSource => dataSource
+                                                            .Ajax()
+                                                            .Batch(true)
+                                                            .PageSize(10)
+                                                            .ServerOperation(false)
+                                                            .Events(events => events.Error("error_handler"))
+                                                            .Model(model => model.Id(p => p.SUBJECT_ID))
+                                                                            .Destroy("ScheduleSubDelete", "Maintain"))
+                                                 .Sortable() // Enable sorting
+
+                )
+
+            </div>
+
+        </div>
+        <div class="tab-pane fade" id="maintain-tab4">
+            <div class="text-right mb10">
+                    <a href="CaseLevel" class="btn btn-danger xs100">
+                        @*新增等級*@
+                        @Html.BMResource("BM_New")
+                    </a>
+            </div>
+            <div class="table-responsive">
+                @(Html.Kendo().Grid(Model.CTB_EIP_BM_CASE_LEVEL)
+                .Name("gridCASELEVEL")
+        .Columns(columns =>
+        {
+            @*columns.Template(@<text><input type='checkbox' class="chkbxq" /></text>).HeaderTemplate("<input id='chkbxCASELEVEL'  type='checkbox' onclick='ToggleChkBox(this.checked);' />").Title("選取");*@
+            //columns.Template(c => @Html.ActionLink(string.IsNullOrEmpty(c.CASE_LEVEL_NAME) ? "None" : c.CASE_LEVEL_NAME, "CaseLevelTurnEdit", new { id = c.CASE_LEVEL_ID })).Title("等級名稱");
+            //等級
+          
+            columns.Bound(c => c.CASE_LEVEL_NAME).ClientTemplate("#=gridColumn_LevelName(CASE_LEVEL_NAME,CASE_LEVEL_ID)#").Title(@Html.BMResource("BM_Grade"));
+            //案件等級
+            columns.Bound(c => c.CASE_LEVEL).Title(@Html.BMResource("BM_Case_Priority"));
+            //拜訪頻率
+            columns.Bound(c => c.VISIT_FREQ).Title(@Html.BMResource("BM_Visit_Frequency"));
+            //控管拜訪
+            columns.Bound(c => c.IS_VISIT_FREQ).Title(@Html.BMResource("BM_to_control_customer_visiting")).ClientTemplate("#= getFrequencyAndUpgrade(IS_VISIT_FREQ)#");
+            //升等天數
+            columns.Bound(c => c.UPGRADE_LIMIT).Title(@Html.BMResource("BM_Dates_of_customer_status_upgrade"));
+            //控管升等
+            columns.Bound(c => c.IS_UPGRADE_LIMIT).Title(@Html.BMResource("BM_to_control_customer_upgrading")).ClientTemplate("#= getFrequencyAndUpgrade(IS_UPGRADE_LIMIT)#");
+            //備註
+            columns.Bound(c => c.REMARK).Title(@Html.BMResource("BM_Case_Remark"));
+
+            columns.Bound(c => c.CASE_LEVEL_ID)
+.ClientTemplate("#=gridColumn_reportDelete(CASE_LEVEL_ID,DATA_TYPE)#")
+                //"刪除"
+                              .Title(@Html.BMResource("BM_Delete"));
+
+           
+        }
+        
+        )
+                .Pageable(pageable => pageable.PageSizes(new[] { 10, 20, 30, 40, 50 })
+                                                                        .Messages(messages => messages.Display(
+                                                                                 @Html.BMResource("BM_From") + " {0} "
+                                                                                                  + @Html.BMResource("BM_To") + " {1} ,"
+                                                                                                  + @Html.BMResource("BM_Total") + ": {2} ")) //{0} - {1} of {2} items
+                                                                             .Messages(messages => messages.ItemsPerPage("")) //{0} - {1} of {2} items
+                                                                .Messages(messages => messages.ItemsPerPage(""))
+                                                                .Messages(messages => messages.Last(""))
+                                                                .Messages(messages => messages.Next(""))
+                                                                .Messages(messages => messages.First(""))
+                                                                .Messages(messages => messages.Previous(""))
+                                                                .ButtonCount(5)) // Enable paging
+                                                         .DataSource(dataSource => dataSource
+                                                                    .Ajax()
+                                                                             .Batch(true)
+                                                                    .PageSize(10)
+                            .ServerOperation(false)
+                                                                    .Events(events => events.Error("error_handler"))
+                                                                    .Model(model => model.Id(p => p.CASE_LEVEL_ID))
+                                                                     .Destroy("CaseLevelDelete", "Maintain"))
+                                                         .Sortable() // Enable sorting
+
+                )
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Areas/BM/js/Sortable.js"></script>
+<script>
+    $(".menu-maintain").addClass("active");
+    //拖曳功能用
+    $(document).ready(function () {
+        var el = document.getElementById('sortable');
+        var sortable = new Sortable(el, {
+            animation: 50
+        });
+    });
+</script>
+
+<script>
+
+    //Cell click Checkbox select
+    $('#gridCASELEVEL').on("click", "td", function (e) {
+        var selectedTd = $(e.target).closest("td");
+        var grdChkBox = selectedTd.parents('tr').find("td:first").next("td").find('input:checkbox');
+        grdChkBox.prop('checked', !grdChkBox.prop('checked'));
+
+    });
+
+    function ToggleChkBox(flag) {
+
+        $('#chkbxqCASELEVEL').each(function () {
+            $(this).attr('checked', flag);
+        });
+    }
+
+
+
+    function SetDelete() {
+
+
+        checkboxes = $('#sortable').find('input[type="checkbox"]:checked');
+        Type = $('#CUSTOM_FIELD_TYPE').val();
+        for (var i = 0; i < checkboxes.length; i++) {
+            var checkbox = checkboxes[i];
+            var currentHtmlLi = checkbox.parentNode;
+            var currentHtmlInput = $(currentHtmlLi).find('input[id^="FieldId"]');
+
+            var l_FieldId = currentHtmlInput.val();
+
+
+
+            $.ajax({
+                url: '@Url.Action("CustomFieldDelete", "Maintain")',
+                data: {
+                    p_data: l_FieldId,
+                    p_type: Type
+                },
+                type: 'post',
+                cache: false,
+                async: false,
+                dataType: 'json',
+                success: function (data) {
+
+
+
+                }, error: function (data) {
+
+                    alert('error')
+                }
+            });
+
+        }
+
+        document.location = '@Url.Action("Maintain", "Maintain")';
+    }
+
+
+
+
+</script>

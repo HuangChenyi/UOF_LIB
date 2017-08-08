@@ -1,0 +1,36 @@
+﻿
+
+<div class="ui top orange attached secondary  segment">
+    <h3 class="ui left floated  header">
+        <div class="content">
+            職務
+        </div>
+    </h3>
+</div>
+
+<div class="ui attached segment" ng-show="showBack()">
+    <h3 class="ui left floated header" ng-click="goBack()">
+        <div class="content">
+            <i class="icon ellipsis horizontal"></i>
+        </div>
+    </h3>
+</div>
+<div class="ui attached segment" ng-repeat="item in jobfunctions">
+    <h4 class="ui left floated header">
+        <uof-multi-state-checkbox key="item.Id"
+                                  text="item.Name"
+                                  default-icon="choice-jobfunction-default"
+                                  check-icon="choice-jobfunction-check"
+                                  status="2"
+                                  on-toogle="onToogle(state, prevState, key, text)"
+                                  on-loaded="onLoaded(item.Id)">
+        </uof-multi-state-checkbox>
+
+    </h4>
+ 
+
+</div>
+
+
+
+

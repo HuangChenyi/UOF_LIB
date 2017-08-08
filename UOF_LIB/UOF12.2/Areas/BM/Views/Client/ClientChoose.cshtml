@@ -1,0 +1,235 @@
+﻿@{
+    //選擇客戶及聯絡人
+    ViewBag.Title = @Html.BMResource("BM_Select_Customer_and_Contact");
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+
+<div id="main" class="clearfix clientchoose-body">
+    <div class="topTabs-header clearfix">
+        <h1 class="secInfo">
+            @*選擇客戶及聯絡人*@ @Html.BMResource("BM_Select_Customer_and_Contact")
+        </h1>
+    </div>
+
+    <div class="tab-content">
+
+        <div class="clearfix">
+            @*請輸入關鍵字查詢*@
+            <input class="form-control mb10 xs100" placeholder="@Html.BMResource("BM_Key_word_to_inquire")" style="width:auto; display:inline-block;">
+            <button class="btn btn-warning xs100 mb10"> 查詢  Query</button>
+
+            <div class="float-r xs100">
+                <div class="btn-group btn-group-2 xs100">
+                    <a href="../Client/ClientIn" class="btn btn-danger">
+                        新增客戶 New_customer
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive mb20">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>
+                            客戶代號
+                        </th>
+                        <th>
+                            客戶簡稱
+                        </th>
+                        <th>
+                            公司電話
+                        </th>
+                        <th>
+                            客戶地址
+                        </th>
+                        <th>
+                            保固到期日
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="../Client/ClientIn">28293999-002</a>
+                        </td>
+                        <td>
+                            <a href="../Client/ClientIn">一等一科技</a>
+                        </td>
+                        <td>
+                            07-123456
+                        </td>
+                        <td>
+                            高雄市
+                        </td>
+                        <td>
+                            2015/01/01
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="../Client/ClientIn">28293999-002</a>
+                        </td>
+                        <td>
+                            <a href="../Client/ClientIn">一等一科技</a>
+                        </td>
+                        <td>
+                            07-123456
+                        </td>
+                        <td>
+                            高雄市
+                        </td>
+                        <td>
+                            2015/01/01
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="../Client/ClientIn">28293999-002</a>
+                        </td>
+                        <td>
+                            <a href="../Client/ClientIn">一等一科技</a>
+                        </td>
+                        <td>
+                            07-123456
+                        </td>
+                        <td>
+                            高雄市
+                        </td>
+                        <td>
+                            2015/01/01
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="mb10">聯絡人列表</div>
+        <div class="table-responsive mb20">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>
+                            選取
+                        </th>
+                        <th>
+                            姓名
+                        </th>
+                        <th>
+                            性別
+                        </th>
+                        <th>
+                            單位
+                        </th>
+                        <th>
+                            職稱
+                        </th>
+                        <th>
+                            電話
+                        </th>
+                        <th>
+                            分機
+                        </th>
+                        <th>
+                            手機
+                        </th>
+                        <th>
+                            電子郵件
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div><input type="checkbox" data-provide="switch"></div>
+                        </td>
+                        <td>
+                            Emmy
+                        </td>
+                        <td>
+                            女
+                        </td>
+                        <td>
+                            資訊組
+                        </td>
+                        <td>
+                            組長
+                        </td>
+                        <td>
+                            07-123456
+                        </td>
+                        <td>
+                            107
+                        </td>
+                        <td>
+                            091111111
+                        </td>
+                        <td>
+                            123@mail.com
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div><input type="checkbox" data-provide="switch"></div>
+                        </td>
+                        <td>
+                            Emmy
+                        </td>
+                        <td>
+                            女
+                        </td>
+                        <td>
+                            資訊組
+                        </td>
+                        <td>
+                            組長
+                        </td>
+                        <td>
+                            07-123456
+                        </td>
+                        <td>
+                            107
+                        </td>
+                        <td>
+                            091111111
+                        </td>
+                        <td>
+                            123@mail.com
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div><input type="checkbox" data-provide="switch"></div>
+                        </td>
+                        <td>
+                            Emmy
+                        </td>
+                        <td>
+                            女
+                        </td>
+                        <td>
+                            資訊組
+                        </td>
+                        <td>
+                            組長
+                        </td>
+                        <td>
+                            07-123456
+                        </td>
+                        <td>
+                            107
+                        </td>
+                        <td>
+                            091111111
+                        </td>
+                        <td>
+                            123@mail.com
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+
+        <div class="text-center">
+            <button type="button" class="btn btn-submit xs100 xs-mb10">確定</button>
+            <button type="button" class="btn btn-close xs100" onclick="goBack()">返回</button>
+        </div>
+    </div>
+</div>

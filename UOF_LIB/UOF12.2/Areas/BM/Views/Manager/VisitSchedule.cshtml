@@ -1,0 +1,59 @@
+﻿@model List<Ede.Uof.EIP.BM.dl.Manager.MANAGER_CASE_PARTIAL>
+
+@Html.Hidden("ORDER_GUID", (string)ViewBag.INCOME_GUID)
+
+<div class="modal-body color-w" style="">
+    <div class="table-responsive">
+        @*拜訪行程*@
+        <div class="text-center" style="margin-top:20px;">@Html.BMResource("BM_Visit_Schedule")</div>
+        <hr />
+        @(Html.Kendo().Grid(Model).Name("gridSCHEDULE").Columns(columns =>
+        {
+            @*時間*@
+            columns.Bound(c => c.SCHEDULE_TIME).ClientTemplate("#=SCHEDULE_TIME# ").Title(Html.BMResource("BM_Time"));
+
+            @*搭配經銷商*@
+            columns.Bound(c => c.CUSTOMER_ABBREVIATION).Title(Html.BMResource("BM_Distributor"));
+
+            @*行程主旨*@
+            columns.Bound(c => c.SUBJECT_NAME).Title(Html.BMResource("BM_Schedule_Subject"));
+
+            @*拜訪紀錄*@
+            columns.Bound(c => c.SCH_CONTENT).Title(Html.BMResource("BM_Visit_Record"));
+
+            @*拜訪備註*@
+            columns.Bound(c => c.SCH_REMARK).Title(Html.BMResource("BM_Remark"));
+
+        }).Pageable(pageable => pageable.PageSizes(new[] { 10, 20, 30, 40, 50 })
+        .Messages(messages => messages.Display
+        (
+            Html.BMResource("BM_From") + " {0} " +
+            Html.BMResource("BM_To") + " {1} ," +
+            Html.BMResource("BM_Total") + ": {2} ")
+        ).Messages(messages => messages.ItemsPerPage(""))
+        .Messages(messages => messages.Last(""))
+        .Messages(messages => messages.Next(""))
+        .Messages(messages => messages.First(""))
+        .Messages(messages => messages.Previous(""))
+        .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+                    .Ajax()
+                    .Batch(true)
+                    .PageSize(10)
+                    .ServerOperation(false)
+                    .Events(events => events.Error("error_handler"))
+                    .Model(model => model.Id(p => p.SUBJECT_ID)))
+        .Sortable())
+    </div>
+    <div class="text-center" style="margin-top:10px">
+        @*關閉鈕*@
+        <button type="button" class="btn btn-warning xs100 mb10" data-dismiss="modal" style="margin:0 10px">@Html.BMResource("BM_EXIT")</button>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#approve-btn').click(function () {
+            $('#modal-container').modal('hide');
+        });
+    });
+</script>

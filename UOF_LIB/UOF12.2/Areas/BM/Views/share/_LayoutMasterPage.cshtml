@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Areas/BM/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Areas/BM/css/bootstrap.min.css" rel="stylesheet" />
+
+
+    @*<link href="../css/build.css" rel="stylesheet" />*@
+    <link href="~/Areas/BM/css/fileinput.css" rel="stylesheet" />
+    <link href="~/Areas/BM/css/jquery.onoff.css" rel="stylesheet" />
+    <link href="~/Areas/BM/css/all.css" rel="stylesheet" />
+    <link href="~/Areas/BM/css/master.css" rel="stylesheet" />
+
+    @* KendoUI *@
+
+    <link href="~/Areas/BM/css/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Areas/BM/css/kendo.dataviz.default.min.css" rel="stylesheet" />
+    <link href="~/Areas/BM/css/kendo.dataviz.min.css" rel="stylesheet" />
+    <link href="~/Areas/BM/css/kendo.default.min.css" rel="stylesheet" />
+    <link href="~/Areas/BM/css/kendo.default.mobile.min.css" rel="stylesheet" />
+    <link href="~/Areas/BM/css/kendo.mobile.all.min.css" rel="stylesheet" />
+    <link href="~/Areas/BM/css/kendo.rtl.min.css" rel="stylesheet" />
+    <link href="~/Areas/BM/css/examples-offline.css" rel="stylesheet" />
+
+
+    <script src="~/Areas/BM/js/jquery.min.js"></script>
+    <script src="~/Areas/BM/js/bootstrap.min.js"></script>
+    <script src="~/Areas/BM/js/fileinput.js"></script>
+    <script src="~/Areas/BM/js/jquery.onoff.js"></script>
+
+
+    @* KendoUI *@
+    <script src="~/Areas/BM/js/kendo.all.min.js"></script>
+    <script src="~/Areas/BM/js/kendo.aspnetmvc.min.js"></script>
+    @* KendoUI 多國語系 *@
+    @{ var culture = System.Threading.Thread.CurrentThread.CurrentCulture.ToString(); }
+    <script src="@Url.Content("~/Areas/BM/js/cultures/kendo.culture." + culture + ".min.js")"></script>
+    @* Set the current culture *@
+    <script>
+        kendo.culture("@culture");
+    </script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+    </script>
+  
+
+    <style>
+
+
+
+        #header,.modal-header,.btn-warning ,.btn-danger ,.edit ,.onoffswitch-inner::before {
+            background-color: #82BDBC!important;
+        }
+        .btn-warning:hover,.btn-danger:hover ,.edit:hover {
+            background-color: #519290!important;
+        }
+        a {
+            color: #44908C;
+        }
+        a:hover {
+            color: #2D706B;
+        }
+        #header {
+    background-image: url('@Url.Content("~/Areas/BM/img/logo-bg.png")');
+    background-repeat: no-repeat;
+    background-size: 220px 80px;
+}
+
+
+    </style>
+
+
+    <style>
+        .tip-wrap, .tip-wrap-message {
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            -webkit-transform: translateX(-50%);
+            -moz-transform: translateX(-50%);
+            -o-transform: translateX(-50%);
+            z-index: 9999;
+            display: none;
+            background-color: rgba(0,0,0,0.4);
+            color: #FFF;
+        }
+
+        .new-icon {
+            background-color: #ff0000;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            height: 20px;
+            line-height: 20px;
+            position: absolute;
+            right: 23px;
+            top: 30px;
+            width: 20px;
+        }
+    </style>
+    <script>
+        function keyperss(e) {
+            if (e.key != 'Backspace' && e.key != 'Escape') {
+                e.preventDefault();
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div id="wrapper" class="clearfix container" style="width:100%; padding:0;">
+        <div id="header" style="color:#FFF; padding:15px 10px; margin:0; position:relative;">
+            <img src="@ViewBag.LOGO" style="margin-right:60px; width:145px;" />
+            @*業務管理系統*@
+            <h1 class="fw-b dis-ib v-mid xs-dis-b">@Html.BMResource("BM_CRM_system")</h1>
+            <div class="menu-btn visible-xs" style="position:absolute; top:20px; right:20px; cursor:pointer;"><i class="fa fa-bars icon-nav-mobile" style="font-size:20px;"></i></div>
+        </div>
+        <div id="sidebar">
+            <ul class="sidebar-inner">
+                @Html.Action("Menu", "Main", new { area = "BM" })
+            </ul>
+        </div>
+        <div class="content-wrapper">
+            @RenderBody()
+            <div class="modal fade add-window" id="modal-container" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content bg-black-o bd-white" style="overflow:hidden;">
+                    </div>
+                </div>
+            </div>
+
+            @if (ViewBag.ResultMessage != null)//判斷如果有訊息，則顯示。
+            {
+
+                <div class="tip-wrap" style="background-color:#000;">
+                    @ViewBag.ResultMessage
+                </div>
+
+
+                <script>
+
+
+
+                    if (!$('.tip-wrap').is(':visible')) {
+                        $('.tip-wrap').css({ display: 'block', top: '-100px', opacity: '1' }).animate({ top: '100px' }, 500, function () {
+                            setTimeout(out, 2000);
+                        });
+                    }
+
+
+                    function out() {
+                        $('.tip-wrap').animate({ top: '-100px', opacity: '0' }, 500, function () {
+                            $(this).css({ display: 'none' });
+                        });
+                    }
+
+                </script>
+            }
+        </div>
+    </div>
+
+    <div id="footer">
+        © @Ede.Uof.EIP.Organization.Util.UserTime.GetSystemNowForUi().DateTime.Year e-Excellence Inc. All Rights Reserved. 一等一科技 版權所有.
+    </div>
+
+
+
+
+    <!-- 彈出核准視窗開始 -->
+    <div class="modal fade" id="PassModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="overflow:hidden;">
+                <div class="modal-header" style="background-color:#f39800; color:#fFF;">
+                    <button type="button" style="color:#FFF;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    核准意見
+                </div>
+                <div class="modal-body">
+                    <textarea style="max-width:100%; padding:10px;" rows="5" class="w100 mb10"></textarea>
+
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">送出</button>
+                        <button type="button" class="btn close-btn btn-warning" data-dismiss="modal">關閉</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 彈出核准視窗結束 -->
+    <!-- 彈出退回視窗開始 -->
+    <div class="modal fade" id="ReturnModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="overflow:hidden;">
+                <div class="modal-header" style="background-color:#f39800; color:#fFF;">
+                    <button type="button" style="color:#FFF;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    退回意見
+                </div>
+                <div class="modal-body">
+                    <textarea style="max-width:100%; padding:10px;" rows="5" class="w100 mb10"></textarea>
+
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">送出</button>
+                        <button type="button" class="btn close-btn btn-warning" data-dismiss="modal">關閉</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 彈出退回視窗結束 -->
+    <!-- 彈出刪除視窗開始 -->
+    <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="overflow:hidden;">
+                <div class="modal-header" style="background-color:#f39800; color:#fFF;">
+                    <button type="button" style="color:#FFF;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    刪除原因
+                </div>
+                <div class="modal-body">
+                    <textarea style="max-width:100%; padding:10px;" rows="5" class="w100 mb10" placeholder="日報狀態是草稿或退回才可以刪除行程"></textarea>
+
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">送出</button>
+                        <button type="button" class="btn close-btn btn-warning" data-dismiss="modal">關閉</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 彈出刪除視窗結束 -->
+    <script>
+        function error_handler(e) {
+            if (e.errors) {
+                var message = "There are some errors:\n";
+                // Create a message containing all errors.
+                $.each(e.errors, function (key, value) {
+                    if ('errors' in value) {
+                        $.each(value.errors, function () {
+                            message += this + "\n";
+                        });
+                    }
+                });
+                // Display the message
+                alert(message);
+                // Cancel the changes
+                var grid = $("#grid").data("kendoGrid");
+                grid.cancelChanges();
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+
+
+        //彈跳視窗
+
+        $(function () {
+
+            $('body').on('click', '.modal-link', function (e) {
+                e.preventDefault();
+                $(this).attr('data-target', '#modal-container');
+                $(this).attr('data-toggle', 'modal');
+            });
+            $('body').on('click', '.modal-close-btn', function () {
+                $('#modal-container').modal('hide');
+            });
+
+            $('#modal-container').on('hidden.bs.modal', function () {
+                $(this).removeData('bs.modal');
+            });
+
+            $('#CancelModal').on('click', function () {
+                return false;
+            });
+        });
+    </script>
+
+
+    @*讓內容高度至少是裝置高度*@
+    <script>
+        $(document).ready(function () {
+            $(window).bind("load resize", function () {
+                    var _WH = $(window).height() -20;
+                    $("#wrapper").css('min-height', _WH);                
+            });
+        });
+    </script>
+
+    <script src="~/Areas/BM/js/forcrm.js"></script>
+</body>
+
+</html>

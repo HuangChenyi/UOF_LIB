@@ -1,0 +1,12 @@
+;aiu;
+
+[Update12.20.6242]
+ProductVersion=12.20.6242
+Name=Excellence Messenger 12.20.6242
+URL=http://www.example.com/downloads/setup.msi
+Size=33236480
+MD5=f44962483e69a996b617533e5e130a22
+ServerFileName=setup12.20.6242.msi
+RegistryKey=HKLM\SOFTWARE\e-Excellence Inc.\Excellence Messenger\Version
+Version=12.20.6242
+Description=Support UOF12.20.6242

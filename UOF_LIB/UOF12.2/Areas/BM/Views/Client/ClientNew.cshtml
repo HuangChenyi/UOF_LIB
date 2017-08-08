@@ -1,0 +1,773 @@
+﻿@{
+    ViewBag.Title = "新增客戶";
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+
+<style>
+    .onoffswitch-inner::before {
+        content: "選取";
+        background-color: #f0ad4e;
+    }
+
+    .onoffswitch-inner::after {
+        content: "取消";
+    }
+
+    .onoffswitch-inner::before, .onoffswitch-inner::after {
+        font-family: '微軟正黑體';
+    }
+
+    .onoffswitch-label {
+        margin-bottom: 0;
+    }
+
+    .onoffswitch {
+        margin: 0 auto;
+    }
+
+    .onoffswitch-switch, .onoffswitch-label {
+        border: 1px solid #494949;
+    }
+</style>
+
+<div id="main" class="clearfix clientnew-body">
+    <div class="topTabs-header clearfix">
+        <h1 class="secInfo">
+            新增客戶
+        </h1>
+        <!-- /SecInfo -->
+        <ul class="tabs">
+            <li class="tab active">
+                <a href="#ClientNew-tab2" data-toggle="tab">
+                    <span>
+                        客戶資料
+                    </span>
+                </a>
+            </li>
+            <li class="tab">
+                <a href="#ClientNew-tab3" data-toggle="tab">
+                    <span>
+                        聯絡人資料
+                    </span>
+                </a>
+            </li>
+            <li class="tab">
+                <a href="#ClientNew-tab4" data-toggle="tab">
+                    <span>
+                        客戶備忘錄
+                    </span>
+                </a>
+            </li>
+        </ul>
+        <button class="return-btn" onclick="goBack()"><i class="fa fa-reply"></i></button>
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="ClientNew-tab2">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>客戶代號</span></span>
+                        <input class="form-control" type="text">
+                        <a href="#" class="edit" data-toggle="modal" data-target="#SearchClientModal"><i class="fa fa-search"></i></a>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>客戶簡稱</span></span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon"><span>統一編號</span></span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>客戶名稱</span></span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>英文名稱</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>資料狀態</span>
+                        </span>
+                        <div class="form-control no-edit">未發佈</div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon">
+                            <span><span style="color:#FF0000;">*</span>客戶類別</span>
+                        </span>
+                        <div class="form-control"><a href="#" data-toggle="modal" data-target="#ClientTypeModal">選擇類別</a></div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>地區別</span>
+                        </span>
+                        <div class="form-control"><a href="#">選擇地區別</a></div>
+
+                        <a href="#" class="edit"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>行業別</span>
+                        </span>
+                        <select class="form-control">
+                            <option>--暫不分類--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>負責人</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>資本額</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>客戶等級</span>
+                        </span>
+                        <select class="form-control">
+                            <option>--暫不分類--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>公司電話1</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>公司電話2</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>公司傳真</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>郵遞區號</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>公司地址</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>發票郵遞區號</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb5">
+                        <span class="input-group-addon">
+                            <span>發票地址</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                    <div class="text-right mb10">
+                        <a href="#">同公司地址</a>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>公司網址</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span><span style="color:#FF0000;">*</span>資料歸屬</span>
+                        </span>
+                        <div class="form-control">選取人員(使用一等一人員選擇)</div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="input-group mb20">
+
+                        <span class="input-group-addon">
+                            <span>備註</span>
+                        </span>
+                        <textarea placeholder="這是備註說明內容" style="max-width:100%;" rows="6" class="form-control"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon">
+                            <span>其他1</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon">
+                            <span>其他2</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon">
+                            <span>其他3</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon">
+                            <span>其他4</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon">
+                            <span>其他5</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon">
+                            <span>其他6</span>
+                        </span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="ClientNew-tab3">
+            <div class="clearfix">
+                <div class="float-r xs100 mb10">
+                    <div class="btn-group btn-group-2 xs100">
+                        <a class="btn btn-danger" href="ContactPersonNew">
+                            新增聯絡人
+                        </a>
+                        <button data-target="#DeleteModal" data-toggle="modal" type="submit" class="btn btn-danger">
+                            刪除聯絡人
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive mb20">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>
+                                選取
+                            </th>
+                            <th>
+                                姓名
+                            </th>
+                            <th>
+                                性別
+                            </th>
+                            <th>
+                                單位
+                            </th>
+                            <th>
+                                職稱
+                            </th>
+                            <th>
+                                電話
+                            </th>
+                            <th>
+                                分機
+                            </th>
+                            <th>
+                                手機
+                            </th>
+                            <th>
+                                電子郵件
+                            </th>
+                            <th>
+                                外部會員帳號
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div><input type="checkbox" data-provide="switch"></div>
+                            </td>
+                            <td>
+                                <a data-target="#UserModal" data-toggle="modal" href="#">姚先生</a>
+                            </td>
+                            <td>
+                                男
+                            </td>
+                            <td>
+                                企劃室
+                            </td>
+                            <td>
+                                經理
+                            </td>
+                            <td>
+                                072215545
+                            </td>
+                            <td>
+                                123
+                            </td>
+                            <td>
+                                0921506883
+                            </td>
+                            <td>
+                                123@yahoo.com.tw
+                            </td>
+                            <td>
+                                ID123
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="ClientNew-tab4">
+            目前尚無資料
+        </div>
+        
+    </div>
+</div>
+
+
+<!-- 彈出查詢客戶視窗開始 -->
+<div class="modal fade" id="SearchClientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="overflow:hidden;">
+            <div class="modal-header" style="background-color:#f39800; color:#fFF;">
+                <button type="button" style="color:#FFF;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                查詢客戶資料
+            </div>
+            <div class="modal-body">
+                <input class="form-control mb10 xs100" placeholder="請輸入關鍵字查詢" style="width:auto; display:inline-block;">
+                <button class="btn btn-warning xs100 mb10"> 查詢 </button>
+                <div class="table-responsive mb20">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    客戶代號
+                                </th>
+                                <th>
+                                    統一編號
+                                </th>
+                                <th>
+                                    客戶簡稱
+                                </th>
+                                <th>
+                                    客戶名稱
+                                </th>
+                                <th>
+                                    發佈日期
+                                </th>
+                                <th>
+                                    資料狀態
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    00000
+                                </td>
+                                <td>
+                                    00220022
+                                </td>
+                                <td>
+                                    海鷗股份有限公司
+                                </td>
+                                <td>
+                                    客戶名稱
+                                </td>
+                                <td>
+                                    發佈日期
+                                </td>
+                                <td>
+                                    未發佈
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    00000
+                                </td>
+                                <td>
+                                    00220022
+                                </td>
+                                <td>
+                                    海鷗股份有限公司
+                                </td>
+                                <td>
+                                    客戶名稱
+                                </td>
+                                <td>
+                                    發佈日期
+                                </td>
+                                <td>
+                                    未發佈
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    00000
+                                </td>
+                                <td>
+                                    00220022
+                                </td>
+                                <td>
+                                    海鷗股份有限公司
+                                </td>
+                                <td>
+                                    客戶名稱
+                                </td>
+                                <td>
+                                    發佈日期
+                                </td>
+                                <td>
+                                    未發佈
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-center">
+                    <button type="button" class="btn btn-close" data-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 彈出查詢客戶視窗結束 -->
+<!-- 彈出客戶類別視窗開始 -->
+<div class="modal fade" id="ClientTypeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="overflow:hidden;">
+            <div class="modal-header" style="background-color:#f39800; color:#fFF;">
+                <button type="button" style="color:#FFF;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                選擇客戶類別
+            </div>
+            <div class="modal-body">
+
+                <div class="table-responsive mb20">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th width="100" style="text-align:center;">
+                                    選取
+                                </th>
+                                <th>
+                                    類別
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" />
+                                </td>
+                                <td>
+                                    1111
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" />
+                                </td>
+                                <td>
+                                    2222
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" />
+                                </td>
+                                <td>
+                                    33333
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" />
+                                </td>
+                                <td>
+                                    444444
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" />
+                                </td>
+                                <td>
+                                    5555555
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-center">
+                    <button type="button" class="btn btn-submit xs-mb10 xs100" data-dismiss="modal">確定</button>
+                    <button type="button" class="btn btn-close xs100" data-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 彈出客戶類別視窗結束 -->
+<!-- 彈出聯絡人資料視窗開始 -->
+<div class="modal fade user-window" id="UserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="overflow:hidden;">
+            <div class="modal-header" style="background-color:#f39800; color:#fFF;">
+                <button type="button" style="color:#FFF;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                瀏覽聯絡人資料
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span><span style="color:#FF0000;">*</span>姓名</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>性別</span></span>
+                            <div class="form-control">
+                                <label class="radio-inline">
+                                    <input type="radio" value="option1" id="" name="inlineRadioOptions">男
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="option1" id="" name="inlineRadioOptions">女
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>生日</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>單位</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>職稱</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>公司電話</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>分機</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>手機</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>電子郵件</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>電子郵件1</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>電子郵件2</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>主管名稱</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>助理名稱</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>Skype</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>QQ</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>公司名稱</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>統一編號</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>公司傳真</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon"><span>地址</span></span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon">
+                                <span>備註</span>
+                            </span>
+                            <textarea style="max-width:100%;" rows="6" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="input-group mb20">
+                            <span class="input-group-addon">
+                                <span>外部會員帳號</span>
+                            </span>
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="button" class="btn btn-close" data-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 彈出聯絡人資料視窗結束 -->
+
+<script>
+    jQuery(function ($) {
+        $('#ClientTypeModal input[type="checkbox"]').onoff();
+    });
+</script>
+
+
+

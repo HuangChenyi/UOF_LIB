@@ -1,0 +1,95 @@
+﻿@model List<Ede.Uof.EIP.BM.dl.Gerent.GERENT_CASE>
+
+<div>
+    @*案件狀態*@
+    <div class="btn-title xs100 mb10">@Html.BMResource("BM_Case_Status")</div>
+    @Html.DropDownList("ddlCaseStatus", (IEnumerable<SelectListItem>)ViewBag.StatusList, new { @class = "form-control mb10 xs100 ", @style = "width:auto; display:inline-block;" })
+
+    @*案件等級*@
+    <div class="btn-title xs100 mb10">@Html.BMResource("BM_Case_Priority")</div>
+    @Html.DropDownList("ddlCaseLevel", (IEnumerable<SelectListItem>)ViewBag.LevelList, Html.BMResource("BM_All"), new { @class = "form-control mb10 xs100", @style = "width:auto; display:inline-block;" })
+
+    @*關鍵字*@
+    <input id="txtCaseKeyword" name="KeywordCase" class="form-control mb10 xs100" placeholder="@Html.BMResource("BM_Key_word_to_inquire")" style="width:auto; display:inline-block;">
+
+    @*查詢鈕*@
+    <button class="btn btn-warning mb10 xs100" onclick="GetCaseManagementGrid();">@Html.BMResource("BM_Query")</button>
+</div>
+
+<div class="table-responsive">
+    @(Html.Kendo().Grid(Model).Name("gridCase").Columns(columns =>
+    {
+        @*案件代號*@
+        columns.Bound(c => c.CASE_NO)
+        .ClientTemplate(Html.ActionLink("#=CASE_NO#", "CaseIn", "Case", new { CASE_ID = "#= CASE_ID#" }, "").ToHtmlString())
+        .Title(Html.BMResource("BM_Case_ID"));
+
+        @*案件名稱*@
+        columns.Bound(c => c.CASE_NAME).Title(Html.BMResource("BM_Case_Name"));
+
+        @*客戶代號*@
+        columns.Bound(c => c.CUSTOMER_ID)
+        .ClientTemplate(Html.ActionLink("#=CUSTOMER_ID#", "ClientIn", "Client", new { CUSTOMER_ID = "#= CUSTOMER_ID#" }, "").ToHtmlString())
+        .Title(Html.BMResource("BM_Customer_ID"));
+
+        @*客戶名稱*@
+        columns.Bound(c => c.CUSTOMER_NAME).Title(Html.BMResource("BM_Customer_name"));
+
+        @*客戶簡稱*@
+        columns.Bound(c => c.CUSTOMER_ABBREVIATION).Title(Html.BMResource("BM_Customer_abbreviation"));
+
+        @*負責人員*@
+        columns.Bound(c => c.NAME)
+        .ClientTemplate(Html.ActionLink("#=NAME#(#=ACCOUNT#)", "UserIn", "User", new { id = "#=USER_GUID#" }, "").ToHtmlString())
+        .Title(Html.BMResource("BM_Owner"));
+
+        @*等級*@
+        columns.Bound(c => c.CASE_LEVEL).ClientTemplate("#=CASE_LEVEL_NAME#").Title(Html.BMResource("BM_Grade"));
+
+        @*狀態*@
+        columns.Bound(c => c.CASE_STATUS).ClientTemplate("#=getStatus(CASE_STATUS)#").Title(Html.BMResource("BM_Status"));
+
+    }).Pageable(pageable => pageable.PageSizes(new[] { 10, 20, 30, 40, 50 })
+    .Messages(messages => messages.Display
+    (
+        Html.BMResource("BM_From") + " {0} " +
+        Html.BMResource("BM_To") + " {1} ," +
+        Html.BMResource("BM_Total") + ": {2} ")
+    ).Messages(messages => messages.ItemsPerPage(""))
+    .Messages(messages => messages.Last(""))
+    .Messages(messages => messages.Next(""))
+    .Messages(messages => messages.First(""))
+    .Messages(messages => messages.Previous(""))
+    .ButtonCount(5))
+    .DataSource(dataSource => dataSource
+                .Ajax()
+                .Batch(true)
+                .PageSize(10)
+                .ServerOperation(false)
+                .Events(events => events.Error("error_handler"))
+                .Model(model => model.Id(p => p.CASE_ID))
+                .Destroy("GerentDelete", "Gerent"))
+    .Sortable())
+</div>
+
+<script type="text/javascript">
+    function GetCaseManagementGrid() {
+        $.ajax({
+            url: '@Url.Action("GetCaseManagementList")',
+            data: {
+                caseStatus: $("#ddlCaseStatus").val(),
+                caseLevel: $("#ddlCaseLevel").val(),
+                keyword: $("#txtCaseKeyword").val()
+            },
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                $("#gridCase").data("kendoGrid").dataSource.data(data);
+            }, error: function (data, textStatus, jqXHR) {
+                alert(data.error);
+            }
+        });
+    }
+</script>

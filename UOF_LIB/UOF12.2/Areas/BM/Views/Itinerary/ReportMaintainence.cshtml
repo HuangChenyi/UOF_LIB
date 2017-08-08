@@ -1,0 +1,142 @@
+﻿@model List<Ede.Uof.EIP.BM.dl.Itinerary.REPORTAndCUSTOMER>
+
+
+<div class="form-group">
+    @*報表狀態*@ 
+    <div class="btn-title xs100 mb10">@Html.BMResource("BM_Report_Status")</div>
+    @Html.DropDownList("dllRptStatus", (IEnumerable<SelectListItem>)ViewBag.REPORT_STATUS, new { @class = "form-control xs100 mb10", @style = "width:auto; display:inline-block;" })
+    
+    @*日期起訖*@
+    <div class="btn-title xs100 mb10"> @Html.BMResource("BM_Date_Start_End")</div>
+    @(Html.Kendo().DatePicker().Name("txtRptStartDate").Value(ViewBag.startDay).HtmlAttributes(new { @class = "xs100 mb10" }))
+    <div class="dis-ib xs100 text-center mb10">　~　</div>
+    @(Html.Kendo().DatePicker().Name("txtRptEndDate").Value(ViewBag.endDay).HtmlAttributes(new { @class = "xs100 mb10" }))
+
+    @*請輸入關鍵字查詢*@
+    <input id="txtRptKeyWord" class="form-control xs100 mb10" placeholder="@Html.BMResource("BM_Key_word_to_inquire")" style="width:200px; display:inline-block;">
+    
+    @*查詢鈕*@
+    <button class="btn btn-warning xs100 mb10" onclick="GetReportMaintainenceGrid();">@Html.BMResource("BM_Query")</button>
+
+    @*新增日報表鈕*@
+    <div class="pull-right">
+        @Html.ActionLink(Html.BMResource("BM_Create_a_Daily_Report"), "AddNewReport", null, new { @class= "btn btn-danger xs100" })
+        @*<button type="button" class="btn btn-danger xs100">@Html.BMResource("BM_Create_a_Daily_Report")</button>*@
+    </div>
+</div>
+
+<div class="table-responsive">
+    @(Html.Kendo().Grid(Model).Name("gridDayReport").Columns(columns =>
+    {
+        @*報表日期*@
+        columns.Bound(c => c.CTB_EIP_BM_DAY_REPORT.REPORT_DATE)
+        .ClientTemplate("#=gridColumn_reportTime(CTB_EIP_BM_DAY_REPORT)#")
+        .Title(Html.BMResource("BM_Report_Date"));
+
+        @*拜訪客戶*@
+        columns.Bound(c => c.CTB_EIP_BM_DAY_REPORT.LIST_CUSTOMER_NAME)
+        .ClientTemplate("#=gridColumn_reportCustomer(LIST_CTB_EB_CUS_CUSTOMER)#")
+        .Title(Html.BMResource("BM_Visit_Customer"));
+
+        @*報表狀態*@
+        columns.Bound(c => c.CTB_EIP_BM_DAY_REPORT.REPORT_STATUS)
+        .ClientTemplate("#=gridColumn_reportStatus(CTB_EIP_BM_DAY_REPORT)#")
+        .Title(Html.BMResource("BM_Report_Status"));
+
+        @*填寫日期*@
+        columns.Bound(c => c.CTB_EIP_BM_DAY_REPORT.EntryDate)
+        .ClientTemplate("#=CTB_EIP_BM_DAY_REPORT.EntryDate#")
+        .Title(Html.BMResource("BM_Apply_Date"));
+
+        @*刪除*@
+        columns.Bound(c => c.CTB_EIP_BM_DAY_REPORT.REPORT_DATE)
+        .ClientTemplate("#=gridColumn_reportDelete(CTB_EIP_BM_DAY_REPORT)#")
+        .Title(Html.BMResource("BM_Delete"));
+
+    }).Pageable(pageable => pageable.PageSizes(new[] { 10, 20, 30, 40, 50 })
+    .Messages(messages => messages.Display
+    (
+        Html.BMResource("BM_From") + " {0} " + 
+        Html.BMResource("BM_To") + " {1} ," + 
+        Html.BMResource("BM_Total") + ": {2} ")
+    ).Messages(messages => messages.ItemsPerPage(""))
+    .Messages(messages => messages.Last(""))
+    .Messages(messages => messages.Next(""))
+    .Messages(messages => messages.First(""))
+    .Messages(messages => messages.Previous(""))
+    .ButtonCount(5))
+    .DataSource(dataSource => dataSource
+                .Ajax()
+                .Batch(true)
+                .PageSize(10)
+                .ServerOperation(false)
+                .Events(events => events.Error("error_handler"))
+                .Model(model => model.Id(p => p.CTB_EIP_BM_DAY_REPORT.REPORT_ID))
+                .Destroy("newRepoetScheduleDelete", "Itinerary"))
+    .Sortable())
+</div>
+<div class="tip-wrap-message" style="background-color:#000;"></div>
+
+<script type="text/javascript">
+    function GetReportMaintainenceGrid() {
+        $.ajax({
+            url: '@Url.Action("GetReportMaintainenceList")',
+            data: {
+                rptStatus: $("#dllRptStatus").val(),
+                keyword: $("#txtRptKeyWord").val(),
+                startDay: $("#txtRptStartDate").val(),
+                endDay: $("#txtRptEndDate").val()
+            },
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                $("#gridDayReport").data("kendoGrid").dataSource.data(data);
+            }, error: function (data, textStatus, jqXHR) {
+                alert(data.error);
+            }
+        });
+    }
+
+    function gridColumn_reportDelete(input) {
+        var result = "";
+        if (input.REPORT_STATUS == "Draft") {
+            result = "<button id='btnDeleteOne' onclick=\"deleteReport('" + input.REPORT_ID + "');\">@Html.BMResource("BM_Delete")</button>";
+        }
+        return result;
+    }
+
+    function deleteReport(id) {
+        $.ajax({
+            url: '@Url.Action("DeleteReport")',
+            data: {
+                id: id,
+                rptStatus: $("#dllRptStatus").val(),
+                startDay: $("#txtRptStartDate").val(),
+                endDay: $("#txtRptEndDate").val(),
+                keyword: $("#txtRptKeyWord").val()
+            },
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'json',
+            success: function (obj) {
+                $("#gridDayReport").data("kendoGrid").dataSource.data(obj.griddata);
+                ShowMessage(obj.message);
+            }, error: function (data, textStatus, jqXHR) {
+                alert(data.error);
+            }
+        });
+    }
+
+    function ShowMessage(message) {
+        $('.tip-wrap-message').html(message).css({ display: 'block', top: '-100px', opacity: '1' }).animate({ top: '100px' }, 500, function () {
+            setTimeout(function () {
+                $('.tip-wrap-message').animate({ top: '-100px', opacity: '0' }, 500, function () {
+                    $('.tip-wrap-message').css({ display: 'none' });
+                });
+            }, 2000);
+        });
+    }
+</script>

@@ -1,0 +1,127 @@
+﻿@{
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+    ViewBag.Title = Html.BMResource("BM_Schedule_function");
+}
+
+<div id="main" class="clearfix itinerary-body">
+    <div class="topTabs-header clearfix mb20">
+        <h1 class="secInfo">
+            @*行程功能*@
+            @Html.BMResource("BM_Schedule_function")
+        </h1>
+        <ul class="tabs">
+            <li class="tab active">
+                <a href="#ReportMaintainence" data-toggle="tab">
+                    <span>
+                        @*日報表維護*@
+                        @Html.BMResource("BM_Daily_Report_Maintainence")
+                    </span>
+                </a>
+            </li>
+            <li class="tab">
+                <a href="#ScheduleInquiry" data-toggle="tab">
+                    <span>
+                        @*行程查詢*@
+                        @Html.BMResource("BM_Schedule_Inquiry")
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="ReportMaintainence">
+            @Html.Action("ReportMaintainence", "Itinerary")
+        </div>
+        <div class="tab-pane fade" id="ScheduleInquiry">
+            @Html.Action("ScheduleInquiry", "Itinerary")
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(".menu-itinerary").addClass("active");
+
+    function gridColumn_reportTime(p_input) {
+        var result = "";
+        var url = '@Url.Action("JudgeReportOperate", "Itinerary")';
+        if (p_input.REPORT_STATUS == "Draft" || p_input.REPORT_STATUS == "Reject") {
+            result += "<a href='" + url + "?REPORT_ID=" + p_input.REPORT_ID + "&OPERATE=UPDATE'" + ">" + getJsDateStringFromKendoContainer(p_input.REPORT_DATE) + "</a>";
+        } else {
+            result += "<a href='" + url + "?REPORT_ID=" + p_input.REPORT_ID + "&OPERATE=VIEW'" + ">" + getJsDateStringFromKendoContainer(p_input.REPORT_DATE) + "</a>";
+        }
+        return result;
+    }
+
+    function getJsDateStringFromKendoContainer(input) {
+        var a = kendo.parseDate(input, "yyyy/MM/dd");
+        return kendo.toString(new Date(a), "d")
+    }
+
+    function gridColumn_reportCustomer(input) {
+        var result = "";
+        if (input != null && input != '') {
+            var j = input.length;
+            var url = '@Url.Action("ClientIn", "Client")';
+            for (var i = 0; i < j; i++) {
+                if (i == 0) {
+                    result += "<a href='" + url + "/?CUSTOMER_ID=" + input[i].CUSTOMER_ID + "'" + ">" + input[i].CUSTOMER_NAME + "</a>";
+                } else {
+                    result += ",<a href='" + url + "/?CUSTOMER_ID=" + input[i].CUSTOMER_ID + "'" + ">" + input[i].CUSTOMER_NAME + "</a>";
+                }
+            }
+        }
+        return result;
+    }
+
+    function gridColumn_reportStatus(input) {
+        var result = "";
+        if (input.REPORT_STATUS == "Draft") {
+            result = "<span>@Html.BMResource("BM_Draft")</span>";
+        } else if (input.REPORT_STATUS == "Confirm") {
+            result = "<span>@Html.BMResource("BM_Approval_in_process")</span>";
+        } else if (input.REPORT_STATUS == "Adopt") {
+            result = "<span>@Html.BMResource("BM_Approved")</span>";
+        } else if (input.REPORT_STATUS == "Reject") {
+            result = "<span>@Html.BMResource("BM_Reject")</span>";
+        }
+        return result;
+    }
+
+    function gridColumn_ScheduleCustomer(input) {
+        var result = "";
+        if (input != null && input != '') {
+            if (input.CUSTOMER_NAME != null && input.CUSTOMER_NAME != '' && input.CUSTOMER_ID != null && input.CUSTOMER_ID != '') {
+                var url = '@Url.Action("ClientIn", "Client")';
+                result += "<a href='" + url + "/?CUSTOMER_ID=" + input.CUSTOMER_ID + "'" + ">" + input.CUSTOMER_NAME + "</a>";
+            }
+        }
+        return result;
+    }
+
+    function gridColumn_Case(input) {
+        var result = "";
+        if (input != null && input != '') {
+            if (input.CASE_NO != null && input.CASE_NO != '' && input.CASE_ID != null && input.CASE_ID != '') {
+                var url = '@Url.Action("CaseIn", "Case")';
+                result += "<a href='" + url + "/?CASE_ID=" + input.CASE_ID + "'" + ">" + input.CASE_NO + "</a>";
+            }
+        }
+        return result;
+    }
+
+    function gridColumn_CustomerContant(input) {
+        var result = "";
+        if (input != null) {
+            var j = input.length;
+            for (var i = 0; i < j; i++) {
+                if (i == 0) {
+                    result += input[i].CONTACT_NAME;
+                } else {
+                    result += ',' + input[i].CONTACT_NAME;
+                }
+            }
+        }
+        return result;
+    }
+</script>

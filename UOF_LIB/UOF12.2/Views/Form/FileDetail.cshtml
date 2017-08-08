@@ -1,0 +1,136 @@
+﻿<style>
+
+     .ui.button input[type="file"] {
+         position: absolute;
+         top: 0;
+        right: 0;
+         z-index: 1;
+         font: 200px monospace !important;
+         filter: alpha(opacity=0);
+         opacity: 0;
+         margin: 0;
+         padding: 0;
+         cursor: pointer;
+     }
+    .ui.items > .item > .image > canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: .125rem;
+        border: none;
+    }
+    .ui.tiny.image canvas {
+        max-width: 100%;
+        font-size: .85714286rem;
+    }
+</style>
+
+<div class="pusher">
+   
+    <div class="ui top large inverted orange fixed menu">
+        <a class="active left item" ng-hide="uploader.isUploading" ng-click="goBack()">
+            <i class="arrow circle left icon"></i> 返回
+        </a>
+    </div>
+    <div class="full height">
+
+        <div class=" header segment">
+            <div class="container">
+                <div class="introduction">
+                    <h1 class="ui header blue" ng-bind-html="pool.viewTitle">
+                    </h1>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="main container">
+
+            <div class="ui button labeled">
+                <div class="ui button large blue">
+                    <i class="folder open  icon"></i>
+                    選擇檔案...
+                </div>
+                <input nv-file-select="" name="files" id="files" type="file" uploader="uploader" multiple>
+               
+            </div>
+            @*<div class="ui divided items">
+                <div class="item" ng-repeat="item in uploader.queue">
+                    <div class="ui tiny image" ng-show="isImage(item.file)">
+                        <div ng-thumb="{ file: item._file, height: 100 }"></div>
+                    </div>
+                    <div class="middle aligned content">
+                        <a class="header">{{ item.file.name }}</a>
+                        <div class="description">{{ item.file.size/1024/1024|number:2 }}Mb</div>
+                        <div class="meta">
+                            <span class="cinema">
+                                <div ng-show="uploader.isHTML5">
+                                    <div ng-class="item.isSuccess ? 'success' : item.isError ? 'error':''" class="ui progress">
+                                        <div class="bar" ng-style="{ 'width': item.progress + '%' }">
+                                            <div class="progress active" data-percent="0">{{item.progress||0}}%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="extra">
+                            <div class="ui right floated blue button" ng-click="removeFile(item)">Remove</div>
+                            <div ng-show="item.isError" class="ui icon negative message">
+                                <i class="warning circle icon"></i>
+                                <div class="content">
+                                    <div class="header">
+                                        檔案上傳失敗,可能是檔案大小超過限制
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>*@
+
+            <div class="ui attached segment" ng-repeat="item in uploader.queue">
+
+                <div class="ui header">
+                    <div ng-show="isImage(item.file)" class="ui tiny image left floated">
+                        <div ng-thumb="{ file: item._file, height: 100 }"></div>
+                    </div>
+                    <div class="content right floated">
+                        <div class="ui medium header" ng-bind-html="item.file.name"></div>
+                        <div class="sub header"><span ng-bind-html="item.file.size/1024|number:2"></span>kb</div>
+                    </div>
+                </div>
+                <div style="clear: both; margin: 0"></div>
+                <div class="ui grid">
+                    <div class="sixteen wide column" ng-show="item.isError">
+                        <div class="ui icon negative message">
+                            <i class="warning circle icon"></i>
+                            <div class="content">
+                                <div class="header">
+                                    檔案上傳失敗,可能是檔案大小超過限制
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="ten wide column">
+                            <div ng-show="uploader.isHTML5">
+                                <div ng-class="item.isSuccess ? 'success' : item.isError ? 'error':''" class="ui progress">
+                                    <div class="bar" ng-style="{ 'width': item.progress + '%' }">
+                                        <div class="progress active" data-percent="0"><span ng-bind-html="item.progress||0"></span>%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="six wide column">
+                            <div class="ui right floated blue small button" ng-click="removeFile(item)">Remove</div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

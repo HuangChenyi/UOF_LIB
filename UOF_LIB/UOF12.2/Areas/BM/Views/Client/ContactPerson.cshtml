@@ -1,0 +1,202 @@
+﻿@model Ede.Uof.EIP.BM.dl.CTB_EB_CUS_CONTACT
+@{
+    //"聯絡人資料"; 
+    ViewBag.Title = Html.BMResource("BM_Contact_information");
+    Layout = "~/Areas/BM/Views/share/_LayoutMasterPage.cshtml";
+}
+
+<script>
+
+    function sameAsTel( p_type ) {
+        alert(p_type);
+
+    }
+
+
+</script>
+<div id="main" class="clearfix">
+    <div class="topTabs-header clearfix">
+        <h1 class="secInfo">
+            @*聯絡人資料*@ @Html.BMResource("BM_Contact_information")
+        </h1>
+        <!-- /SecInfo -->
+        <button class="return-btn" onclick="goBack()"><i class="fa fa-reply"></i></button>
+    </div>
+
+    @using (Html.BeginForm("ContactPersonSave", "Client", FormMethod.Post))
+    {
+
+        @Html.HiddenFor(model => model.CUSTOMER_ID)
+        @Html.Hidden("CRUD_STATUS","INSERT")
+        <div class="tab-content">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span><span style="color:#ff0000;">*</span>@*姓名*@ @Html.BMResource("BM_Name")</span></span>
+                     
+                        @Html.TextBoxFor(model => model.CONTACT_NAME, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*性別*@ @Html.BMResource("BM_Gender")</span></span>
+                        <div class="form-control text-center">
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(m => m.SEX, "M" ) @*男*@ @Html.BMResource("BM_Male")
+                            </label>
+                            <label class="radio-inline">
+                                @Html.RadioButtonFor(m => m.SEX, "F") @*女*@ @Html.BMResource("BM_Female")
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*生日*@ @Html.BMResource("BM_Birth_date")</span></span>
+                        <div >
+                        @(Html.Kendo().DatePickerFor(m=>m.BIRTHDAY))
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*單位*@ @Html.BMResource("BM_Unit")</span></span>
+                    
+                        @Html.TextBoxFor(model => model.DEPARTMENT, new { @class = "form-control" })
+                    </div>
+
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*職稱*@ @Html.BMResource("BM_Job_title")</span></span>
+                        @Html.TextBoxFor(model => model.TITLE, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*公司電話*@ @Html.BMResource("BM_Office_tel")</span></span>
+                        @Html.TextBoxFor(model => model.TEL, new { @class = "form-control" })
+                    </div>
+                      </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span class="input-group-addon"><span>@*分機*@ @Html.BMResource("BM_Ext")</span></span>
+                        @Html.TextBoxFor(model => model.EXT_NUM, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*手機*@ @Html.BMResource("BM_Mobile")</span></span>
+                        @Html.TextBoxFor(model => model.MOBILE_PHONE, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*電子郵件*@ @Html.BMResource("BM_E_mail")</span></span>
+                        @Html.TextBoxFor(model => model.EMAIL, new { @class = "form-control", @type = "email" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*電子郵件1*@ @Html.BMResource("BM_E_mail1")</span></span>
+                        @Html.TextBoxFor(model => model.EMAIL1, new { @class = "form-control", @type = "email" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*電子郵件2*@ @Html.BMResource("BM_E_mail2")</span></span>
+                        @Html.TextBoxFor(model => model.EMAIL2, new { @class = "form-control", @type = "email" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*主管名稱*@ @Html.BMResource("BM_Supervisos_name")</span></span>
+                        @Html.TextBoxFor(model => model.DIRECTOR, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*助理名稱*@ @Html.BMResource("BM_Assistant_name")</span></span>
+                        @Html.TextBoxFor(model => model.ASSISTANT, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>Skype</span></span>
+                        @Html.TextBoxFor(model => model.SKYPE, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*YAHOO即時通*@ @Html.BMResource("BM_YAHOO")</span></span>
+                        @Html.TextBoxFor(model => model.YAHOO, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>QQ</span></span>
+                        @Html.TextBoxFor(model => model.QQ, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                @*<div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>公司名稱</span></span>
+                        <input class="form-control" type="text" aria-describedby="" value="" placeholder="">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>統一編號</span></span>
+                        <input class="form-control" type="text" aria-describedby="" value="" placeholder="">
+                    </div>
+                </div>*@
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*公司傳真*@ @Html.BMResource("BM_Office_fax")</span></span>
+                        @Html.TextBoxFor(model => model.FAX, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span> @Html.BMResource("BM_Address")</span></span>
+                        @Html.TextBoxFor(model => model.ADDRESS, new { @class = "form-control" })
+                    </div>
+                
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="input-group mb20">
+                        <span id="" class="input-group-addon"><span>@*備註*@ @Html.BMResource("BM_Remark")</span></span>
+                        @Html.TextAreaFor(model => model.REMARK, new { @class = "form-control" })
+                    </div>
+                </div>
+
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-submit xs100 xs-mb10">@*儲存*@ @Html.BMResource("BM_Save")</button>
+                <button type="button" class="btn btn-close xs100" onclick="goBack()">@*返回*@ @Html.BMResource("BM_Return")</button>
+            </div>
+        </div>
+
+    }
+</div>
