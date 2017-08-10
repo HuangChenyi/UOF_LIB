@@ -30,7 +30,8 @@ namespace Lib.WKF.PO
             string cmdTxt = @" SELECT 
        *
  FROM [dbo].[{0}] 
-WHERE STATUS IS NULL";
+WHERE STATUS IS NULL
+AND ENABLED = 1 ";
 
             cmdTxt = string.Format(cmdTxt, tableName);
 
