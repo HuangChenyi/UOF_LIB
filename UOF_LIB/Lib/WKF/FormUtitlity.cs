@@ -10,7 +10,7 @@ using System.Xml;
 
 namespace Lib.WKF
 {
-    public class FormUtitlity
+    internal class FormUtitlity
     {
         public XmlDocument XmlDoc { get; set; }
 
@@ -129,7 +129,6 @@ namespace Lib.WKF
             XmlElement formElement = formUtility.GetFormInfoXmlCode(externalFormsDr["FORM_VERSION_ID"].ToString(), applyFormDr["URGENT_LEVEL"].ToString());
 
             //建立申請資訊
-            // 有缺部門ID轉換   職級要換成中文
             // 有缺意見欄位
             XmlElement applicantElement = formUtility.GetApplicantXmlCode(applyFormDr["APPLICANT"].ToString(), "", "", "", applyFormDr["ATTACH_PATH"].ToString());
             //建立欄位資訊
@@ -158,6 +157,13 @@ namespace Lib.WKF
                 }
 
 
+
+                Organization.UserSetPlus userSetP=new Organization.UserSetPlus();
+
+
+                string json = userSetP.ConverToJson();
+
+
                 string fieldType = versionFieldsXml.SelectSingleNode(string.Format("./VersionField/FieldItem[@fieldId='{0}']", dc.ColumnName)).Attributes["fieldType"].Value;
 
                 XmlElement fieldElement = null;
@@ -169,7 +175,7 @@ namespace Lib.WKF
                         fieldElement = fieldUtil.GetAutoNumberField(dc.ColumnName, applyFormDr[dc.ColumnName].ToString());
                         break;
                     case "optionalField":
-                        //外掛欄位   {"FieldValue":"" ,"ConditionValue":"" , "RealValue" : "" }
+                        //外掛欄位   {"FieldValue":"欄位值" ,"ConditionValue":"條件值" , "RealValue" : "組織資訊" }
                         fieldElement = fieldUtil.GetOptionalFieldXml(dc.ColumnName, applyFormDr[dc.ColumnName].ToString(), applyFormDr["APPLICANT"].ToString());
                         break;
                     case "dataGrid":

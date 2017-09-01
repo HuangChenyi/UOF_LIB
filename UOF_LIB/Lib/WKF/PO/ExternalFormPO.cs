@@ -9,13 +9,18 @@ namespace Lib.WKF.PO
 {
     internal class ExternalFormPO : Ede.Uof.Utility.Data.BasePersistentObject
     {
+        /// <summary>
+        /// 找出所有可以起單的TABLE
+        /// </summary>
+        /// <returns></returns>
         internal DataTable QueryExernalForms()
         {
             string cmdTxt = @" SELECT 
 	 [FORM_VERSION_ID] , 
 	 [EXTERNAL_TABLE_NAME] , 
 	 [EXTERNAL_GRID_TABLES_NAME]  
- FROM [dbo].[TB_CDS_EXTERNAL_FORM_MAPPING] ";
+ FROM [dbo].[TB_CDS_EXTERNAL_FORM_MAPPING] 
+WHERE ENABLED=1";
 
             DataTable dt = new DataTable();
             dt.Load(this.m_db.ExecuteReader(cmdTxt), LoadOption.OverwriteChanges);
@@ -24,14 +29,58 @@ namespace Lib.WKF.PO
 
         }
 
+        /// <summary>
+        /// 更新表單審核結果
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="formResult"></param>
+        internal void UpdateExernalFormResult(string tableName, string taskId,int formResult)
+        {
+            string cmdTxt = @"UPDATE {0} 
+                            SET FORM_RESULT=@FORM_RESULT
+                            WHERE TASK_ID=@TASK_ID";
+
+            cmdTxt = string.Format(cmdTxt, tableName);
+
+            this.m_db.AddParameter("FORM_RESULT", formResult);
+            this.m_db.AddParameter("TASK_ID", taskId);
+            this.m_db.ExecuteNonQuery(cmdTxt);
+        }
+
+
+        /// <summary>
+        /// 找出起單的TABLE名稱
+        /// </summary>
+        /// <returns></returns>
+        internal string QueryExernalForms(string formVersionId)
+        {
+            string cmdTxt = @" SELECT 
+	 [EXTERNAL_TABLE_NAME]  
+ FROM [dbo].[TB_CDS_EXTERNAL_FORM_MAPPING] 
+WHERE FORM_VERSION_ID=@FORM_VERSION_ID";
+
+            this.m_db.AddParameter("FORM_VERSION_ID", formVersionId);
+
+            object obj = this.m_db.ExecuteScalar(cmdTxt);
+
+            return obj.ToString();
+
+
+        }
+
+
+        /// <summary>
+        /// 找出所有申請的表單
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
         internal DataTable QueryAllApplyForms(string tableName)
         {
             //格式不定，只能用*
             string cmdTxt = @" SELECT 
        *
  FROM [dbo].[{0}] 
-WHERE STATUS IS NULL
-AND ENABLED = 1 ";
+WHERE STATUS IS NULL ";
 
             cmdTxt = string.Format(cmdTxt, tableName);
 
@@ -64,6 +113,11 @@ ORDER BY GRID_SEQ";
         }
 
 
+        /// <summary>
+        /// 找到欄位設定的XML
+        /// </summary>
+        /// <param name="formVersionId"></param>
+        /// <returns></returns>
         internal string QueryVersionFields(string formVersionId)
         {
             string cmdTxt = @"SELECT VERSION_FIELD FROM TB_WKF_FORM_VERSION
@@ -77,6 +131,15 @@ ORDER BY GRID_SEQ";
 
         }
 
+        /// <summary>
+        /// 更新起單成功後狀態
+        /// </summary>
+        /// <param name="externalTaskId"></param>
+        /// <param name="tableName"></param>
+        /// <param name="status"></param>
+        /// <param name="taskId"></param>
+        /// <param name="formNbr"></param>
+        /// <param name="exception"></param>
         internal void UpdateFormStatus(string externalTaskId, string tableName, string status, string taskId, string formNbr, string exception)
         {
             string cmdTxt = string.Format(@"  UPDATE [dbo].[{0}]  

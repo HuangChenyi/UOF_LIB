@@ -12,7 +12,7 @@ using System.Xml;
 
 namespace Lib.WKF
 {
-    public class FieldUtility
+    internal class FieldUtility
     {
 
         public XmlDocument XmlDoc { get; set; }

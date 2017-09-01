@@ -77,8 +77,7 @@ mode:執行的類型,共4種
 
 <CDSTask>
   <triggers>
-    <trigger type="Training.Task"  file="Training"  mode="OnStarts" />
-    <trigger type="YJ.Lib.SimulationTask"  file="YJ.Lib"  mode="OnStarts" />
+    <trigger type="Lib.WKF.CreateFormTask" file="Lib"  mode="EveryDay" hours="*" minutes="0/5"  />
   </triggers>
   <Tasks>
      

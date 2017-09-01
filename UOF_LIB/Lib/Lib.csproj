@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Lib.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,6 +37,10 @@
     <Reference Include="Ede.Uof.EIP.Organization.Util">
       <HintPath>..\UOF12.2\bin\Ede.Uof.EIP.Organization.Util.dll</HintPath>
     </Reference>
+    <Reference Include="Ede.Uof.EIP.Schedule.Meeting, Version=12.20.6264.29817, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\UOF12.2\Bin\Ede.Uof.EIP.Schedule.Meeting.dll</HintPath>
+    </Reference>
     <Reference Include="Ede.Uof.EIP.SystemInfo">
       <HintPath>..\UOF12.2\bin\Ede.Uof.EIP.SystemInfo.dll</HintPath>
     </Reference>
@@ -44,6 +49,10 @@
     </Reference>
     <Reference Include="Ede.Uof.Utility.Data">
       <HintPath>..\UOF12.2\bin\Ede.Uof.Utility.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Ede.Uof.Utility.FileCenter, Version=12.20.6264.29817, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\UOF12.2\Bin\Ede.Uof.Utility.FileCenter.dll</HintPath>
     </Reference>
     <Reference Include="Ede.Uof.Utility.Log">
       <HintPath>..\UOF12.2\bin\Ede.Uof.Utility.Log.dll</HintPath>
@@ -73,17 +82,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EIP\Sch\Info.cs" />
+    <Compile Include="EIP\Sch\MeetingUCO.cs" />
+    <Compile Include="Organization\Organization.cs" />
     <Compile Include="Organization\OrganizationPlus.cs" />
     <Compile Include="Organization\UserSetPlus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WKF\CreateFormTask.cs" />
+    <Compile Include="WKF\ExternalDllSites.cs" />
     <Compile Include="WKF\PO\ExternalFormPO.cs" />
     <Compile Include="WKF\FieldUtility.cs" />
     <Compile Include="WKF\FormUtitlity.cs" />
+    <Compile Include="WKF\Trigger\EndFormTrigger.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="EIP\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

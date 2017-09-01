@@ -75,11 +75,14 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Telerik.Reporting, Version=9.0.15.225, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\DemoDataSet.Designer.cs">
@@ -103,6 +106,12 @@
     <Compile Include="Task.cs" />
     <Compile Include="Trigger\EndFormTrigger.cs" />
     <Compile Include="Trigger\OnFlowFormTrigger.cs" />
+    <Compile Include="Trigger\Report1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Trigger\Report1.Designer.cs">
+      <DependentUpon>Report1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Trigger\StartFormTrigger.cs" />
     <Compile Include="UCO\DemoUCO.cs" />
   </ItemGroup>
@@ -138,7 +147,11 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Trigger\Report1.resx">
+      <DependentUpon>Report1.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

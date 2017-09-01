@@ -925,7 +925,14 @@
             <Value Culture="vi" Name="簽名欄位" />
           </Display>
         </FieldItem>
-
+        <FieldItem DesignUI="~/CDS/WKF_Fields/SetupField_optionField4.aspx" WriteUI="~/CDS/WKF_Fields/optionField4.ascx" FieldName="optionField4">
+          <Display>
+            <Value Culture="zh-TW" Name="維修資訊" />
+            <Value Culture="zh-CN" Name="維修資訊" />
+            <Value Culture="en-US" Name="維修資訊" />
+            <Value Culture="vi" Name="維修資訊" />
+          </Display>
+        </FieldItem>
       </OptionalField>
     </Field>
   </WKF>

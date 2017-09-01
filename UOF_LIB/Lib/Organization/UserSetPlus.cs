@@ -1,4 +1,5 @@
 ﻿using Ede.Uof.EIP.Organization.Util;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,6 +141,15 @@ namespace Lib.Organization
 
             return returnValue;
         }
+
+        /// <summary>
+        /// 轉換成JSON格式
+        /// </summary>
+        /// <returns></returns>
+        public string ConverToJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 
     public class UserSetItem
@@ -148,5 +158,12 @@ namespace Lib.Organization
         public bool isDepth { get; set; }
         public string Value { get; set; }
         public string Value2 { get; set; }
+
+        public UserSetItem()
+        {
+            isDepth = false;
+            Value = "";
+            Value2 = "";
+        }
     }
 }
