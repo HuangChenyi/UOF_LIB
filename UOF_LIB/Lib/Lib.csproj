@@ -41,6 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\UOF12.2\Bin\Ede.Uof.EIP.Schedule.Meeting.dll</HintPath>
     </Reference>
+    <Reference Include="Ede.Uof.EIP.SMS">
+      <HintPath>..\UOF12.2\bin\Ede.Uof.EIP.SMS.dll</HintPath>
+    </Reference>
     <Reference Include="Ede.Uof.EIP.SystemInfo">
       <HintPath>..\UOF12.2\bin\Ede.Uof.EIP.SystemInfo.dll</HintPath>
     </Reference>
@@ -84,6 +87,7 @@
   <ItemGroup>
     <Compile Include="EIP\Sch\Info.cs" />
     <Compile Include="EIP\Sch\MeetingUCO.cs" />
+    <Compile Include="EIP\SMS\SMSUCO.cs" />
     <Compile Include="Organization\Organization.cs" />
     <Compile Include="Organization\OrganizationPlus.cs" />
     <Compile Include="Organization\UserSetPlus.cs" />

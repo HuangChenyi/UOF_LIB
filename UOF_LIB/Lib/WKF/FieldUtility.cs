@@ -150,7 +150,7 @@ namespace Lib.WKF
 
             if (optionData != "")
             {
-                obj = (OptionFieldObj)JsonConvert.DeserializeObject(optionData);
+                obj = (OptionFieldObj)JsonConvert.DeserializeObject< OptionFieldObj>(optionData);
             }
             else
             {
