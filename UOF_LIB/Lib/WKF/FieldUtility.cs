@@ -114,8 +114,8 @@ namespace Lib.WKF
             }
 
             XmlElement fileElement = XmlDoc.CreateElement("FieldItem");
-            fileElement.SetAttribute("fieldId", "{0}");
-            fileElement.SetAttribute("IsNeedTransfer", "true");
+            fileElement.SetAttribute("fieldId", fieldId);
+            fileElement.SetAttribute("IsNeedTransfer", "True");
             fileElement.SetAttribute("IsDeleteTemp", "true");
             fileElement.SetAttribute("realValue", "");
             fileElement.SetAttribute("fieldValue", "");
@@ -124,13 +124,17 @@ namespace Lib.WKF
             fileElement.SetAttribute("fillerAccount", account);
             fileElement.SetAttribute("fillSiteId", "");
 
-            //如果多個附件請加入多個AttachItem，如果沒附件可不加入
-            XmlElement attachItemElement = XmlDoc.CreateElement("AttachItem");
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                //如果多個附件請加入多個AttachItem，如果沒附件可不加入
+                XmlElement attachItemElement = XmlDoc.CreateElement("AttachItem");
 
-            attachItemElement.SetAttribute("filePath", filePath);
-            fileElement.AppendChild(attachItemElement);
+                attachItemElement.SetAttribute("filePath", filePath);
+                fileElement.AppendChild(attachItemElement);
+            }
 
             return fileElement;
+
 
         }
 
@@ -338,6 +342,7 @@ namespace Lib.WKF
             {
                 return GetFieldElement(fieldId, "", "", userName, userGuid, account);
             }
+
 
 
             OrganizationPlus orgP = new OrganizationPlus();

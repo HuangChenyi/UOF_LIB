@@ -1,4 +1,5 @@
-﻿using Ede.Uof.Utility.Task;
+﻿using Ede.Uof.Utility.Log;
+using Ede.Uof.Utility.Task;
 using Lib.WKF.PO;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,8 @@ namespace Lib.WKF
 
                         string formXml = formUtil.GetFormXML(applyFormDr, externalFormsDr);
 
+
+                   
                         //直接起單
                         Ede.Uof.WKF.Utility.TaskUtilityUCO taskUtli = new Ede.Uof.WKF.Utility.TaskUtilityUCO();
 

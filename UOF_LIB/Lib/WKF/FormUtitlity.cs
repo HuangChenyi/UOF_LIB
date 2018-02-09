@@ -184,6 +184,7 @@ namespace Lib.WKF
 
                     case "fileButton":
                         //檔案欄位
+                        if(applyFormDr[dc.ColumnName].ToString() !="")
                         fieldElement = fieldUtil.GetFileFieldElement(dc.ColumnName, applyFormDr[dc.ColumnName].ToString(), applyFormDr["APPLICANT"].ToString());
                         break;
                     case "checkBox":
