@@ -86,18 +86,17 @@ namespace Lib.Organization
             string groupId = null;
             string parentGroupID = "Company";
 
-            string tmp = groupData.GetRootGroupID(deptNames[1].Trim());
+            string tmp = groupData.GetRootGroupID(deptNames[0].Trim());
+          
             if (tmp != parentGroupID) //取得第0階的GroupID,如果不等於 "Company" 則抛出例外
             {
                 //丟例外
                 return "";
             }
-            else if (deptNames.Length == 2)
-            {
-                return tmp;
-            }
 
-            for (int i = 2; i < deptNames.Length; i++)
+            groupId = parentGroupID;
+
+            for (int i = 1; i < deptNames.Length; i++)
             {
                 if (string.IsNullOrEmpty(deptNames[i]))
                     continue;

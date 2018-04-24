@@ -13,6 +13,7 @@ public partial class CDS_Notice_Default : BasePage
     {
         if (!IsPostBack)
         { 
+           
             Setting setting= new Setting();
 
             if (!string.IsNullOrEmpty(setting["WrigleyNoticeDay"]))

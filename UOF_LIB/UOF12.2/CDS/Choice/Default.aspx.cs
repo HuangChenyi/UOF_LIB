@@ -14,19 +14,13 @@ public partial class CDS_Choice_Default : Ede.Uof.Utility.Page.BasePage
         UC_ChoiceList1.EditButtonOnClick += UC_ChoiceList1_EditButtonOnClick;
         UC_ChoiceList2.EditButtonOnClick += UC_ChoiceList2_EditButtonOnClick;
 
-        //d8406752-c83a-e4d9-127e-6b1d31a8f0c1
-        UserSet userSet = new UserSet();
-    //    userSet.Contains
-        //UserSetGroup userSetGroup = new UserSetGroup();
-        //userSetGroup.GROUP_ID = "d8406752-c83a-e4d9-127e-6b1d31a8f0c1";
-        //userSetGroup.IS_DEPTH = true;
+    
 
-        //userSetGroup = new UserSetGroup();
-        //userSetGroup.GROUP_ID = "Company";
-        //userSetGroup.IS_DEPTH = true;
 
-        //userSet.Items.Add(userSetGroup);
-        //UC_ChoiceList3.LimitXML = userSet.GetXML();
+
+
+
+
     }
 
     void UC_ChoiceList2_EditButtonOnClick(Ede.Uof.EIP.Organization.Util.UserSet userSet)
