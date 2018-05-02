@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="http://poc.edetw.com/UOF_FTV/WKF/WebService/TransferFormWS.asmx?wsdl" docRef="http://poc.edetw.com/UOF_FTV/WKF/WebService/TransferFormWS.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="http://poc.edetw.com/UOF_FTV/WKF/WebService/TransferFormWS.asmx" xmlns:q1="http://www.1st-excellence.com" binding="q1:TransferFormWSSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="http://poc.edetw.com/UOF_FTV/WKF/WebService/TransferFormWS.asmx" xmlns:q2="http://www.1st-excellence.com" binding="q2:TransferFormWSSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>
