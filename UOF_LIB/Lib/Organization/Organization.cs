@@ -9,6 +9,82 @@ namespace Lib.Organization
 {
     public class Organization
     {
+
+        /// <summary>
+        /// 取得職級的簽核者
+        /// </summary>
+        /// <param name="UserTitleName"></param>
+        /// <param name="UserGroupId"></param>
+        /// <param name="SignerTitleNamne"></param>
+        /// <returns></returns>
+        public UserSet GetSignerByJobTitle(string UserTitleName, string UserGroupId , string SignerTitleNamne)
+        {
+            string userTitleId = GetJobTitleID(UserTitleName);
+            string signerTitleId = GetJobTitleID(SignerTitleNamne);
+
+            JobTitleUCO titleUCO = new JobTitleUCO();
+
+            EmployeeJobTitle jt1 = titleUCO.GetJobTitle(userTitleId);
+            EmployeeJobTitle jt2 = titleUCO.GetJobTitle(signerTitleId);
+
+            //如果USER的職級>=簽核者職級就跳過
+            if(jt1.Rank>= jt2.Rank)
+            {
+                return new UserSet();
+            }
+
+            return GetTitleOfGroupSigner(UserGroupId, signerTitleId);
+
+        }
+
+        /// <summary>
+        /// 取得職級簽核者
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="signerTitleId"></param>
+        /// <returns></returns>
+        private UserSet GetTitleOfGroupSigner(string groupId, string signerTitleId)
+        {
+            UserSet userSet = new UserSet();
+
+            UserUCO userUCO = new UserUCO();
+            BaseGroup baseGp = new BaseGroup(groupId);
+
+            UserSetTitleOfGroup userSetTofG = new UserSetTitleOfGroup();
+            userSetTofG.IS_DEPTH = false;
+            userSetTofG.GROUP_ID = groupId;
+            userSetTofG.TITLE_ID = signerTitleId;
+
+            userSet.Items.Add(userSetTofG);
+
+            //如果沒有上層部門..找不到就跳過
+            if(baseGp.ParnetGroup == null)
+            {
+                return userSet;
+            }
+            else
+            {
+                //找到人直接回傳
+                if(userSet.GetUsers().Rows.Count>0)
+                {
+                    return userSet;
+                }
+                else
+                {
+                    //找不到人再上找
+                    return GetTitleOfGroupSigner(baseGp.ParnetGroup.GroupId, signerTitleId);
+                }
+            }
+        }
+
+        public string GetJobTitleID(string titleName)
+        {
+            using (var po = new OrganizationPO())
+            {
+                return po.GetJobTitleId(titleName);
+            }
+        }
+
         /// <summary>
         /// 取得員工直屬主管
         /// </summary>

@@ -17,5 +17,16 @@ namespace Lib.WKF
 
             return ws.SendForm(formInfo);
         }
+
+
+        public string EndForm(string taskId,string account, string result, string reason)
+        {
+            Setting setting = new Setting();
+            Form.TransferFormWS ws = new Form.TransferFormWS();
+            ws.Url = setting["SiteUrl"] + "/WKF/WebService/TransferFormWS.asmx";
+
+            return ws.TerminateTask(taskId,account,result,reason);
+        }
+
     }
 }
