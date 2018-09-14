@@ -21,7 +21,7 @@ namespace Lib.WKF
         public string  ConvertToXML()
         {
             XDocument xDoc = new XDocument();
-            XElement returnValueElement = new XElement("Return");
+            XElement returnValueElement = new XElement("ReturnValue");
             if (Sites.Count == 0)
             {
                 XElement emptyFlowElement = new XElement("EmptyFlow");

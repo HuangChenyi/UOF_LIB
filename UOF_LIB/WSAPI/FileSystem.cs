@@ -66,17 +66,24 @@ namespace WSAPI
 
             int index = 0;
 
+
+
             while (fs.Length > index)
             {
-                byte[] bytes = new byte[102400];
+                long buffer = 102400;
 
-                int i = fs.Read(bytes, 0, 102400);
+                if (index + buffer >= fs.Length)
+                {
+                    buffer = fs.Length - index;
+                }
 
+                byte[] bytes = new byte[buffer];
 
+                int i = fs.Read(bytes, 0, Convert.ToInt32(buffer));
 
                 service.WriteFileSession(m_Token, m_FileTarget, sessionId, index, bytes);
 
-                index += 102400;
+                index += Convert.ToInt32(buffer);
             }
 
 
