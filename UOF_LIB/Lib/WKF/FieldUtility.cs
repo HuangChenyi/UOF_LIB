@@ -77,7 +77,7 @@ namespace Lib.WKF
 
             if (formNumber != "")
             {
-                autoNumberElement.SetAttribute("isNeedAutoNbr", "true");
+                autoNumberElement.SetAttribute("IsNeedAutoNbr", "true");
             }
             else
             {

@@ -35,9 +35,7 @@ namespace Lib.WKF
                         FormUtitlity formUtil = new FormUtitlity();
 
                         string formXml = formUtil.GetFormXML(applyFormDr, externalFormsDr);
-
-
-                   
+                        
                         //直接起單
                         Ede.Uof.WKF.Utility.TaskUtilityUCO taskUtli = new Ede.Uof.WKF.Utility.TaskUtilityUCO();
 

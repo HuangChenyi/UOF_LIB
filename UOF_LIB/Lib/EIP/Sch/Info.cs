@@ -74,4 +74,71 @@ namespace Lib.EIP.Sch.Info
         /// </summary>
         public string CONTACT_PERSON { get; set; }
     } 
+
+    /// <summary>
+    /// 備忘資訊
+    /// </summary>
+    public class MemoInfo
+    {
+        /// <summary>
+        /// 是否全天
+        /// </summary>
+        public bool ALL_DAY { get; set; }
+        /// <summary>
+        /// 建立時間
+        /// </summary>
+        public bool CREATE_TIME { get; set; }
+        /// <summary>
+        /// 建立者
+        /// </summary>
+        public bool CREATE_USER { get; set; }
+        /// <summary>
+        /// 說明
+        /// </summary>
+        public bool DESCRIPTION { get; set; }
+
+        /// <summary>
+        /// 結束時間
+        /// </summary>
+        public bool END_TIME { get; set; }
+
+        /// <summary>
+        /// 備忘擁有者
+        /// </summary>
+        public bool OWNER { get; set; }
+       
+        /// <summary>
+        /// 提醒時間
+        /// </summary>
+        public bool REMINDER_TIME { get; set; }
+        ///
+
+        /// <summary>
+        /// 開始時間
+        /// </summary>
+        public bool START_TIME { get; set; }
+        /// <summary>
+        /// 標題
+        /// </summary>
+        public bool SUBJECT { get; set; }
+
+
+
+
+
+        //dr.ALL_DAY//是否全天
+
+        //dr.CREATE_TIME//建立時間
+        //dr.CREATE_USER//建立者
+        //dr.DESCRIPTION"";//說明
+        //dr.END_TIME=//結束時間
+        //dr.MEMO_GUID//NEW GUID
+        //dr.OWNER //
+        //dr.PERSONAL_TYPE = "Display";
+        //dr.REMINDER_TIME//
+        //dr.REPEAT_GUID=""
+        //dr.START_TIME//
+        //dr.SUBJECT//
+
+    }
 }

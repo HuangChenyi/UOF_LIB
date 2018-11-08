@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace PochenPOC
 {
     public class FileSystem
-    {
+    { 
          public string m_Token;
          public string Token { get{return m_Token; }  }
         public string SiteUrl { get; set; }
