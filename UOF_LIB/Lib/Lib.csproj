@@ -116,6 +116,7 @@
     <Compile Include="WKF\PO\ExternalFormPO.cs" />
     <Compile Include="WKF\FieldUtility.cs" />
     <Compile Include="WKF\FormUtitlity.cs" />
+    <Compile Include="WKF\TaskPro.cs" />
     <Compile Include="WKF\Trigger\EndFormTrigger.cs" />
   </ItemGroup>
   <ItemGroup>
