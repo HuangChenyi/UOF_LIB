@@ -32,19 +32,29 @@ namespace Lib.WKF
                     foreach (DataRow applyFormDr in applyFormDt.Rows)
                     {
 
-                        FormUtitlity formUtil = new FormUtitlity();
+                        try
+                        {
+                            FormUtitlity formUtil = new FormUtitlity();
 
-                        string formXml = formUtil.GetFormXML(applyFormDr, externalFormsDr);
-                        
-                        //直接起單
-                        Ede.Uof.WKF.Utility.TaskUtilityUCO taskUtli = new Ede.Uof.WKF.Utility.TaskUtilityUCO();
+                            string formXml = formUtil.GetFormXML(applyFormDr, externalFormsDr);
 
-                        string log = taskUtli.WebService_CreateTask(formXml);
+                            //直接起單
+                            Ede.Uof.WKF.Utility.TaskUtilityUCO taskUtli = new Ede.Uof.WKF.Utility.TaskUtilityUCO();
+
+                            string log = taskUtli.WebService_CreateTask(formXml);
 
 
-                        formUtil.GetResult(applyFormDr["EXTERNAL_TASK_ID"].ToString(), externalFormsDr["EXTERNAL_TABLE_NAME"].ToString(), log);
+                            formUtil.GetResult(applyFormDr["EXTERNAL_TASK_ID"].ToString(), externalFormsDr["EXTERNAL_TABLE_NAME"].ToString(), log);
 
-                        dt.Rows.Add(new object[] { log });
+                            dt.Rows.Add(new object[] { log });
+                        }
+                        catch (Exception ce)
+                        {
+                            //讓例外發生時表單還可以正常起單
+                                    po.UpdateFormStatus(applyFormDr["EXTERNAL_TASK_ID"].ToString(), externalFormsDr["EXTERNAL_TABLE_NAME"].ToString(), "0", "", "", ce.ToString());
+                               
+                            
+                        }
                     }
                 }
             }

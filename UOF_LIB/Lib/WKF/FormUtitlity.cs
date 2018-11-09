@@ -164,8 +164,15 @@ namespace Lib.WKF
                 string json = userSetP.ConverToJson();
 
 
-                string fieldType = versionFieldsXml.SelectSingleNode(string.Format("./VersionField/FieldItem[@fieldId='{0}']", dc.ColumnName)).Attributes["fieldType"].Value;
+                string fieldType = "";
 
+                try {
+                    fieldType= versionFieldsXml.SelectSingleNode(string.Format("./VersionField/FieldItem[@fieldId='{0}']", dc.ColumnName)).Attributes["fieldType"].Value;
+                }
+                catch
+                {
+                    throw new Exception($"Table欄位{dc.ColumnName}不存在於表單欄位中!");
+                }
                 XmlElement fieldElement = null;
 
                 switch (fieldType)
