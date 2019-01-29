@@ -37,6 +37,10 @@
     <Reference Include="Ede.Uof.EIP.Organization.Util">
       <HintPath>..\UOF12.2\bin\Ede.Uof.EIP.Organization.Util.dll</HintPath>
     </Reference>
+    <Reference Include="Ede.Uof.EIP.Schedule.Devolve, Version=12.20.6264.29817, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\UOF12.2\bin\Ede.Uof.EIP.Schedule.Devolve.dll</HintPath>
+    </Reference>
     <Reference Include="Ede.Uof.EIP.Schedule.Meeting, Version=12.20.6264.29817, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\UOF12.2\Bin\Ede.Uof.EIP.Schedule.Meeting.dll</HintPath>
@@ -44,6 +48,10 @@
     <Reference Include="Ede.Uof.EIP.Schedule.Memorandum, Version=12.20.6264.29817, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\UOF12.2\bin\Ede.Uof.EIP.Schedule.Memorandum.dll</HintPath>
+    </Reference>
+    <Reference Include="Ede.Uof.EIP.Schedule.Work, Version=12.20.6264.29817, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\UOF12.2\Bin\Ede.Uof.EIP.Schedule.Work.dll</HintPath>
     </Reference>
     <Reference Include="Ede.Uof.EIP.SMS">
       <HintPath>..\UOF12.2\bin\Ede.Uof.EIP.SMS.dll</HintPath>
@@ -91,9 +99,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EIP\Sch\DevolveUCO.cs" />
     <Compile Include="EIP\Sch\Info.cs" />
     <Compile Include="EIP\Sch\MeetingUCO.cs" />
     <Compile Include="EIP\Sch\MemoUCO.cs" />
+    <Compile Include="EIP\Sch\WorkUCO.cs" />
     <Compile Include="EIP\SMS\SMSUCO.cs" />
     <Compile Include="Organization\Organization.cs" />
     <Compile Include="Organization\OrganizationPlus.cs" />

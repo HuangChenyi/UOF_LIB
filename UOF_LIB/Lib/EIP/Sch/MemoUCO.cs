@@ -1,4 +1,5 @@
 ﻿using Ede.Uof.EIP.Schedule.Memorandum;
+using Lib.EIP.Sch.Info;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,27 +10,31 @@ namespace Lib.EIP.Sch
 {
     public  class MemoUCO
     {
-        public void CreateMemo()
+        /// <summary>
+        /// 新增備忘
+        /// </summary>
+        /// <param name="info"></param>
+        public void CreateMemo(MemoInfo info)
         {
-            //MemorandumManagementUCO uco = new MemorandumManagementUCO();
+            MemorandumManagementUCO uco = new MemorandumManagementUCO();
 
-            //MemorandumDataSet ds = new MemorandumDataSet();
-            //MemorandumDataSet.MemorandumRow dr = ds.Memorandum.NewMemorandumRow();
-            //dr.ALL_DAY//是否全天
-            //dr.CREATE_TIME//建立時間
-            //dr.CREATE_USER//建立者
-            //dr.DESCRIPTION"";//說明
-            //dr.END_TIME=//結束時間
-            //dr.MEMO_GUID//NEW GUID
-            //dr.OWNER //備忘擁有者
-            //dr.PERSONAL_TYPE = "Display";
-            //dr.REMINDER_TIME//提醒時間
-            //dr.REPEAT_GUID=""
-            //dr.START_TIME//開始時間
-            //dr.SUBJECT//標題
+            MemorandumDataSet ds = new MemorandumDataSet();
+            MemorandumDataSet.MemorandumRow dr = ds.Memorandum.NewMemorandumRow();
+            dr.ALL_DAY = info.ALL_DAY;//是否全天
+            dr.CREATE_TIME = info.CREATE_TIME;//建立時間
+            dr.CREATE_USER = info.CREATE_USER;//建立者
+            dr.DESCRIPTION = info.DESCRIPTION;//說明
+            dr.END_TIME = info.END_TIME;//結束時間
+            dr.MEMO_GUID = System.Guid.NewGuid().ToString();//NEW GUID
+            dr.OWNER = info.OWNER;//備忘擁有者
+            dr.PERSONAL_TYPE = PersonalType.Display.ToString(); 
+            dr.REMINDER_TIME = info.REMINDER_TIME;//提醒時間
+            dr.REPEAT_GUID = "";
+            dr.START_TIME = info.START_TIME;//開始時間
+            dr.SUBJECT = info.SUBJECT;//標題
 
-            //ds.Memorandum.Rows.Add(dr);
-            //uco.CreateMemorandum(ds);
+            ds.Memorandum.Rows.Add(dr);
+            uco.CreateMemorandum(ds);
 
         }
     }
