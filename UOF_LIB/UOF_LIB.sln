@@ -6,7 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "UOF12.2", "UOF12.2\", "{7F3592F4-D064-4AFF-847B-E4BA013A91CD}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6"
-		ProjectReferences = "{c4d1f5ba-1556-482a-9a34-ec8e0ac1451c}|Lib.dll;{61988e64-e3ad-4655-b741-70e8a31ac60a}|Training.dll;"
+		ProjectReferences = "{c4d1f5ba-1556-482a-9a34-ec8e0ac1451c}|Lib.dll;{61988e64-e3ad-4655-b741-70e8a31ac60a}|Training.dll;{492825df-2f69-43c9-9d3c-65aecf628ce3}|Lib.TipTop.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_6558"
 		Debug.AspNetCompiler.PhysicalPath = "UOF12.2\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_6558\"
@@ -36,6 +36,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YJ.Lib", "YJ.Lib\YJ.Lib.csproj", "{1A128E00-6266-4FA6-BB80-885D6EC00410}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{2733BCF4-4DA6-4EAD-BDF3-C24105997A3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.TipTop", "Lib.TipTop\Lib.TipTop.csproj", "{492825DF-2F69-43C9-9D3C-65AECF628CE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,10 @@ Global
 		{2733BCF4-4DA6-4EAD-BDF3-C24105997A3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2733BCF4-4DA6-4EAD-BDF3-C24105997A3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2733BCF4-4DA6-4EAD-BDF3-C24105997A3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{492825DF-2F69-43C9-9D3C-65AECF628CE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{492825DF-2F69-43C9-9D3C-65AECF628CE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{492825DF-2F69-43C9-9D3C-65AECF628CE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{492825DF-2F69-43C9-9D3C-65AECF628CE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
