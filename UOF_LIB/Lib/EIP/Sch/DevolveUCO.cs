@@ -58,6 +58,8 @@ namespace Lib.EIP.Sch
 
             devolveDs.Devolve.Rows.Add(row);
             dmData.CreateDevolve(devolveDs);
+
+            return;
         }
     }
 }
