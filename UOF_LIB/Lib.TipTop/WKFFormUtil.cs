@@ -82,6 +82,37 @@ namespace Lib.TipTop
             
             formFieldValueElement.AppendChild(NOElement);
 
+
+            //隱藏欄位
+            //PlantID
+            XmlElement PlantIDElement = xmlDoc.CreateElement("FieldItem");
+            PlantIDElement.SetAttribute("fieldId", "PlantID");
+            PlantIDElement.SetAttribute("fieldValue", xdoc.Element("Request").Element("RequestContent").Element("Form").Element("PlantID").Value);
+            PlantIDElement.SetAttribute("realValue", "");
+   
+            formFieldValueElement.AppendChild(PlantIDElement);
+            //ProgramID
+            XmlElement ProgramIDElement = xmlDoc.CreateElement("FieldItem");
+            ProgramIDElement.SetAttribute("fieldId", "ProgramID");
+            ProgramIDElement.SetAttribute("fieldValue", xdoc.Element("Request").Element("RequestContent").Element("Form").Element("ProgramID").Value);
+            ProgramIDElement.SetAttribute("realValue", "");
+
+            formFieldValueElement.AppendChild(ProgramIDElement);
+            //SourceFormID
+            XmlElement SourceFormIDElement = xmlDoc.CreateElement("FieldItem");
+            SourceFormIDElement.SetAttribute("fieldId", "SourceFormID");
+            SourceFormIDElement.SetAttribute("fieldValue", xdoc.Element("Request").Element("RequestContent").Element("Form").Element("SourceFormID").Value);
+            SourceFormIDElement.SetAttribute("realValue", "");
+
+            formFieldValueElement.AppendChild(SourceFormIDElement);
+            //SourceFormNum
+            XmlElement SourceFormNumElement = xmlDoc.CreateElement("FieldItem");
+            SourceFormNumElement.SetAttribute("fieldId", "SourceFormNum");
+            SourceFormNumElement.SetAttribute("fieldValue", xdoc.Element("Request").Element("RequestContent").Element("Form").Element("SourceFormNum").Value);
+            SourceFormNumElement.SetAttribute("realValue", "");
+
+            formFieldValueElement.AppendChild(SourceFormNumElement);
+
             //表單Header欄位
             foreach (var node in xdoc.Element("Request").Element("RequestContent").Element("Form").Element("ContentText").Element("head").Elements())
             {
