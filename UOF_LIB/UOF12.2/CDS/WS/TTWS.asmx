@@ -12,14 +12,21 @@ using System.Web.Services.Protocols;
 public class TTWS  : System.Web.Services.WebService {
 
     [WebMethod]
-    public string SenTipTopForm(string xml) {
+    public string SenTipTopForm(string xml)
+    {
         Lib.TipTop.WKFFormUtil wkf = new Lib.TipTop.WKFFormUtil();
+        try
+        {
+            string formXML = wkf.ConvertUOFFormXml(xml);
 
-        string formXML = wkf.ConvertUOFFormXml(xml);
+            Ede.Uof.WKF.Utility.TaskUtilityUCO uco = new Ede.Uof.WKF.Utility.TaskUtilityUCO();
 
-        Ede.Uof.WKF.Utility.TaskUtilityUCO uco = new Ede.Uof.WKF.Utility.TaskUtilityUCO();
-
-        return uco.WebService_CreateTask(formXML);
+            return uco.WebService_CreateTask(formXML);
+        }
+        catch (Exception ce)
+        {
+            return ce.ToString();
+        }
     }
-    
+
 }
