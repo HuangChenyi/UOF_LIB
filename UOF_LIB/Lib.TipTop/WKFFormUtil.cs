@@ -1,5 +1,6 @@
 ﻿using Ede.Uof.EIP.Organization.Util;
 using Ede.Uof.Utility.Configuration;
+using Ede.Uof.Utility.Log;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -85,9 +86,11 @@ namespace Lib.TipTop
 
             //隱藏欄位
             //PlantID
+            string PlantID = xdoc.Element("Request").Element("RequestContent").Element("Form").Element("PlantID").Value;
+
             XmlElement PlantIDElement = xmlDoc.CreateElement("FieldItem");
             PlantIDElement.SetAttribute("fieldId", "PlantID");
-            PlantIDElement.SetAttribute("fieldValue", xdoc.Element("Request").Element("RequestContent").Element("Form").Element("PlantID").Value);
+            PlantIDElement.SetAttribute("fieldValue", PlantID);
             PlantIDElement.SetAttribute("realValue", "");
    
             formFieldValueElement.AppendChild(PlantIDElement);
@@ -217,7 +220,7 @@ namespace Lib.TipTop
                     {
                         case "HTTP":
                             string key = detail.Attribute("content").Value.Substring(0, detail.Attribute("content").Value.IndexOf('.'));
-                            cellElement.SetAttribute("fieldValue", DownloadFile(key));
+                            cellElement.SetAttribute("fieldValue", DownloadFile(key , PlantID));
                             break;
                         case "URL":
 
@@ -296,7 +299,7 @@ namespace Lib.TipTop
             return $"{fileName}@{url}/{year}/{month}/{day}/{fileName}";
         }
 
-        public string  DownloadFile(string key)
+        public string  DownloadFile(string key , string PlantID)
         {
             //先寫死
           
@@ -323,7 +326,9 @@ namespace Lib.TipTop
             OracleConnection conn = new OracleConnection(connStr);
             conn.Open();
 
-           OracleCommand comm = new OracleCommand(@"select GCB07,GCB09 from IGS00.gcb_file
+            Logger.Write("TT" , $"KEY={key},PLANT_ID={PlantID}");
+
+           OracleCommand comm = new OracleCommand($@"select GCB07,GCB09 from {PlantID}.gcb_file
 where gcb01 =:key
 ", conn);
               comm.Parameters.Add("gcb01" , key);
