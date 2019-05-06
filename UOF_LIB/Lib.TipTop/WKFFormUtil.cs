@@ -24,8 +24,8 @@ namespace Lib.TipTop
         {
             Setting set = new Setting();
 
-            filePath = set["IGS_UploadFilePath"];// "D:\\技轉暫存_鈊象\\UOF_Training\\UOF13.1\\CDS\\TTAttach";
-             url = set["IGS_UploadFileURL"]; //"http://localhost/UOF_IGS/CDS/TTAttach/";
+            filePath = set["UOFTT_UploadFilePath"];// "D:\\技轉暫存_鈊象\\UOF_Training\\UOF13.1\\CDS\\TTAttach";
+             url = set["UOFTT_UploadFileURL"]; //"http://localhost/UOF_IGS/CDS/TTAttach/";
         }
 
 
