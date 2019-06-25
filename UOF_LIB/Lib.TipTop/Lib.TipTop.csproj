@@ -36,6 +36,9 @@
     <Reference Include="Ede.Uof.EIP.Organization.Util">
       <HintPath>..\UOF12.2\bin\Ede.Uof.EIP.Organization.Util.dll</HintPath>
     </Reference>
+    <Reference Include="Ede.Uof.EIP.SystemInfo">
+      <HintPath>..\UOF12.2\bin\Ede.Uof.EIP.SystemInfo.dll</HintPath>
+    </Reference>
     <Reference Include="Ede.Uof.Utility.Configuration, Version=12.20.6264.29817, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\UOF12.2\bin\Ede.Uof.Utility.Configuration.dll</HintPath>
@@ -47,9 +50,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\UOF12.2\bin\Ede.Uof.Utility.Log.dll</HintPath>
     </Reference>
-    <Reference Include="Oracle.ManagedDataAccess, Version=4.122.18.3, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
-      <HintPath>..\packages\Oracle.ManagedDataAccess.18.3.0\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Ede.Uof.Web">
+      <HintPath>..\UOF12.2\bin\Ede.Uof.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Ede.Uof.WKF">
+      <HintPath>..\UOF12.2\bin\Ede.Uof.WKF.dll</HintPath>
+    </Reference>
+    <Reference Include="ERP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>RefDLL\ERP.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.122.19.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\packages\Oracle.ManagedDataAccess.19.3.0\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -63,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Trigger\EndFormTrigger.cs" />
     <Compile Include="WKFFormUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WKFPO.cs" />
@@ -70,6 +83,15 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="RefDLL\ERP.dll.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RefDLL\ERP.dll" />
+    <Content Include="RefDLL\ERP.pdb" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

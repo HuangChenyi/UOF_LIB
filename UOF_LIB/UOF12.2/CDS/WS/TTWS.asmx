@@ -29,4 +29,20 @@ public class TTWS  : System.Web.Services.WebService {
         }
     }
 
+    [WebMethod]
+    public string GetCreateTTFormXML(string xml)
+    {
+        Lib.TipTop.WKFFormUtil wkf = new Lib.TipTop.WKFFormUtil();
+        try
+        {
+            string formXML = wkf.ConvertUOFFormXml(xml);
+
+            return formXML;
+        }
+        catch (Exception ce)
+        {
+            return ce.ToString();
+        }
+    }
+
 }

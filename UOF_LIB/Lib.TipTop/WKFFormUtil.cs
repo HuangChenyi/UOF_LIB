@@ -20,12 +20,24 @@ namespace Lib.TipTop
     {
         string filePath = "";
         string url = "";
+        string ttUrl = "";
+        bool isTTEmpNo = false; 
         public WKFFormUtil()
         {
             Setting set = new Setting();
 
             filePath = set["UOFTT_UploadFilePath"];// "D:\\技轉暫存_鈊象\\UOF_Training\\UOF13.1\\CDS\\TTAttach";
              url = set["UOFTT_UploadFileURL"]; //"http://localhost/UOF_IGS/CDS/TTAttach/";
+            ttUrl = set["TT_UploadFileURL"]; //"http://192.168.2.20/cgi-bin/fglccgi/toptest/tiptop/";
+
+            if(!string.IsNullOrEmpty(set["TT_IsEmpNo"]))
+            { 
+                isTTEmpNo = Convert.ToBoolean( set["TT_IsEmpNo"]);
+            }
+            else
+            {
+
+            }
         }
 
 
@@ -43,9 +55,20 @@ namespace Lib.TipTop
             string account = xdoc.Element("Request").Element("RequestContent").Element("Form").Element("FormOwnerID").Value;
             UserUCO userUCO = new UserUCO();
 
-            string userGuid = userUCO.GetGUID(account);
-            string userName = userUCO.GetEBUser(userGuid).Name;
+            string userGuid = ""; 
+            string userName = "";
 
+            if(!isTTEmpNo)
+            {
+                userGuid= userUCO.GetGUID(account);
+                userName = userUCO.GetEBUser(userGuid).Name;
+            }
+            else
+            {
+                userGuid = userUCO.GetGUIDByEmpNo(account);
+                userName = userUCO.GetEBUser(userGuid).Name;
+                account = userUCO.GetEBUser(userGuid).Account;
+            }
 
             //urgentLevel 緊急程度0:緊急 1:急 2:普通
             XmlDocument xmlDoc = new XmlDocument();
@@ -137,7 +160,15 @@ namespace Lib.TipTop
             foreach (var node in xdoc.Element("Request").Element("RequestContent").Element("Form").Element("ContentText").Elements("body"))
             {
                 XmlElement A01Element = xmlDoc.CreateElement("FieldItem");
-                A01Element.SetAttribute("fieldId", node.Attribute("id").Value);
+
+                if (node.Attribute("id") != null)
+                {
+                    A01Element.SetAttribute("fieldId", node.Attribute("id").Value);
+                }
+                else
+                {
+                    A01Element.SetAttribute("fieldId", "detail");
+                }
                
                 A01Element.SetAttribute("realValue", "");
                 A01Element.SetAttribute("fillerName", userName);
@@ -215,8 +246,8 @@ namespace Lib.TipTop
                 
                         XmlElement cellElement = xmlDoc.CreateElement("Cell");
 
-
-                    switch(detail.Attribute("type").Value)
+                    string content = "";
+                    switch (detail.Attribute("type").Value)
                     {
                         case "HTTP":
                             string key = detail.Attribute("content").Value.Substring(0, detail.Attribute("content").Value.IndexOf('.'));
@@ -225,7 +256,7 @@ namespace Lib.TipTop
                         case "URL":
 
                             //如果開頭是四個\要換成是http
-                            string content = detail.Attribute("content").Value;
+                             content = detail.Attribute("content").Value;
                             if (content.IndexOf("\\\\\\\\") ==0)
                             {
                                 content= content.Replace("\\\\\\\\", "http://").Replace("\\","/");
@@ -238,6 +269,18 @@ namespace Lib.TipTop
                             break;
                         case "TXT":
                             cellElement.SetAttribute("fieldValue", $"{detail.Attribute("content").Value}@javascript:void(0)");
+                            break;
+                        case "DOC":
+
+                            //如果開頭是四個\要換成是http
+                             content = detail.Attribute("content").Value;
+                          
+                            content = content.Replace("u1", ttUrl);
+                            cellElement.SetAttribute("fieldValue", DownloadFileUrl(content));
+                           
+                            
+
+                            cellElement.SetAttribute("fieldValue", $"{ detail.Attribute("filename").Value}@{content}");
                             break;
                     }
 
@@ -326,24 +369,136 @@ namespace Lib.TipTop
             OracleConnection conn = new OracleConnection(connStr);
             conn.Open();
 
-            Logger.Write("TT" , $"KEY={key},PLANT_ID={PlantID}");
+            Logger.Write("TT" , $"KEY={key},PLANT_ID={PlantID},OracleVersion={conn.ServerVersion}");
 
-           OracleCommand comm = new OracleCommand($@"select GCB07,GCB09 from {PlantID}.gcb_file
-where gcb01 =:key
-", conn);
-              comm.Parameters.Add("gcb01" , key);
-            DataTable dt = new DataTable();
-            dt.Load(comm.ExecuteReader());
 
-            Byte[] pageData = (Byte[])dt.Rows[0]["GCB09"];
-            FileStream fs = new FileStream($"{filePath}\\{year}\\{month}\\{day}\\{dt.Rows[0]["GCB07"].ToString()}", FileMode.OpenOrCreate);
-            fs.Write(pageData, 0, pageData.Length - 1);
+            //因為BLOB在撈資料會有問題，改變為OFFSET的寫法
+            //OracleCommand comm = new OracleCommand($@"select GCB07,GCB09 from {PlantID}.gcb_file
+            //where gcb01 =:key
+            //", conn);
+            //comm.Parameters.Add("gcb01", OracleDbType.Varchar2).Value = key;
+
+            OracleCommand comm = new OracleCommand($@"select GCB07 from {PlantID}.gcb_file
+            where gcb01 =:key
+            ", conn);
+            comm.Parameters.Add("gcb01", OracleDbType.Varchar2).Value = key;
+
+            string fileName = comm.ExecuteScalar().ToString();
+
+
+            comm = new OracleCommand($@"WITH
+                                    INFO
+                                    AS
+                                    (
+                                        SELECT
+                                            dbms_lob.getlength(A.GCB09) AS GCB09_LENGTH, 
+                                            MOD(dbms_lob.getlength(A.GCB09),2000) AS MOD,
+                                            CASE
+                                                WHEN MOD(dbms_lob.getlength(A.GCB09),2000) > 0 THEN TRUNC((dbms_lob.getlength(A.GCB09)/2000) + 1)
+                                                ELSE TRUNC(dbms_lob.getlength(A.GCB09)/2000)
+                                            END INTERATION_COUNT,
+                                            A.GCB09,
+                                            A.gcb01
+                                          FROM atp_tw.gcb_file A WHERE gcb01=:key)
+                                    ,OFFSETS AS
+                                    (
+                                        SELECT
+                                            (2000 * (ROWNUM-1)) + 1 AS OFFSET,
+                                            I.MOD,
+                                            I.GCB09_LENGTH,
+                                            I.GCB09,
+                                            I.gcb01,
+                                            I.INTERATION_COUNT
+                                        FROM INFO I
+                                        CONNECT BY LEVEL <= I.INTERATION_COUNT
+                                    )
+                                    ,RESULT AS
+                                    (
+                                        SELECT
+                                            DBMS_LOB.SUBSTR(O.GCB09, 2000, O.OFFSET) AS CONTENT,
+                                            O.OFFSET,
+                                            O.MOD,
+                                            O.GCB09_LENGTH,
+                                            O.gcb01,
+                                            O.INTERATION_COUNT
+                                        FROM OFFSETS O
+                                    )
+                                    SELECT * FROM RESULT R ORDER BY R.OFFSET ASC", conn);
+
+            FileStream fs = new FileStream($"{filePath}\\{year}\\{month}\\{day}\\{fileName}", FileMode.OpenOrCreate);
+            try
+            {
+                comm.Parameters.Add("gcb01", OracleDbType.Varchar2).Value = key;
+
+                DataTable dt = new DataTable();
+                dt.Load(comm.ExecuteReader());
+
+                Console.WriteLine(dt.Rows[0]["GCB09_LENGTH"].ToString());
+
+                // 產生一個空白暫存檔
+               
+
+                byte[] bs = new byte[64 * 1024];
+                Array.Clear(bs, 0, bs.Length);
+
+                int xInt = 0;
+                int yInt = 0;
+
+                xInt = (Convert.ToInt32(dt.Rows[0]["GCB09_LENGTH"].ToString())) / bs.Length;
+                yInt = (Convert.ToInt32(dt.Rows[0]["GCB09_LENGTH"].ToString())) % bs.Length;
+
+                for (long i = 0; i < xInt; i++)
+                    fs.Write(bs, 0, bs.Length);
+
+                if (yInt > 0)
+                    fs.Write(bs, 0, yInt);
+
+                fs.Close();
+
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    WriteFileSession($"{filePath}\\{year}\\{month}\\{day}\\{fileName}", Convert.ToInt32(dt.Rows[i]["OFFSET"]), (byte[])dt.Rows[i]["CONTENT"]);
+                }
+
+            }
+            catch (Exception ce)
+            {
+
+            }
+
+            conn.Close();
+    
             fs.Close();
 
-            Console.Write(conn.ServerVersion);
-            conn.Close();
-            return dt.Rows[0]["GCB07"].ToString() + "@" + $"{url}\\{year}\\{month}\\{day}\\{dt.Rows[0]["GCB07"].ToString()}";
+     
+            return fileName + "@" + $"{url}\\{year}\\{month}\\{day}\\{fileName}";
 
+        }
+
+
+        public  void WriteFileSession(string fielName, int offset, byte[] buffer)
+        {
+
+
+            FileStream fs = new FileStream(fielName, FileMode.Open);
+
+            fs.Seek(offset - 1, SeekOrigin.Begin);  // Seek 到定位
+
+            try
+            {
+                fs.Write(buffer, 0, buffer.Length);
+            }
+            catch (Exception ce)
+            {
+                // string errorStr = String.Format("[EBSystem] WriteFileSession() : Write file [{0}] failure, error reason :\r\n{1}", fileStr, ce.Message);
+                fs.Close();
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
         }
     }
 }
