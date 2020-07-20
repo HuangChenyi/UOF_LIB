@@ -113,11 +113,51 @@ namespace Lib.TipTop.Trigger
 
             ERP.CallERP erp = new ERP.CallERP();
 
-            string result = erp.TIPTOPGateWay(xmlstr);
+            string result = "";
 
-            string log = string.Format("表單編號{0} \r\n 輸入資料 \r\n {1} \r\n 回傳資料 \r\n {2} ", applyTask.FormNumber, result, xDoc.ToString());
+            try
+            {
+                result = erp.TIPTOPGateWay(xmlstr);
+//                 result= erp.TIPTOPGateWay(@"<Response>
+// <ResponseType>SetStatus</ResponseType>
+// <ResponseInfo>
+//  <SenderIP>TIPTOPAP</SenderIP>
+//  <ReceiverIP>192.168.10.74</ReceiverIP>
+// </ResponseInfo>
+// <ResponseContent>
+//  <ReturnInfo>
+//   <ReturnStatus>Y</ReturnStatus>
+//   <ReturnDescribe>No error.</ReturnDescribe>
+//  </ReturnInfo>
+//  <ContentText>
+//   <Form>
+//    <Status>3</Status>
+//    <PlantID>LTTW</PlantID>
+//    <ProgramID>apmt420</ProgramID>
+//    <SourceFormID>AC08</SourceFormID>
+//    <SourceFormNum>AC08-2001140001</SourceFormNum>
+//    <FormCreatorID>T106031</FormCreatorID>
+//    <FormOwnerID>T105013</FormOwnerID>
+//    <TargetFormID>apmt420</TargetFormID>
+//    <TargetSheetNo>4a01d004e6a9100486c3659ac351cf14</TargetSheetNo>
+//   </Form>
+//  </ContentText>
+// </ResponseContent>
+//</Response>");
 
-            Logger.Write("TTLog", log);  //已寫好的LOG元件
+
+string log = string.Format("表單編號{0} \r\n 輸入資料 \r\n {1} \r\n 回傳資料 \r\n {2} ", applyTask.FormNumber, result, xDoc.ToString());
+
+                Logger.Write("TTLog", log);  //已寫好的LOG元件
+            }
+            catch(Exception ce) {
+                result = ce.ToString();
+                string log = string.Format("表單編號{0} \r\n 輸入資料 \r\n {1} \r\n 回傳資料 \r\n {2} ", applyTask.FormNumber, result, xDoc.ToString());
+
+                Logger.Write("TTLog", log);  //已寫好的LOG元件
+                throw;
+            }
+           
 
             return "";
         }

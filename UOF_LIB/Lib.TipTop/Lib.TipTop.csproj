@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Trigger\EndFormTrigger.cs" />
+    <Compile Include="Trigger\StartFormTrigger.cs" />
     <Compile Include="WKFFormUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WKFPO.cs" />
@@ -89,7 +90,6 @@
     <Content Include="RefDLL\ERP.dll" />
     <Content Include="RefDLL\ERP.pdb" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>

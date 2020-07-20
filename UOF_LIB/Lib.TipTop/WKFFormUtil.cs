@@ -249,8 +249,8 @@ namespace Lib.TipTop
                     string content = "";
                     switch (detail.Attribute("type").Value)
                     {
-                        case "HTTP":
-                            string key = detail.Attribute("content").Value.Substring(0, detail.Attribute("content").Value.IndexOf('.'));
+                        case "DOC":
+                            string key = detail.Attribute("content").Value.Substring(0, detail.Attribute("content").Value.IndexOf('.')).Replace("/u1/out/", "");
                             cellElement.SetAttribute("fieldValue", DownloadFile(key , PlantID));
                             break;
                         case "URL":
@@ -270,18 +270,18 @@ namespace Lib.TipTop
                         case "TXT":
                             cellElement.SetAttribute("fieldValue", $"{detail.Attribute("content").Value}@javascript:void(0)");
                             break;
-                        case "DOC":
+                        //case "DOC":
 
-                            //如果開頭是四個\要換成是http
-                             content = detail.Attribute("content").Value;
+                        //    //如果開頭是四個\要換成是http
+                        //     content = detail.Attribute("content").Value;
                           
-                            content = content.Replace("u1", ttUrl);
-                            cellElement.SetAttribute("fieldValue", DownloadFileUrl(content));
+                        //    content = content.Replace("u1", ttUrl);
+                        //    cellElement.SetAttribute("fieldValue", DownloadFileUrl(content));
                            
                             
 
-                            cellElement.SetAttribute("fieldValue", $"{ detail.Attribute("filename").Value}@{content}");
-                            break;
+                        //    cellElement.SetAttribute("fieldValue", $"{ detail.Attribute("filename").Value}@{content}");
+                        //    break;
                     }
 
                         cellElement.SetAttribute("fieldId", "link");
@@ -331,6 +331,7 @@ namespace Lib.TipTop
 
             WebClient MyWebClient = new WebClient();
             MyWebClient.Credentials = CredentialCache.DefaultCredentials;
+            Logger.Write("TTURL", fileURL);
             Byte[] pageData = MyWebClient.DownloadData(fileURL); //從指定網站下載數據
 
             string fileName = fileURL.Substring(fileURL.LastIndexOf("/") + 1, fileURL.Length - fileURL.LastIndexOf("/") - 1);
@@ -382,7 +383,7 @@ namespace Lib.TipTop
             where gcb01 =:key
             ", conn);
             comm.Parameters.Add("gcb01", OracleDbType.Varchar2).Value = key;
-
+           // Logger.Write();
             string fileName = comm.ExecuteScalar().ToString();
 
 
@@ -464,7 +465,7 @@ namespace Lib.TipTop
             }
             catch (Exception ce)
             {
-
+                Logger.Write("TT", ce.ToString());
             }
 
             conn.Close();

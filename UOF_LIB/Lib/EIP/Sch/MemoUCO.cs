@@ -18,6 +18,8 @@ namespace Lib.EIP.Sch
         {
             MemorandumManagementUCO uco = new MemorandumManagementUCO();
 
+            //Ede.Uof.EIP.Organization.Util.UserTime.SetZone("").FromUi(DateTime.Now).ToDb();
+            
             MemorandumDataSet ds = new MemorandumDataSet();
             MemorandumDataSet.MemorandumRow dr = ds.Memorandum.NewMemorandumRow();
             dr.ALL_DAY = info.ALL_DAY;//是否全天
