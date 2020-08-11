@@ -70,6 +70,8 @@ namespace Lib.TipTop
                 account = userUCO.GetEBUser(userGuid).Account;
             }
 
+            var form= Ede.Uof.WKF.Utility.Document.GetEmptyDocument(fromVersionId);
+            
             //urgentLevel 緊急程度0:緊急 1:急 2:普通
             XmlDocument xmlDoc = new XmlDocument();
             XmlElement formElement = xmlDoc.CreateElement("Form");
@@ -142,9 +144,24 @@ namespace Lib.TipTop
             //表單Header欄位
             foreach (var node in xdoc.Element("Request").Element("RequestContent").Element("Form").Element("ContentText").Element("head").Elements())
             {
+
+                
+
                 XmlElement A01Element = xmlDoc.CreateElement("FieldItem");
+
+                //加入下拉選單的處理
+                switch(form.Fields[node.Name.LocalName].FieldType )
+                {
+                    case Ede.Uof.WKF.Design.FieldType.dropDownList:
+                        A01Element.SetAttribute("fieldValue", node.Value.Trim()+"@"+ node.Value.Trim());
+                        break;
+                    default:
+                        A01Element.SetAttribute("fieldValue", node.Value.Trim());
+                        break;
+                }
+
                 A01Element.SetAttribute("fieldId", node.Name.LocalName);
-                A01Element.SetAttribute("fieldValue", node.Value.Trim());
+              
                 A01Element.SetAttribute("realValue", "");
                 A01Element.SetAttribute("fillerName", userName);
                 A01Element.SetAttribute("fillerUserGuid", userGuid);
@@ -155,7 +172,7 @@ namespace Lib.TipTop
 
             }
 
-
+            int bodySeq = 1;
             //表單Detail欄位
             foreach (var node in xdoc.Element("Request").Element("RequestContent").Element("Form").Element("ContentText").Elements("body"))
             {
@@ -167,9 +184,9 @@ namespace Lib.TipTop
                 }
                 else
                 {
-                    A01Element.SetAttribute("fieldId", "detail");
+                    A01Element.SetAttribute("fieldId", "detail"+ bodySeq);
                 }
-               
+                bodySeq++;
                 A01Element.SetAttribute("realValue", "");
                 A01Element.SetAttribute("fillerName", userName);
                 A01Element.SetAttribute("fillerUserGuid", userGuid);
@@ -195,6 +212,10 @@ namespace Lib.TipTop
                     foreach(var cell in detail.Elements())
                     {
                         XmlElement cellElement = xmlDoc.CreateElement("Cell");
+
+                      
+           
+
                         cellElement.SetAttribute("fieldId", cell.Name.LocalName);
                         cellElement.SetAttribute("fieldValue", cell.Value.Trim());
                         cellElement.SetAttribute("realValue", "");

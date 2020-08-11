@@ -85,7 +85,7 @@ namespace Lib.TipTop.Trigger
             }
             string FormCreatorID = applyTask.Task.Applicant.Account;
             string FormOwnerID = applyTask.Task.Applicant.Account;
-            string TargetFormID = applyTask.Task.FormName;
+            string TargetFormID = applyTask.Task.FormName.Split('-')[0];
             string TargetSheetNo = applyTask.FormNumber;
             string Description = "";
 
@@ -95,8 +95,10 @@ namespace Lib.TipTop.Trigger
                            , new XElement("LogOnInfo", new XElement("SenderIP", SenderIP)
                                                      , new XElement("ReceiverIP", ReceiverIP)
                                                      , new XElement("EFSiteName", EFSiteName)
-                                                     , new XElement("EFLogonID", EFLogonID)
-                                                     , new XElement("RequestContent", new XElement("ContentText", new XElement("Form", new XElement("ProgramID", ProgramID)
+                                                     , new XElement("EFLogonID", EFLogonID))
+                                                     , new XElement("RequestContent", new XElement("ContentText"
+                                                                                                                , new XElement("Form", new XElement("StatSlip","")
+                                                                                                                , new XElement("ProgramID", ProgramID)
                                                                                                                 , new XElement("PlantID", PlantID)
                                                                                                                 , new XElement("SourceFormID", SourceFormID)
                                                                                                                 , new XElement("SourceFormNum", SourceFormNum)
@@ -107,7 +109,9 @@ namespace Lib.TipTop.Trigger
                                                                                                                 , new XElement("FormOwnerID", FormOwnerID)
                                                                                                                 , new XElement("TargetFormID", TargetFormID)
                                                                                                                 , new XElement("TargetSheetNo", TargetSheetNo)
-                                                                                                                , new XElement("Description", Description)))))));
+                                                                                                                , new XElement("Description", Description)
+                                                                                                                , new XElement("TPServerIP", "192.168.10.212")
+                                                                                                                , new XElement("TPServerEnv", "toptest"))))));
 
             string xmlstr = xDoc.ToString();
 

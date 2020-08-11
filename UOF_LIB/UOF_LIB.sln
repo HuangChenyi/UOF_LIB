@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.TipTop", "Lib.TipTop\Li
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERP", "ERP\ERP.csproj", "{790D5ECB-9EB7-4FBD-B648-5BB400136D31}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{27F9679A-BACA-49AB-9025-27F4A94C37EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{790D5ECB-9EB7-4FBD-B648-5BB400136D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{790D5ECB-9EB7-4FBD-B648-5BB400136D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{790D5ECB-9EB7-4FBD-B648-5BB400136D31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27F9679A-BACA-49AB-9025-27F4A94C37EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27F9679A-BACA-49AB-9025-27F4A94C37EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27F9679A-BACA-49AB-9025-27F4A94C37EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27F9679A-BACA-49AB-9025-27F4A94C37EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
