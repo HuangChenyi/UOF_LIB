@@ -13,6 +13,8 @@ namespace TestConsole
     class Program
     {
 
+        
+
         /// <summary> 
         /// 經緯度取得行政區 
         /// </summary> 
@@ -74,6 +76,17 @@ namespace TestConsole
         static void Main(string[] args)
         {
 
+            Lib.WKF.ExternalDllSites sites = new Lib.WKF.ExternalDllSites();
+            Lib.WKF.ExternalDllSite site = new Lib.WKF.ExternalDllSite();
+            site.Signers.Add("XXX");
+            site.Signers.Add("OOO");
+            site.SignType = Lib.WKF.SignType.Or;
+            sites.Sites.Add(site);
+
+            Console.WriteLine(sites.ConvertToXML());
+            Console.ReadKey();
+
+            return;
             //double lat = Convert.ToDouble("25.0392");//緯度
             //double lng = Convert.ToDouble("121.525");//經度
             //string result = latLngToChineseAddress(lat, lng);

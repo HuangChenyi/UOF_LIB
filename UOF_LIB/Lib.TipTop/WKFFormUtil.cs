@@ -1,4 +1,5 @@
-﻿using Ede.Uof.EIP.Organization.Util;
+﻿using Ede.Uof.EIP.Organization;
+using Ede.Uof.EIP.Organization.Util;
 using Ede.Uof.Utility.Configuration;
 using Ede.Uof.Utility.Log;
 using Oracle.ManagedDataAccess.Client;
@@ -149,20 +150,61 @@ namespace Lib.TipTop
 
                 XmlElement A01Element = xmlDoc.CreateElement("FieldItem");
 
+                UserSet userSet = new UserSet();
+
                 //加入下拉選單的處理
-                switch(form.Fields[node.Name.LocalName].FieldType )
+                if (form.Fields[node.Name.LocalName] != null)
                 {
-                    case Ede.Uof.WKF.Design.FieldType.dropDownList:
-                        A01Element.SetAttribute("fieldValue", node.Value.Trim()+"@"+ node.Value.Trim());
-                        break;
-                    default:
-                        A01Element.SetAttribute("fieldValue", node.Value.Trim());
-                        break;
+                    switch (form.Fields[node.Name.LocalName].FieldType)
+                    {
+                        case Ede.Uof.WKF.Design.FieldType.dropDownList:
+                            A01Element.SetAttribute("fieldValue", node.Value.Trim() + "@" + node.Value.Trim());
+                            A01Element.SetAttribute("realValue", "");
+                            break;
+                        case Ede.Uof.WKF.Design.FieldType.allDept:
+
+                            string groupId=po.GetGroupIdByGroupCode($"{PlantID}-{node.Value.Trim()}");
+
+                            if (groupId != "")
+                            {
+                                GroupUCO groupUCO = new GroupUCO( GroupType.Department);
+                                UserSetGroup usg = new UserSetGroup();
+                                usg.IS_DEPTH = true;
+                                usg.GROUP_ID = groupId;
+                                userSet.Items.Add(usg);
+                                A01Element.SetAttribute("fieldValue", groupUCO.QueryDepartmentName(groupId));
+                                A01Element.SetAttribute("realValue", userSet.GetXML());
+                            }
+                            else
+                            {
+                                A01Element.SetAttribute("fieldValue","");
+                                A01Element.SetAttribute("realValue", "");
+                            }
+                            break;
+                        case Ede.Uof.WKF.Design.FieldType.allUser:
+                            //原本的值是帳號，要轉換
+                            string uid = new UserUCO().GetGUID(node.Value.Trim());
+                            UserSetUser uUser = new UserSetUser();
+                            uUser.USER_GUID = uid;
+                            userSet.Items.Add(uUser);
+                            EBUser eBUser= userUCO.GetEBUser(uid);
+                            A01Element.SetAttribute("fieldValue", $"{eBUser.Name}({eBUser.Account})");
+                            A01Element.SetAttribute("realValue", userSet.GetXML());
+                            break;
+                        default:
+                            A01Element.SetAttribute("fieldValue", node.Value.Trim());
+                            A01Element.SetAttribute("realValue", "");
+                            break;
+                    }
+                }
+                else
+                {
+                    A01Element.SetAttribute("fieldValue", node.Value.Trim());
                 }
 
                 A01Element.SetAttribute("fieldId", node.Name.LocalName);
               
-                A01Element.SetAttribute("realValue", "");
+              
                 A01Element.SetAttribute("fillerName", userName);
                 A01Element.SetAttribute("fillerUserGuid", userGuid);
                 A01Element.SetAttribute("fillerAccount", account);
@@ -213,12 +255,57 @@ namespace Lib.TipTop
                     {
                         XmlElement cellElement = xmlDoc.CreateElement("Cell");
 
-                      
-           
+
+                        Ede.Uof.WKF.Design.FieldDataGrid grid = form.Fields[A01Element.Attributes["fieldId"].Value] as Ede.Uof.WKF.Design.FieldDataGrid;
+
+                        if(grid.DataGridFieldCollection.FindField(cell.Name.LocalName) == null)
+                        {
+                            //欄位沒有定義在UOF上
+                            continue;
+                        }
+                        UserSet userSet = new UserSet();
+                        switch (grid.DataGridFieldCollection.FindField(cell.Name.LocalName).FieldType)
+                        {
+                            
+                            case Ede.Uof.WKF.Design.FieldType.allDept:
+
+                                string groupId = po.GetGroupIdByGroupCode($"{PlantID}-{node.Value.Trim()}");
+
+                                if (groupId != "")
+                                {
+                                    GroupUCO groupUCO = new GroupUCO(GroupType.Department);
+                                    UserSetGroup usg = new UserSetGroup();
+                                    usg.IS_DEPTH = true;
+                                    usg.GROUP_ID = groupId;
+                                    userSet.Items.Add(usg);
+                                    A01Element.SetAttribute("fieldValue", groupUCO.QueryDepartmentName(groupId));
+                                    A01Element.SetAttribute("realValue", userSet.GetXML());
+                                }
+                                else
+                                {
+                                    A01Element.SetAttribute("fieldValue", "");
+                                    A01Element.SetAttribute("realValue", "");
+                                }
+                                break;
+                            case Ede.Uof.WKF.Design.FieldType.allUser:
+                                //原本的值是帳號，要轉換
+                                string uid = new UserUCO().GetGUID(node.Value.Trim());
+                                UserSetUser uUser = new UserSetUser();
+                                uUser.USER_GUID = uid;
+                                userSet.Items.Add(uUser);
+                                EBUser eBUser = userUCO.GetEBUser(uid);
+                                A01Element.SetAttribute("fieldValue", $"{eBUser.Name}({eBUser.Account})");
+                                A01Element.SetAttribute("realValue", userSet.GetXML());
+                                break;
+                            default:
+                                cellElement.SetAttribute("fieldValue", cell.Value.Trim());
+                                cellElement.SetAttribute("realValue", "");
+                                break;
+                        }
+
 
                         cellElement.SetAttribute("fieldId", cell.Name.LocalName);
-                        cellElement.SetAttribute("fieldValue", cell.Value.Trim());
-                        cellElement.SetAttribute("realValue", "");
+                       
                         cellElement.SetAttribute("fillerName", userName);
                         cellElement.SetAttribute("fillerUserGuid", userGuid);
                         cellElement.SetAttribute("fillerAccount", account);
@@ -272,7 +359,7 @@ namespace Lib.TipTop
                     {
                         case "DOC":
                             string key = detail.Attribute("content").Value.Substring(0, detail.Attribute("content").Value.IndexOf('.')).Replace("/u1/out/", "");
-                            cellElement.SetAttribute("fieldValue", DownloadFile(key , PlantID));
+                            cellElement.SetAttribute("fieldValue", DownloadFile(key , PlantID, Guid.NewGuid().ToString() ));
                             break;
                         case "URL":
 
@@ -350,13 +437,16 @@ namespace Lib.TipTop
             if (!dirInfo.Exists)
                 dirInfo.Create();
 
+            dirInfo = new DirectoryInfo($"{filePath}\\{year}\\{month}\\{day}\\{Guid.NewGuid().ToString()}");
+            dirInfo.Create();
+
             WebClient MyWebClient = new WebClient();
             MyWebClient.Credentials = CredentialCache.DefaultCredentials;
             Logger.Write("TTURL", fileURL);
             Byte[] pageData = MyWebClient.DownloadData(fileURL); //從指定網站下載數據
 
             string fileName = fileURL.Substring(fileURL.LastIndexOf("/") + 1, fileURL.Length - fileURL.LastIndexOf("/") - 1);
-            FileStream fs = new FileStream($"{filePath}\\{year}\\{month}\\{day}\\{fileName}", FileMode.OpenOrCreate);
+            FileStream fs = new FileStream($"{dirInfo.FullName}\\{fileName}", FileMode.OpenOrCreate);
             fs.Write(pageData, 0, pageData.Length - 1);
             fs.Close();
 
@@ -364,7 +454,7 @@ namespace Lib.TipTop
             return $"{fileName}@{url}/{year}/{month}/{day}/{fileName}";
         }
 
-        public string  DownloadFile(string key , string PlantID)
+        public string  DownloadFile(string key , string PlantID, string folderId)
         {
             //先寫死
           
@@ -383,6 +473,11 @@ namespace Lib.TipTop
                 dirInfo.Create();
 
             dirInfo = new DirectoryInfo($"{filePath}\\{year}\\{month}\\{day}");
+
+            if (!dirInfo.Exists)
+                dirInfo.Create();
+
+            dirInfo = new DirectoryInfo($"{filePath}\\{year}\\{month}\\{day}\\{folderId}");
 
             if (!dirInfo.Exists)
                 dirInfo.Create();
@@ -421,7 +516,7 @@ namespace Lib.TipTop
                                             END INTERATION_COUNT,
                                             A.GCB09,
                                             A.gcb01
-                                          FROM atp_tw.gcb_file A WHERE gcb01=:key)
+                                          FROM {PlantID}.gcb_file A WHERE gcb01=:gcb01)
                                     ,OFFSETS AS
                                     (
                                         SELECT
@@ -447,7 +542,7 @@ namespace Lib.TipTop
                                     )
                                     SELECT * FROM RESULT R ORDER BY R.OFFSET ASC", conn);
 
-            FileStream fs = new FileStream($"{filePath}\\{year}\\{month}\\{day}\\{fileName}", FileMode.OpenOrCreate);
+            FileStream fs = new FileStream($"{filePath}\\{year}\\{month}\\{day}\\{folderId}\\{fileName}", FileMode.OpenOrCreate);
             try
             {
                 comm.Parameters.Add("gcb01", OracleDbType.Varchar2).Value = key;
@@ -480,7 +575,7 @@ namespace Lib.TipTop
 
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    WriteFileSession($"{filePath}\\{year}\\{month}\\{day}\\{fileName}", Convert.ToInt32(dt.Rows[i]["OFFSET"]), (byte[])dt.Rows[i]["CONTENT"]);
+                    WriteFileSession($"{filePath}\\{year}\\{month}\\{day}\\{folderId}\\{fileName}", Convert.ToInt32(dt.Rows[i]["OFFSET"]), (byte[])dt.Rows[i]["CONTENT"]);
                 }
 
             }
@@ -494,7 +589,7 @@ namespace Lib.TipTop
             fs.Close();
 
      
-            return fileName + "@" + $"{url}\\{year}\\{month}\\{day}\\{fileName}";
+            return fileName + "@" + $"{url}\\{year}\\{month}\\{day}\\{folderId}\\{fileName}";
 
         }
 
