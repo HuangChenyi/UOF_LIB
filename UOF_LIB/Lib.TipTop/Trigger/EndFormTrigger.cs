@@ -31,6 +31,12 @@ namespace Lib.TipTop.Trigger
             //TT_WS tt = new TT_WS();
             //string empname = tt.getEmployData(empno);
 
+            if((applyTask.EndTime- applyTask.BeginTime).TotalSeconds <10)
+            {
+                System.Threading.Thread.Sleep(5000);
+            }
+
+
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(applyTask.CurrentDocXML);
 

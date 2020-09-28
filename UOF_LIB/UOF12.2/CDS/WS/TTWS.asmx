@@ -51,7 +51,7 @@ public class TTWS  : System.Web.Services.WebService {
                 string FormCreatorID = formElement.Element("FormCreatorID").Value;
                 string FormOwnerID = formElement.Element("FormOwnerID").Value;
                 string TargetFormID = "";
-                string TargetSheetNo = "";
+                string TargetSheetNo = resultXe.Element("TaskId").Value;
                 string ProcessSNo = "";
                 string Description = "";
                 string ActionStatus = "Y";
@@ -68,30 +68,30 @@ public class TTWS  : System.Web.Services.WebService {
                                                  , new XElement("ResponseContent"
                                                             , new XElement("ReturnInfo"
                                                                     , new XElement("ReturnStatus", "Y")
-                                                                    , new XElement("ReturnDescribe", "NO ERROR")))
-                                                            , new XElement("ContentText"
-                                                                    , new XElement("Form"
-                                                                           , new XElement("StatSlip")
-                                                                           , new XElement("PlantID",PlantID)
-                                                                           , new XElement("ProgramID",ProgramID)
-                                                                           , new XElement("SourceFormID",SourceFormID)
-                                                                           , new XElement("SourceFormNum",SourceFormNum)
-                                                                           , new XElement("Date",Date)
-                                                                           , new XElement("Time",Time)
-                                                                           , new XElement("Status",Status)
-                                                                           , new XElement("FormCreatorID",FormCreatorID)
-                                                                           , new XElement("FormOwnerID",FormOwnerID)
-                                                                           , new XElement("TargetFormID",TargetFormID)
-                                                                           , new XElement("TargetSheetNo",TargetSheetNo)
-                                                                           , new XElement("ProcessSNo",ProcessSNo)
-                                                                           , new XElement("Description",Description)
-                                                                           , new XElement("ActionStatus",ActionStatus)
-                                                                           , new XElement("ActionDescribe",ActionDescribe)
-                                                                           , new XElement("TPServerIP",TPServerIP)
-                                                                           , new XElement("TPServerEnv",TPServerEnv)
-                                                                           )
-                                                                           )
-                                                                    );
+                                                                    , new XElement("ReturnDescribe", "NO ERROR"))
+                                                                    , new XElement("ContentText"
+                                                                            , new XElement("Form"
+                                                                                   , new XElement("StatSlip")
+                                                                                   , new XElement("PlantID",PlantID)
+                                                                                   , new XElement("ProgramID",ProgramID)
+                                                                                   , new XElement("SourceFormID",SourceFormID)
+                                                                                   , new XElement("SourceFormNum",SourceFormNum)
+                                                                                   , new XElement("Date",Date)
+                                                                                   , new XElement("Time",Time)
+                                                                                   , new XElement("Status",Status)
+                                                                                   , new XElement("FormCreatorID",FormCreatorID)
+                                                                                   , new XElement("FormOwnerID",FormOwnerID)
+                                                                                   , new XElement("TargetFormID",TargetFormID)
+                                                                                   , new XElement("TargetSheetNo",TargetSheetNo)
+                                                                                   , new XElement("ProcessSNo",ProcessSNo)
+                                                                                   , new XElement("Description",Description)
+                                                                                   , new XElement("ActionStatus",ActionStatus)
+                                                                                   , new XElement("ActionDescribe",ActionDescribe)
+                                                                                   , new XElement("TPServerIP",TPServerIP)
+                                                                                   , new XElement("TPServerEnv",TPServerEnv)
+                                                                                   )
+                                                                                   )
+                                                                    ));
 
                 log += "回傳的XML" + xe.ToString()+"\r\n";
                 Ede.Uof.Utility.Log.Logger.Write("TTFormLog",log);

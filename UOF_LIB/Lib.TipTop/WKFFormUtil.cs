@@ -324,76 +324,156 @@ namespace Lib.TipTop
 
 
             //表單attach(連結)欄位
-            foreach (var node in xdoc.Element("Request").Element("RequestContent").Element("Form").Element("ContentText").Elements("attachment"))
+
+            if (form.Fields["attach"].FieldType == Ede.Uof.WKF.Design.FieldType.fileButton)
             {
-                XmlElement A01Element = xmlDoc.CreateElement("FieldItem");
-                A01Element.SetAttribute("fieldId", "attach");
-
-                A01Element.SetAttribute("realValue", "");
-                A01Element.SetAttribute("fillerName", userName);
-                A01Element.SetAttribute("fillerUserGuid", userGuid);
-                A01Element.SetAttribute("fillerAccount", account);
-                A01Element.SetAttribute("fillSiteId", "");
-
-
-                XmlElement DataGridElement = xmlDoc.CreateElement("DataGrid");
-                A01Element.AppendChild(DataGridElement);
-                int index = 0;
-                foreach (var detail in node.Elements("document"))
+                //附件欄位模式
+                foreach (var node in xdoc.Element("Request").Element("RequestContent").Element("Form").Element("ContentText").Elements("attachment"))
                 {
-                    //<DataGrid>
-                    //  <Row order="0">
-                    //    <Cell fieldId="A12_1" fieldValue="33" realValue="" />
-                    //  </Row>
-                    //</DataGrid>
-                    XmlElement rowElement = xmlDoc.CreateElement("Row");
-                    rowElement.SetAttribute("order", index.ToString());
+                    XmlElement A01Element = xmlDoc.CreateElement("FieldItem");
+                    A01Element.SetAttribute("fieldId", "attach");
 
-                    DataGridElement.AppendChild(rowElement);
+                    A01Element.SetAttribute("realValue", "");
+                    A01Element.SetAttribute("fieldValue", "");
+                    A01Element.SetAttribute("fillerName", userName);
+                    A01Element.SetAttribute("fillerUserGuid", userGuid);
+                    A01Element.SetAttribute("fillerAccount", account);
+                    A01Element.SetAttribute("IsNeedTransfer", "True");
+                    A01Element.SetAttribute("IsDeleteTemp", "True");
+                    A01Element.SetAttribute("fileMinSize", "1");
+                    A01Element.SetAttribute("fillSiteId", "");
 
-                
-                        XmlElement cellElement = xmlDoc.CreateElement("Cell");
 
-                    string content = "";
-                    switch (detail.Attribute("type").Value)
+                    foreach (var detail in node.Elements("document"))
                     {
-                        case "DOC":
-                            string key = detail.Attribute("content").Value.Substring(0, detail.Attribute("content").Value.IndexOf('.')).Replace("/u1/out/", "");
-                            cellElement.SetAttribute("fieldValue", DownloadFile(key , PlantID, Guid.NewGuid().ToString() ));
-                            break;
-                        case "URL":
+                        //<DataGrid>
+                        //  <Row order="0">
+                        //    <Cell fieldId="A12_1" fieldValue="33" realValue="" />
+                        //  </Row>
+                        //</DataGrid>
+                        XmlElement attachItemElement = xmlDoc.CreateElement("AttachItem");
 
-                            //如果開頭是四個\要換成是http
-                             content = detail.Attribute("content").Value;
-                            if (content.IndexOf("\\\\\\\\") ==0)
-                            {
-                                content= content.Replace("\\\\\\\\", "http://").Replace("\\","/");
-                                cellElement.SetAttribute("fieldValue", DownloadFileUrl(content));
+                        string content = "";
+                        switch (detail.Attribute("type").Value)
+                        {
+                            case "DOC":
+                                string key = detail.Attribute("content").Value.Substring(0, detail.Attribute("content").Value.IndexOf('.')).Replace("/u1/out/", "");
+                                attachItemElement.SetAttribute("filePath", DownloadFile(key, PlantID, Guid.NewGuid().ToString(), true));
+                                A01Element.AppendChild(attachItemElement);
                                 break;
-                                
-                            }
+                            case "URL":
 
-                            cellElement.SetAttribute("fieldValue", $"{content}@{content}");
-                            break;
-                        case "TXT":
-                            cellElement.SetAttribute("fieldValue", $"{detail.Attribute("content").Value}@javascript:void(0)");
-                            break;
-                        //case "DOC":
+                                //如果開頭是四個\要換成是http
+                                content = detail.Attribute("content").Value;
+                                if (content.IndexOf("\\\\\\\\") == 0)
+                                {
+                                    content = content.Replace("\\\\\\\\", "http://").Replace("\\", "/");
+                                    attachItemElement.SetAttribute("filePath", DownloadFileUrl(content, true));
+                                    A01Element.AppendChild(attachItemElement);
+                                    break;
 
-                        //    //如果開頭是四個\要換成是http
-                        //     content = detail.Attribute("content").Value;
-                          
-                        //    content = content.Replace("u1", ttUrl);
-                        //    cellElement.SetAttribute("fieldValue", DownloadFileUrl(content));
-                           
-                            
+                                }
 
-                        //    cellElement.SetAttribute("fieldValue", $"{ detail.Attribute("filename").Value}@{content}");
-                        //    break;
+                              //  cellElement.SetAttribute("fieldValue", $"{content}@{content}");
+                                break;
+                            case "TXT":
+                             //   cellElement.SetAttribute("fieldValue", $"{detail.Attribute("content").Value}@javascript:void(0)");
+                                break;
+                                //case "DOC":
+
+                                //    //如果開頭是四個\要換成是http
+                                //     content = detail.Attribute("content").Value;
+
+                                //    content = content.Replace("u1", ttUrl);
+                                //    cellElement.SetAttribute("fieldValue", DownloadFileUrl(content));
+
+
+
+                                //    cellElement.SetAttribute("fieldValue", $"{ detail.Attribute("filename").Value}@{content}");
+                                //    break;
+                        }
                     }
 
+
+                    formFieldValueElement.AppendChild(A01Element);
+
+                }
+
+
+            }
+            else
+            {
+                //明細欄位模式
+                foreach (var node in xdoc.Element("Request").Element("RequestContent").Element("Form").Element("ContentText").Elements("attachment"))
+                {
+                    XmlElement A01Element = xmlDoc.CreateElement("FieldItem");
+                    A01Element.SetAttribute("fieldId", "attach");
+
+                    A01Element.SetAttribute("realValue", "");
+                    A01Element.SetAttribute("fillerName", userName);
+                    A01Element.SetAttribute("fillerUserGuid", userGuid);
+                    A01Element.SetAttribute("fillerAccount", account);
+                    A01Element.SetAttribute("fillSiteId", "");
+
+
+                    XmlElement DataGridElement = xmlDoc.CreateElement("DataGrid");
+                    A01Element.AppendChild(DataGridElement);
+                    int index = 0;
+                    foreach (var detail in node.Elements("document"))
+                    {
+                        //<DataGrid>
+                        //  <Row order="0">
+                        //    <Cell fieldId="A12_1" fieldValue="33" realValue="" />
+                        //  </Row>
+                        //</DataGrid>
+                        XmlElement rowElement = xmlDoc.CreateElement("Row");
+                        rowElement.SetAttribute("order", index.ToString());
+
+                        DataGridElement.AppendChild(rowElement);
+
+
+                        XmlElement cellElement = xmlDoc.CreateElement("Cell");
+
+                        string content = "";
+                        switch (detail.Attribute("type").Value)
+                        {
+                            case "DOC":
+                                string key = detail.Attribute("content").Value.Substring(0, detail.Attribute("content").Value.IndexOf('.')).Replace("/u1/out/", "");
+                                cellElement.SetAttribute("fieldValue", DownloadFile(key, PlantID, Guid.NewGuid().ToString(), false));
+                                break;
+                            case "URL":
+
+                                //如果開頭是四個\要換成是http
+                                content = detail.Attribute("content").Value;
+                                if (content.IndexOf("\\\\\\\\") == 0)
+                                {
+                                    content = content.Replace("\\\\\\\\", "http://").Replace("\\", "/");
+                                    cellElement.SetAttribute("fieldValue", DownloadFileUrl(content,false));
+                                    break;
+
+                                }
+
+                                cellElement.SetAttribute("fieldValue", $"{content}@{content}");
+                                break;
+                            case "TXT":
+                                cellElement.SetAttribute("fieldValue", $"{detail.Attribute("content").Value}@javascript:void(0)");
+                                break;
+                                //case "DOC":
+
+                                //    //如果開頭是四個\要換成是http
+                                //     content = detail.Attribute("content").Value;
+
+                                //    content = content.Replace("u1", ttUrl);
+                                //    cellElement.SetAttribute("fieldValue", DownloadFileUrl(content));
+
+
+
+                                //    cellElement.SetAttribute("fieldValue", $"{ detail.Attribute("filename").Value}@{content}");
+                                //    break;
+                        }
+
                         cellElement.SetAttribute("fieldId", "link");
-                     
+
                         cellElement.SetAttribute("realValue", "");
                         cellElement.SetAttribute("fillerName", userName);
                         cellElement.SetAttribute("fillerUserGuid", userGuid);
@@ -401,21 +481,22 @@ namespace Lib.TipTop
                         cellElement.SetAttribute("fillSiteId", "");
 
                         rowElement.AppendChild(cellElement);
-                    
 
-                    index++;
+
+                        index++;
+                    }
+
+
+                    formFieldValueElement.AppendChild(A01Element);
+
                 }
-
-
-                formFieldValueElement.AppendChild(A01Element);
-
             }
 
 
             return XElement.Parse(formElement.OuterXml).ToString();
         }
 
-        public string DownloadFileUrl(string fileURL)
+        public string DownloadFileUrl(string fileURL, bool returnPath)
         {
            
 
@@ -450,11 +531,26 @@ namespace Lib.TipTop
             fs.Write(pageData, 0, pageData.Length - 1);
             fs.Close();
 
+            //如果是超連結，則回傳超結內容
+            //如果是附件欄位，還需filecopy
+            if (!returnPath)
+            {
+                return $"{fileName}@{url}/{year}/{month}/{day}/{fileName}";
+            }
+            else
+            {
+                FileInfo fileInfo = new FileInfo($"{dirInfo.FullName}\\{fileName}");
+                //取得UOFWKF暫存目錄
+                string uofTemp = System.Configuration.ConfigurationManager.AppSettings["wkfFileTransferTemp"];
+                fileInfo.CopyTo(string.Format("{0}\\{1}", uofTemp, fileName));
 
-            return $"{fileName}@{url}/{year}/{month}/{day}/{fileName}";
+                return fileName;
+            }
+
+         //   return $"{fileName}@{url}/{year}/{month}/{day}/{fileName}";
         }
 
-        public string  DownloadFile(string key , string PlantID, string folderId)
+        public string  DownloadFile(string key , string PlantID, string folderId , bool returnPath)
         {
             //先寫死
           
@@ -588,9 +684,22 @@ namespace Lib.TipTop
     
             fs.Close();
 
-     
-            return fileName + "@" + $"{url}\\{year}\\{month}\\{day}\\{folderId}\\{fileName}";
 
+            //如果是超連結，則回傳超結內容
+            //如果是附件欄位，還需filecopy
+            if (!returnPath)
+            {
+                return fileName + "@" + $"{url}\\{year}\\{month}\\{day}\\{folderId}\\{fileName}";
+            }
+            else
+            {
+                FileInfo fileInfo = new FileInfo($"{filePath}\\{year}\\{month}\\{day}\\{folderId}\\{fileName}");
+                //取得UOFWKF暫存目錄
+                string uofTemp = System.Configuration.ConfigurationManager.AppSettings["wkfFileTransferTemp"];
+                fileInfo.CopyTo(string.Format("{0}\\{1}", uofTemp, fileName));
+
+                return fileName;
+            }
         }
 
 
