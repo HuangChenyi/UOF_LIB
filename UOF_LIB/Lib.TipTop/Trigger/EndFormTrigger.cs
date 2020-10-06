@@ -31,9 +31,14 @@ namespace Lib.TipTop.Trigger
             //TT_WS tt = new TT_WS();
             //string empname = tt.getEmployData(empno);
 
-            if((applyTask.EndTime- applyTask.BeginTime).TotalSeconds <10)
+            if((applyTask.EndTime- applyTask.BeginTime).TotalSeconds <10 && (DateTime.Now-applyTask.EndTime).TotalSeconds<10)
             {
-                System.Threading.Thread.Sleep(5000);
+                //一起單就結案就用動態排程來重送
+                Ede.Uof.Utility.Task.Dynamic.DynamicTask Dtask = new Ede.Uof.Utility.Task.Dynamic.DynamicTask();
+
+                Dtask.Add("Lib.TipTop", "Lib.TipTop.Trigger.ReSendForm", UserTime.GetSystemNowForDb().AddMinutes(5), applyTask.TaskId);
+
+                throw new Exception("ReSending...");
             }
 
 

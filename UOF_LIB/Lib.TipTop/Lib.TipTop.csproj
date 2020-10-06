@@ -50,6 +50,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\UOF12.2\bin\Ede.Uof.Utility.Log.dll</HintPath>
     </Reference>
+    <Reference Include="Ede.Uof.Utility.Task, Version=15.0.6949.47671, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\UOF12.2\bin\Ede.Uof.Utility.Task.dll</HintPath>
+    </Reference>
     <Reference Include="Ede.Uof.Web">
       <HintPath>..\UOF12.2\bin\Ede.Uof.Web.dll</HintPath>
     </Reference>
@@ -64,6 +68,10 @@
     <Reference Include="Oracle.ManagedDataAccess, Version=4.122.19.1, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
       <HintPath>..\packages\Oracle.ManagedDataAccess.19.3.0\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
+    <Reference Include="Quartz, Version=2.6.2.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\UOF12.2\bin\Quartz.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -77,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Trigger\EndFormTrigger.cs" />
+    <Compile Include="Trigger\ReSendForm.cs" />
     <Compile Include="Trigger\StartFormTrigger.cs" />
     <Compile Include="WKFFormUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
