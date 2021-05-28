@@ -378,7 +378,9 @@ namespace Lib.TipTop
                                     //  cellElement.SetAttribute("fieldValue", $"{content}@{content}");
                                     break;
                                 case "TXT":
-                                    //   cellElement.SetAttribute("fieldValue", $"{detail.Attribute("content").Value}@javascript:void(0)");
+                                    attachItemElement.SetAttribute("filePath",  DownloadTxtFile(detail.Attribute("desc").Value ,detail.Attribute("content").Value ));
+                                    A01Element.AppendChild(attachItemElement);
+                                  
                                     break;
                                     //case "DOC":
 
@@ -497,6 +499,62 @@ namespace Lib.TipTop
             return XElement.Parse(formElement.OuterXml).ToString();
         }
 
+        private string DownloadTxtFile(string name,string content)
+        {
+          
+            string fileName = "";
+            if (name.Length > 200)
+            {
+                fileName = name.Substring(0, 200);
+            }
+            else
+            {
+                fileName = name ;
+            }
+
+            fileName+= ".txt";
+            string uofTemp = System.Configuration.ConfigurationManager.AppSettings["wkfFileTransferTemp"];
+
+
+            //取得UOFWKF暫存目錄
+            string folderId = Guid.NewGuid().ToString();
+            string year = DateTime.Today.Year.ToString();
+            string month = DateTime.Today.Month.ToString("d2");
+            string day = DateTime.Today.Day.ToString("d2");
+
+            //為了不要有重覆檔名的問題，加上年月日和GUID來作管理
+            DirectoryInfo tempDrir = new DirectoryInfo($"{uofTemp}\\{year}");
+
+            if (!tempDrir.Exists)
+                tempDrir.Create();
+
+            tempDrir = new DirectoryInfo($"{uofTemp}\\{year}\\{month}");
+
+            if (!tempDrir.Exists)
+                tempDrir.Create();
+
+            tempDrir = new DirectoryInfo($"{uofTemp}\\{year}\\{month}\\{day}");
+
+            if (!tempDrir.Exists)
+                tempDrir.Create();
+
+            tempDrir = new DirectoryInfo($"{uofTemp}\\{year}\\{month}\\{day}\\{folderId}");
+
+            if (!tempDrir.Exists)
+                tempDrir.Create();
+
+
+
+            FileStream fs = new FileStream($"{tempDrir.FullName}\\{fileName}", FileMode.OpenOrCreate);
+
+            StreamWriter sw = new StreamWriter(fs);
+            sw.Write(name+"\r\n"+content);
+            sw.Close();
+            fs.Close();
+
+            return $"{year}\\{month}\\{day}\\{folderId}\\{fileName}";
+        }
+
         public string DownloadFileUrl(string fileURL, bool returnPath)
         {
            
@@ -543,9 +601,37 @@ namespace Lib.TipTop
                 FileInfo fileInfo = new FileInfo($"{dirInfo.FullName}\\{fileName}");
                 //取得UOFWKF暫存目錄
                 string uofTemp = System.Configuration.ConfigurationManager.AppSettings["wkfFileTransferTemp"];
-                fileInfo.CopyTo(string.Format("{0}\\{1}", uofTemp, fileName));
+               
 
-                return fileName;
+                string folderId = Guid.NewGuid().ToString();
+              
+                //為了不要有重覆檔名的問題，加上年月日和GUID來作管理
+                DirectoryInfo tempDrir = new DirectoryInfo($"{uofTemp}\\{year}");
+
+                if (!tempDrir.Exists)
+                    tempDrir.Create();
+
+                tempDrir = new DirectoryInfo($"{uofTemp}\\{year}\\{month}");
+
+                if (!tempDrir.Exists)
+                    tempDrir.Create();
+
+                tempDrir = new DirectoryInfo($"{uofTemp}\\{year}\\{month}\\{day}");
+
+                if (!tempDrir.Exists)
+                    tempDrir.Create();
+
+                tempDrir = new DirectoryInfo($"{uofTemp}\\{year}\\{month}\\{day}\\{folderId}");
+
+                if (!tempDrir.Exists)
+                    tempDrir.Create();
+
+
+
+                fileInfo.CopyTo(string.Format("{0}\\{1}", tempDrir.FullName, fileName));
+
+                return $"{year}\\{month}\\{day}\\{folderId}\\{fileName}";
+
             }
 
          //   return $"{fileName}@{url}/{year}/{month}/{day}/{fileName}";
@@ -697,9 +783,33 @@ namespace Lib.TipTop
                 FileInfo fileInfo = new FileInfo($"{filePath}\\{year}\\{month}\\{day}\\{folderId}\\{fileName}");
                 //取得UOFWKF暫存目錄
                 string uofTemp = System.Configuration.ConfigurationManager.AppSettings["wkfFileTransferTemp"];
-                fileInfo.CopyTo(string.Format("{0}\\{1}", uofTemp, fileName));
 
-                return fileName;
+                //為了不要有重覆檔名的問題，加上年月日和GUID來作管理
+                DirectoryInfo tempDrir = new DirectoryInfo($"{uofTemp}\\{year}");
+
+                if (!tempDrir.Exists)
+                    tempDrir.Create();
+
+                tempDrir = new DirectoryInfo($"{uofTemp}\\{year}\\{month}");
+
+                if (!tempDrir.Exists)
+                    tempDrir.Create();
+
+                tempDrir = new DirectoryInfo($"{uofTemp}\\{year}\\{month}\\{day}");
+
+                if (!tempDrir.Exists)
+                    tempDrir.Create();
+
+                tempDrir = new DirectoryInfo($"{uofTemp}\\{year}\\{month}\\{day}\\{folderId}");
+
+                if (!tempDrir.Exists)
+                    tempDrir.Create();
+
+
+
+                fileInfo.CopyTo(string.Format("{0}\\{1}", tempDrir.FullName, fileName));
+
+                return $"{year}\\{month}\\{day}\\{folderId}\\{fileName}";
             }
         }
 

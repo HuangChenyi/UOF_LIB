@@ -133,41 +133,51 @@ namespace Lib.TipTop.Trigger
             try
             {
                 result = erp.TIPTOPGateWay(xmlstr);
-//                 result= erp.TIPTOPGateWay(@"<Response>
-// <ResponseType>SetStatus</ResponseType>
-// <ResponseInfo>
-//  <SenderIP>TIPTOPAP</SenderIP>
-//  <ReceiverIP>192.168.10.74</ReceiverIP>
-// </ResponseInfo>
-// <ResponseContent>
-//  <ReturnInfo>
-//   <ReturnStatus>Y</ReturnStatus>
-//   <ReturnDescribe>No error.</ReturnDescribe>
-//  </ReturnInfo>
-//  <ContentText>
-//   <Form>
-//    <Status>3</Status>
-//    <PlantID>LTTW</PlantID>
-//    <ProgramID>apmt420</ProgramID>
-//    <SourceFormID>AC08</SourceFormID>
-//    <SourceFormNum>AC08-2001140001</SourceFormNum>
-//    <FormCreatorID>T106031</FormCreatorID>
-//    <FormOwnerID>T105013</FormOwnerID>
-//    <TargetFormID>apmt420</TargetFormID>
-//    <TargetSheetNo>4a01d004e6a9100486c3659ac351cf14</TargetSheetNo>
-//   </Form>
-//  </ContentText>
-// </ResponseContent>
-//</Response>");
+                //                result = erp.TIPTOPGateWay(@"<Response>
+                // <ResponseType>SetStatus</ResponseType>
+                // <ResponseInfo>
+                //  <SenderIP>TIPTOPAP</SenderIP>
+                //  <ReceiverIP>192.168.10.74</ReceiverIP>
+                // </ResponseInfo>
+                // <ResponseContent>
+                //  <ReturnInfo>
+                //   <ReturnStatus>Y</ReturnStatus>
+                //   <ReturnDescribe>No error.</ReturnDescribe>
+                //  </ReturnInfo>
+                //  <ContentText>
+                //   <Form>
+                //    <Status>3</Status>
+                //    <PlantID>LTTW</PlantID>
+                //    <ProgramID>apmt420</ProgramID>
+                //    <SourceFormID>AC08</SourceFormID>
+                //    <SourceFormNum>AC08-2001140001</SourceFormNum>
+                //    <FormCreatorID>T106031</FormCreatorID>
+                //    <FormOwnerID>T105013</FormOwnerID>
+                //    <TargetFormID>apmt420</TargetFormID>
+                //    <TargetSheetNo>4a01d004e6a9100486c3659ac351cf14</TargetSheetNo>
+                //   </Form>
+                //  </ContentText>
+                // </ResponseContent>
+                //</Response>");
 
+                XElement xe = XElement.Parse(result);
 
-string log = string.Format("表單編號{0} \r\n 輸入資料 \r\n {1} \r\n 回傳資料 \r\n {2} ", applyTask.FormNumber, result, xDoc.ToString());
+                //ReturnStatus不是Y代表呼叫失敗
+                if (xe.Element("ResponseContent").Element("ReturnInfo").Element("ReturnStatus").Value == "Y")
+                {
+                    string log = string.Format("表單編號{0} \r\n 輸入資料 \r\n {1} \r\n 回傳資料 \r\n {2} ", applyTask.FormNumber, result, xDoc.ToString());
+                    Logger.Write("TTLog", log);  //已寫好的LOG元件
+                }
+                else
+                {
+                    throw new Exception(xe.Element("ResponseContent").Element("ReturnInfo").Element("ReturnDescribe").Value);
+                }
 
-                Logger.Write("TTLog", log);  //已寫好的LOG元件
+               
             }
             catch(Exception ce) {
-                result = ce.ToString();
-                string log = string.Format("表單編號{0} \r\n 輸入資料 \r\n {1} \r\n 回傳資料 \r\n {2} ", applyTask.FormNumber, result, xDoc.ToString());
+               // result = ce.ToString();
+                string log = string.Format("表單編號{0} \r\n 輸入資料 \r\n {1} \r\n 回傳資料 \r\n {2} 錯誤訊息 \r\n {3} ", applyTask.FormNumber, result, xDoc.ToString(), ce.ToString());
 
                 Logger.Write("TTLog", log);  //已寫好的LOG元件
                 throw;
